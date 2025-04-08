@@ -1,5 +1,8 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 /* src/app.css */
-@import "tw-animate-css";
+@import 'tw-animate-css';
 /* Standard Tailwind directives */
 @tailwind base;
 @tailwind components;
@@ -12,134 +15,133 @@
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
+	/* Your :root variables using oklch */
+	:root {
+		/* Your Core Theme Variables */
+		--background: oklch(94.11% 0.036556 308.0303);
+		--secondary-background: oklch(100% 0 0);
+		--foreground: oklch(0% 0 0);
+		--main-foreground: oklch(0% 0 0);
+		--main: oklch(71.9% 0.198 310.03);
+		--border: oklch(0% 0 0);
+		--ring: oklch(0% 0 0);
+		/* Note: Original shadcn uses this for focus rings */
+		--overlay: oklch(0% 0 0 / 0.8);
+		--shadow: 2px 2px 0px 0px var(--border);
 
-  /* Your :root variables using oklch */
-  :root {
-    /* Your Core Theme Variables */
-    --background: oklch(94.11% 0.036556 308.0303);
-    --secondary-background: oklch(100% 0 0);
-    --foreground: oklch(0% 0 0);
-    --main-foreground: oklch(0% 0 0);
-    --main: oklch(71.9% 0.198 310.03);
-    --border: oklch(0% 0 0);
-    --ring: oklch(0% 0 0);
-    /* Note: Original shadcn uses this for focus rings */
-    --overlay: oklch(0% 0 0 / 0.8);
-    --shadow: 2px 2px 0px 0px var(--border);
+		/* Original shadcn variables (map your vars to these or update tailwind.config.ts) */
+		/* --foreground: 222.2 84% 4.9%; */
+		/* --muted: 210 40% 96.1%; */
+		/* --muted-foreground: 215.4 16.3% 46.9%; */
+		/* --popover: 0 0% 100%; */
+		/* --popover-foreground: 222.2 84% 4.9%; */
+		/* --card: 0 0% 100%; */
+		/* --card-foreground: 222.2 84% 4.9%; */
+		/* --border: 214.3 31.8% 91.4%; */
+		/* Replaced by your --border */
+		/* --input: 214.3 31.8% 91.4%; */
+		/* Often same as border */
+		/* --primary: 222.2 47.4% 11.2%; */
+		/* Map var(--main) here? */
+		/* --primary-foreground: 210 40% 98%; */
+		/* Map var(--main-foreground) here? */
+		/* --secondary: 210 40% 96.1%; */
+		/* Map var(--secondary-background) here? */
+		/* --secondary-foreground: 222.2 47.4% 11.2%; */
+		/* --accent: 210 40% 96.1%; */
+		/* --accent-foreground: 222.2 47.4% 11.2%; */
+		/* --destructive: 0 72.2% 50.6%; */
+		/* --destructive-foreground: 210 40% 98%; */
+		/* --ring: 222.2 84% 4.9%; */
+		/* Replaced by your --ring */
+		--radius: 10px;
+		/* Using --radius-base from @theme, adjust if needed */
+		/* --sidebar-background: 0 0% 98%; */
+		/* --sidebar-foreground: 240 5.3% 26.1%; */
+		/* ... other sidebar vars ... */
+	}
 
-    /* Original shadcn variables (map your vars to these or update tailwind.config.ts) */
-    /* --foreground: 222.2 84% 4.9%; */
-    /* --muted: 210 40% 96.1%; */
-    /* --muted-foreground: 215.4 16.3% 46.9%; */
-    /* --popover: 0 0% 100%; */
-    /* --popover-foreground: 222.2 84% 4.9%; */
-    /* --card: 0 0% 100%; */
-    /* --card-foreground: 222.2 84% 4.9%; */
-    /* --border: 214.3 31.8% 91.4%; */
-    /* Replaced by your --border */
-    /* --input: 214.3 31.8% 91.4%; */
-    /* Often same as border */
-    /* --primary: 222.2 47.4% 11.2%; */
-    /* Map var(--main) here? */
-    /* --primary-foreground: 210 40% 98%; */
-    /* Map var(--main-foreground) here? */
-    /* --secondary: 210 40% 96.1%; */
-    /* Map var(--secondary-background) here? */
-    /* --secondary-foreground: 222.2 47.4% 11.2%; */
-    /* --accent: 210 40% 96.1%; */
-    /* --accent-foreground: 222.2 47.4% 11.2%; */
-    /* --destructive: 0 72.2% 50.6%; */
-    /* --destructive-foreground: 210 40% 98%; */
-    /* --ring: 222.2 84% 4.9%; */
-    /* Replaced by your --ring */
-    --radius: 10px;
-    /* Using --radius-base from @theme, adjust if needed */
-    /* --sidebar-background: 0 0% 98%; */
-    /* --sidebar-foreground: 240 5.3% 26.1%; */
-    /* ... other sidebar vars ... */
-  }
+	/* Your .dark variables using oklch */
+	.dark {
+		/* Your Core Dark Theme Variables */
+		--background: oklch(29.68% 0.0791 315.62);
+		--secondary-background: oklch(23.93% 0 0);
+		--foreground: oklch(92.49% 0 0);
+		--main-foreground: oklch(0% 0 0);
+		--main: oklch(67.34% 0.2314 309.13);
+		--border: oklch(0% 0 0);
+		--ring: oklch(100% 0 0);
+		/* Note: Original shadcn uses this for focus rings */
+		--shadow: 2px 2px 0px 0px var(--border);
 
-  /* Your .dark variables using oklch */
-  .dark {
-    /* Your Core Dark Theme Variables */
-    --background: oklch(29.68% 0.0791 315.62);
-    --secondary-background: oklch(23.93% 0 0);
-    --foreground: oklch(92.49% 0 0);
-    --main-foreground: oklch(0% 0 0);
-    --main: oklch(67.34% 0.2314 309.13);
-    --border: oklch(0% 0 0);
-    --ring: oklch(100% 0 0);
-    /* Note: Original shadcn uses this for focus rings */
-    --shadow: 2px 2px 0px 0px var(--border);
+		/* Original shadcn dark variables (map your vars or update tailwind.config.ts) */
+		/* --foreground: 210 40% 98%; */
+		/* --muted: 217.2 32.6% 17.5%; */
+		/* --muted-foreground: 215 20.2% 65.1%; */
+		/* --popover: 222.2 84% 4.9%; */
+		/* --popover-foreground: 210 40% 98%; */
+		/* --card: 222.2 84% 4.9%; */
+		/* --card-foreground: 210 40% 98%; */
+		/* --border: 217.2 32.6% 17.5%; */
+		/* Replaced by your --border */
+		/* --input: 217.2 32.6% 17.5%; */
+		/* Often same as border */
+		/* --primary: 210 40% 98%; */
+		/* Map var(--main) here? */
+		/* --primary-foreground: 222.2 47.4% 11.2%; */
+		/* Map var(--main-foreground) here? */
+		/* --secondary: 217.2 32.6% 17.5%; */
+		/* Map var(--secondary-background) here? */
+		/* --secondary-foreground: 210 40% 98%; */
+		/* --accent: 217.2 32.6% 17.5%; */
+		/* --accent-foreground: 210 40% 98%; */
+		/* --destructive: 0 62.8% 30.6%; */
+		/* --destructive-foreground: 210 40% 98%; */
+		/* --ring: 212.7 26.8% 83.9%; */
+		/* Replaced by your --ring */
+		/* --sidebar-background: 240 5.9% 10%; */
+		/* --sidebar-foreground: 240 4.8% 95.9%; */
+		/* ... other dark sidebar vars ... */
+	}
 
-    /* Original shadcn dark variables (map your vars or update tailwind.config.ts) */
-    /* --foreground: 210 40% 98%; */
-    /* --muted: 217.2 32.6% 17.5%; */
-    /* --muted-foreground: 215 20.2% 65.1%; */
-    /* --popover: 222.2 84% 4.9%; */
-    /* --popover-foreground: 210 40% 98%; */
-    /* --card: 222.2 84% 4.9%; */
-    /* --card-foreground: 210 40% 98%; */
-    /* --border: 217.2 32.6% 17.5%; */
-    /* Replaced by your --border */
-    /* --input: 217.2 32.6% 17.5%; */
-    /* Often same as border */
-    /* --primary: 210 40% 98%; */
-    /* Map var(--main) here? */
-    /* --primary-foreground: 222.2 47.4% 11.2%; */
-    /* Map var(--main-foreground) here? */
-    /* --secondary: 217.2 32.6% 17.5%; */
-    /* Map var(--secondary-background) here? */
-    /* --secondary-foreground: 210 40% 98%; */
-    /* --accent: 217.2 32.6% 17.5%; */
-    /* --accent-foreground: 210 40% 98%; */
-    /* --destructive: 0 62.8% 30.6%; */
-    /* --destructive-foreground: 210 40% 98%; */
-    /* --ring: 212.7 26.8% 83.9%; */
-    /* Replaced by your --ring */
-    /* --sidebar-background: 240 5.9% 10%; */
-    /* --sidebar-foreground: 240 4.8% 95.9%; */
-    /* ... other dark sidebar vars ... */
-  }
+	/* Your @theme block */
+	/* Ensure required PostCSS plugins are configured for this */
+	@theme inline {
+		--color-main: var(--main);
+		--color-background: var(--background);
+		--color-secondary-background: var(--secondary-background);
+		--color-foreground: var(--foreground);
+		--color-main-foreground: var(--main-foreground);
+		--color-border: var(--border);
+		--color-overlay: var(--overlay);
+		--color-ring: var(--ring);
 
-  /* Your @theme block */
-  /* Ensure required PostCSS plugins are configured for this */
-  @theme inline {
-    --color-main: var(--main);
-    --color-background: var(--background);
-    --color-secondary-background: var(--secondary-background);
-    --color-foreground: var(--foreground);
-    --color-main-foreground: var(--main-foreground);
-    --color-border: var(--border);
-    --color-overlay: var(--overlay);
-    --color-ring: var(--ring);
+		--spacing-boxShadowX: 2px;
+		--spacing-boxShadowY: 2px;
+		--spacing-reverseBoxShadowX: -2px;
+		--spacing-reverseBoxShadowY: -2px;
+		--radius-base: 10px;
+		/* This sets the base radius */
+		--shadow-shadow: var(--shadow);
+		--font-weight-base: 500;
+		--font-weight-heading: 700;
+	}
 
-    --spacing-boxShadowX: 2px;
-    --spacing-boxShadowY: 2px;
-    --spacing-reverseBoxShadowX: -2px;
-    --spacing-reverseBoxShadowY: -2px;
-    --radius-base: 10px;
-    /* This sets the base radius */
-    --shadow-shadow: var(--shadow);
-    --font-weight-base: 500;
-    --font-weight-heading: 700;
-  }
+	/* Base styles from original file - these will now use your variables */
+	* {
+		@apply border-border;
+		/* Uses your --border */
+	}
 
-  /* Base styles from original file - these will now use your variables */
-  * {
-    @apply border-border;
-    /* Uses your --border */
-  }
+	body {
+		@apply bg-background text-foreground;
+		/* Uses your --background & --foreground */
+		/* You might want to apply base font weight here */
+		/* font-weight: var(--font-weight-base); */
+	}
 
-  body {
-    @apply bg-background text-foreground;
-    /* Uses your --background & --foreground */
-    /* You might want to apply base font weight here */
-    /* font-weight: var(--font-weight-base); */
-  }
-
-  /* Apply base heading font weight (example) */
-  /* h1, h2, h3, h4, h5, h6 {
+	/* Apply base heading font weight (example) */
+	/* h1, h2, h3, h4, h5, h6 {
     font-weight: var(--font-weight-heading);
   } */
 }

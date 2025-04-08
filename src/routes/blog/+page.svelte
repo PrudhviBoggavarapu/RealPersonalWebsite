@@ -1,15 +1,17 @@
+<!-- src/routes/blog/+page.svelte -->
 <script lang="ts">
 	// Import the shared Header and Footer
 	import Header from '$lib/frontpage/Header.svelte';
 	import Footer from '$lib/frontpage/Footer.svelte';
 	import { onMount } from 'svelte';
+	import type { PageData } from './+page.server.js'; // Import the type for loaded data
 
 	// --- Theme Toggle State and Logic ---
 	// NOTE: Ideally, this logic should live in your root +layout.svelte
 	// so it applies globally and doesn't need repeating on each page.
 	// We're keeping it here for now to match the previous structure.
-	let isDark = false;
-	let mounted = false;
+	let isDark = $state(false);
+	let mounted = $state(false);
 
 	onMount(() => {
 		mounted = true;
@@ -39,6 +41,9 @@
 		}
 	}
 	// --- End Theme Logic ---
+
+	// Get the loaded posts from the page data provided by +page.server.ts
+	let { data }: { data: PageData } = $props();
 </script>
 
 <div class="flex min-h-screen flex-col bg-background text-foreground">
@@ -50,30 +55,37 @@
 		<div class="container mx-auto p-8">
 			<h1 class="font-heading mb-6 border-b-2 border-border pb-4 text-4xl">Blog Posts</h1>
 
-			<!-- Placeholder for Blog Post List -->
-			<div class="space-y-8">
-				<article class="shadow-shadow rounded-[var(--radius-base)] border-2 border-border p-6">
-					<h2 class="font-heading mb-2 text-2xl">Placeholder Blog Post Title 1</h2>
-					<p class="mb-4 text-sm text-foreground/80">Published on: August 1, 2024</p>
-					<p class="font-base mb-4">
-						This is a short excerpt of the first blog post. Lorem ipsum dolor sit amet, consectetur
-						adipiscing elit...
-					</p>
-					<a href="/blog/post-1" class="text-main font-bold hover:underline">Read More</a>
-				</article>
-
-				<article class="shadow-shadow rounded-[var(--radius-base)] border-2 border-border p-6">
-					<h2 class="font-heading mb-2 text-2xl">Placeholder Blog Post Title 2</h2>
-					<p class="mb-4 text-sm text-foreground/80">Published on: July 25, 2024</p>
-					<p class="font-base mb-4">
-						Another blog post summary goes here. Sed do eiusmod tempor incididunt ut labore et
-						dolore magna aliqua...
-					</p>
-					<a href="/blog/post-2" class="text-main font-bold hover:underline">Read More</a>
-				</article>
-
+			<!-- Check if there are posts loaded -->
+			{#if data.posts && data.posts.length > 0}
+				<div class="space-y-8">
+					<!-- Iterate over the loaded posts -->
+					{#each data.posts as post}
+						<!-- Apply the exact same classes as the original placeholder article -->
+						<article class="shadow-shadow rounded-[var(--radius-base)] border-2 border-border p-6">
+							<!-- Post Title - styled like original h2 -->
+							<h2 class="font-heading mb-2 text-2xl">{post.name}</h2>
+							<!-- Publication Date - styled like original date p -->
+							<p class="mb-4 text-sm text-foreground/80">
+								Published on: {post.date.toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'long',
+									day: 'numeric'
+								})}
+							</p>
+							<!-- Post Blurb/Excerpt - styled like original excerpt p -->
+							{#if post.blurb}
+								<p class="font-base mb-4">{post.blurb}</p>
+							{/if}
+							<!-- Read More Link - styled like original link -->
+							<a href="/blog/{post.slug}" class="text-main font-bold hover:underline">
+								Read More
+							</a>
+						</article>
+					{/each}
+				</div>
+			{:else}
 				<p class="font-base text-center italic">More posts coming soon!</p>
-			</div>
+			{/if}
 		</div>
 	</main>
 

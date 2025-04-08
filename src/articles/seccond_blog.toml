@@ -1,0 +1,10 @@
+[[title]]
+name = "Second Blog Post"
+slug = "second-blog-post"
+blurb = "A brief description of the article."
+tags = ["blog", "second"]
+date = "2025-10-05"
+image = "/images/first-blog-post.jpg"
+content = """
+This is a short excerpt of the first blog post. Lorem ipsum dolor sit amet, consectetur adipiscing elit...
+"""

@@ -44,6 +44,10 @@ The content is organized as follows:
 
 <directory_structure>
 src/
+  articles/
+    first_blog.toml
+    seccond_blog.toml
+    third_blog.toml
   lib/
     components/
       ui/
@@ -81,9 +85,17 @@ src/
     frontpage/
       Footer.svelte
       Header.svelte
+    server/
+      blogPosts.ts
     index.ts
     utils.ts
   routes/
+    blog/
+      [slug]/
+        +page.server.ts
+        +page.svelte
+      +page.server.ts
+      +page.svelte
     +layout.svelte
     +page.svelte
   app.css
@@ -106,6 +118,361 @@ vite.config.ts
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="src/articles/first_blog.toml">
+[[title]]
+name = "First Blog Post"
+slug = "first-blog-post"
+blurb = "A brief description of the article."
+tags = ["blog", "first"]
+date = "2024-10-05"
+content = """
+This is a short excerpt of the first blog post. Lorem ipsum dolor sit amet, consectetur adipiscing elit...
+"""
+</file>
+
+<file path="src/articles/seccond_blog.toml">
+[[title]]
+name = "Second Blog Post"
+slug = "second-blog-post"
+blurb = "A brief description of the article."
+tags = ["blog", "second"]
+date = "2025-10-05"
+image = "/images/first-blog-post.jpg"
+content = """
+This is a short excerpt of the first blog post. Lorem ipsum dolor sit amet, consectetur adipiscing elit...
+"""
+</file>
+
+<file path="src/articles/third_blog.toml">
+[[title]]
+name = "Third Blog Post"
+slug = "third-blog-post"
+blurb = "A brief description of the third article."
+tags = ["blog", "third"]
+date = "2020-10-05"
+content = """# The World of Programming: Building the Digital Future
+
+In today's digitally driven world, "programming" or "coding" are terms we hear constantly. But what do they actually mean? At its core, programming is the process of giving instructions to a computer to perform a specific task. Think of it like writing a very precise recipe or a set of detailed directions that a computer, which understands only specific languages, can follow step-by-step. From the apps on your smartphone to the websites you browse, the complex systems managing traffic lights, and the algorithms powering artificial intelligence – programming is the invisible engine behind it all.
+
+## What Exactly is Programming?
+
+Computers don't understand human languages like English or Spanish natively. They operate on binary code – sequences of 1s and 0s. Programming languages act as a bridge, allowing humans to write instructions in a more readable format, which are then translated (compiled or interpreted) into machine code that the computer's processor can execute. This process involves logic, problem-solving, and creativity. Programmers analyze problems, design solutions (algorithms), write the code, test it rigorously, and fix any errors (debugging).
+
+## The Building Blocks: Core Concepts
+
+While there are hundreds of programming languages, many share fundamental concepts. **Variables** are like containers used to store information (numbers, text, etc.). **Data types** define what kind of information a variable can hold. **Control structures**, such as 'if/else' statements, allow programs to make decisions based on conditions, while **loops** enable the repetition of tasks. **Functions** or **methods** group blocks of code that perform a specific action, making code reusable and organized. Understanding these core ideas is crucial, as they form the foundation for writing any program.
+
+## A Multitude of Tongues: Programming Languages
+
+The diversity of programming languages reflects the vast range of tasks computers perform. **Python** is renowned for its readability and is popular in data science, AI, and web development. **JavaScript** is the backbone of interactive websites. **Java** is widely used for large-scale enterprise applications and Android app development. **C++** and **C** are known for performance and are often used in game development and system software. Choosing a language often depends on the project's goal, but learning one language makes picking up others much easier due to the shared core concepts.
+
+## More Than Just Typing: The Programming Process
+
+Writing code is just one part of programming. A significant amount of time is spent understanding the problem, planning the solution, testing the code to find bugs, and refining it. Debugging – the process of finding and fixing errors – is an essential skill. Collaboration, using version control systems like Git, and continuously learning are also vital aspects of a programmer's life. It's a field that demands patience, persistence, and a logical mindset.
+
+## Embarking on Your Journey: Getting Started
+
+Intrigued? Getting started with programming has never been more accessible. Numerous online platforms offer interactive courses (like Codecademy, freeCodeCamp, Coursera), tutorials, and documentation. Start with a beginner-friendly language like Python. Focus on understanding the fundamentals rather than memorizing syntax. Practice by working on small projects – build a simple calculator, a basic game, or automate a repetitive task. Join online communities, ask questions, and don't be afraid to make mistakes; they are part of the learning process.
+
+## The Endless Possibilities
+
+Programming is more than just a technical skill; it's a powerful tool for creation and innovation. It empowers you to build solutions, automate processes, and bring ideas to life in the digital realm. Whether you aim to become a professional software developer or simply want to understand the technology shaping our world, learning to program opens up a universe of possibilities.
+"""
+</file>
+
+<file path="src/lib/server/blogPosts.ts">
+// src/lib/server/blogPosts.ts
+import fs from "node:fs";
+import path from "node:path";
+import toml from "toml";
+import { error } from "@sveltejs/kit";
+
+// Define the structure of your article data based on the TOML
+// Note: Your TOML uses [[title]], which creates an array. We'll assume
+// you want the first element of that array for the main post details.
+interface TomlArticleData {
+	title: {
+		name: string;
+		slug: string;
+		blurb: string;
+		tags: string[];
+		date: string; // Keep as string initially for sorting
+		image?: string; // Optional image
+		content: string;
+	}[]; // Array due to [[title]]
+}
+
+export interface BlogPost {
+	name: string;
+	slug: string;
+	blurb: string;
+	tags: string[];
+	date: Date; // Convert to Date object for easier use
+	image?: string;
+	content: string;
+	filePath: string; // Keep track of the original file
+}
+
+const articlesDir = path.resolve("src/articles"); // Path to your articles
+
+let allPosts: BlogPost[] | null = null; // Cache the posts
+/**
+ * Reads all .toml files from the articles directory, parses them,
+ * sorts them by date (newest first), caches the result, and returns the array.
+ * Subsequent calls return the cached, sorted array directly.
+ */
+export function getAllPosts(): BlogPost[] {
+	// If posts are already loaded and cached, return the cached version directly.
+	// It was sorted before being cached.
+	if (allPosts) {
+		return allPosts;
+	}
+
+	// If cache is empty, proceed to load, parse, and sort.
+	console.log("Cache empty. Loading and parsing posts..."); // Log cache miss
+	const posts: BlogPost[] = [];
+
+	try {
+		const files = fs.readdirSync(articlesDir);
+
+		for (const file of files) {
+			// console.log(`Processing file: ${file}`); // Keep if needed for debugging
+			if (path.extname(file).toLowerCase() === ".toml") {
+				const filePath = path.join(articlesDir, file);
+				try {
+					const fileContent = fs.readFileSync(filePath, "utf-8");
+					const parsedData = toml.parse(fileContent) as TomlArticleData;
+
+					// Validate the structure
+					if (
+						!parsedData.title ||
+						!Array.isArray(parsedData.title) ||
+						parsedData.title.length === 0
+					) {
+						console.warn(
+							`Skipping ${file}: Missing or invalid [[title]] array.`
+						);
+						continue;
+					}
+
+					const postData = parsedData.title[0];
+
+					// Validate required fields
+					if (
+						!postData.slug ||
+						!postData.name ||
+						!postData.date ||
+						!postData.content
+					) {
+						console.warn(
+							`Skipping ${file}: Missing required fields (slug, name, date, content) in title object.`
+						);
+						continue;
+					}
+
+					// Create the BlogPost object, converting date string to Date object
+					posts.push({
+						name: postData.name,
+						slug: postData.slug,
+						blurb: postData.blurb || "",
+						tags: postData.tags || [],
+						date: new Date(postData.date), // Convert string to Date here
+						image: postData.image,
+						content: postData.content,
+						filePath: filePath,
+					});
+				} catch (parseError: any) {
+					console.error(`Error parsing TOML file ${file}:`, parseError);
+				}
+			}
+		}
+	} catch (readDirError: any) {
+		if (readDirError.code === "ENOENT") {
+			console.warn(
+				`Articles directory not found at ${articlesDir}. No posts loaded.`
+			);
+			allPosts = []; // Cache empty array if dir not found
+			return allPosts;
+		}
+		console.error(
+			`Error reading articles directory ${articlesDir}:`,
+			readDirError
+		);
+		throw error(500, "Could not read blog articles directory");
+	}
+
+	// Sort the newly loaded posts by date (newest first) *before* caching.
+	// This uses the Date objects directly.
+	posts.sort((a, b) => b.date.getTime() - a.date.getTime());
+	console.log(`Loaded and sorted ${posts.length} posts.`);
+
+	// Cache the sorted result.
+	allPosts = posts;
+	return allPosts;
+}
+
+/**
+ * Finds and returns a single blog post by its slug.
+ * Uses the cached list generated by getAllPosts.
+ *
+ * @param slug The slug of the post to find.
+ * @returns The found BlogPost or null if not found.
+ */
+export function getPostBySlug(slug: string): BlogPost | null {
+	const posts = getAllPosts(); // Ensure posts are loaded and cached
+	const post = posts.find((p) => p.slug === slug);
+	//sort posts by date, newest first
+
+	return post || null;
+}
+</file>
+
+<file path="src/routes/blog/[slug]/+page.server.ts">
+// src/routes/blog/[slug]/+page.server.ts
+import { getPostBySlug, type BlogPost } from "$lib/server/blogPosts";
+import { error } from "@sveltejs/kit";
+
+export interface PageData {
+    post: BlogPost;
+}
+
+// The `params` object contains the dynamic route parameters (e.g., { slug: 'first-blog-post' })
+export function load({ params }): PageData {
+    const post = getPostBySlug(params.slug);
+
+    if (!post) {
+        // If the post isn't found by slug, throw a 404 error
+        throw error(404, "Blog post not found");
+    }
+
+    return {
+        post: post, // Pass the specific post data to the page
+    };
+}
+</file>
+
+<file path="src/routes/blog/[slug]/+page.svelte">
+<!-- src/routes/blog/[slug]/+page.svelte -->
+<script lang="ts">
+	import Header from '$lib/frontpage/Header.svelte';
+	import Footer from '$lib/frontpage/Footer.svelte';
+	import { Badge } from '$lib/components/ui/badge';
+	import { onMount } from 'svelte';
+	import type { PageData } from './+page.server.js';
+
+	// --- Markdown Rendering ---
+	import { marked } from 'marked'; // For parsing Markdown ONLY
+
+	// --- Theme Toggle State and Logic ---
+	let isDark = false;
+	let mounted = false;
+
+	onMount(() => {
+		mounted = true;
+		const storedTheme = localStorage.getItem('theme');
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		if (storedTheme) {
+			isDark = storedTheme === 'dark';
+		} else {
+			isDark = prefersDark;
+		}
+		applyTheme();
+	});
+
+	function toggleTheme() {
+		isDark = !isDark;
+		localStorage.setItem('theme', isDark ? 'dark' : 'light');
+		applyTheme();
+	}
+
+	function applyTheme() {
+		if (typeof document !== 'undefined') {
+			if (isDark) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		}
+	}
+	// --- End Theme Logic ---
+
+	let { data }: { data: PageData } = $props();
+	const post = data.post;
+
+	// Reactive statement to parse Markdown when post.content is available
+	// WARNING: No sanitization! Only use if content is 100% trusted.
+	let renderedHtml = $state(''); // Use $state for reactivity
+
+	$effect(() => {
+		if (post?.content) {
+			// Directly parse Markdown to HTML. Assumes content is safe.
+			renderedHtml = marked.parse(post.content) as string;
+		} else {
+			renderedHtml = ''; // Handle cases where content is initially null/undefined
+		}
+	});
+</script>
+
+<div class="flex min-h-screen flex-col bg-background text-foreground">
+	<Header {mounted} {isDark} {toggleTheme} />
+
+	<main class="flex-grow">
+		<article class="container mx-auto items-center p-8">
+			<header class="mb-8 border-b-2 border-border pb-6">
+				<h1 class="font-heading mb-3 text-4xl md:text-5xl">{post.name}</h1>
+				<p class="mb-4 text-lg text-foreground/80">
+					Published on: {post.date.toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					})}
+				</p>
+				{#if post.tags.length > 0}
+					<div class="flex flex-wrap gap-2">
+						{#each post.tags as tag}
+							<Badge variant="neutral">{tag}</Badge>
+						{/each}
+					</div>
+				{/if}
+				{#if post.image}
+					<img
+						src={post.image}
+						alt="Featured image for {post.name}"
+						class="shadow-shadow mt-6 w-full rounded border-2 border-border object-cover"
+						width="800"
+						height="400"
+					/>
+				{/if}
+			</header>
+
+			<!-- Render the UNSANITIZED HTML generated from Markdown -->
+			<!-- Add prose styles for better Markdown rendering -->
+			<div class="prose prose-neutral dark:prose-invert max-w-none">
+				{@html renderedHtml}
+			</div>
+		</article>
+	</main>
+
+	<Footer />
+</div>
+</file>
+
+<file path="src/routes/blog/+page.server.ts">
+// src/routes/blog/+page.server.ts
+import { getAllPosts, type BlogPost } from "$lib/server/blogPosts";
+
+export interface PageData {
+    posts: BlogPost[];
+}
+
+export function load(): PageData {
+    const posts = getAllPosts();
+    return {
+        posts: posts, // Pass the loaded posts to the page
+    };
+}
+</file>
 
 <file path="src/lib/components/ui/avatar/avatar-fallback.svelte">
 <script lang="ts">
@@ -873,12 +1240,14 @@ export {
 	const linkedinIcon = `
     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
   `;
+
+
+  
 </script>
 
 <footer class="w-full bg-background p-8">
-	<Separator thickness="h-2" class="mb-8" />
-	<!-- Use the black bar separator -->
-	<div class="mx-auto max-w-7xl">
+	<Separator class="mb-8" />
+	<div class="mx-auto">
 		<div class="mb-12 grid grid-cols-1 gap-8 md:grid-cols-3">
 			<!-- Quick Links -->
 			<div>
@@ -989,11 +1358,9 @@ export {
 </file>
 
 <file path="src/lib/frontpage/Header.svelte">
-<!-- src/lib/components/layout/Header.svelte -->
+<!-- src/lib/frontpage/Header.svelte -->
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	// Import Sheet components if you decide to add the mobile menu back later
-	// import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from '$lib/components/ui/sheet';
 
 	// Props passed down from the parent (+page.svelte or +layout.svelte)
 	let {
@@ -1022,16 +1389,17 @@ export {
 	const moonIcon = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
   `;
-	// const hamburgerIcon = `...`; // Keep if adding Sheet back
 </script>
 
-<nav class="fixed left-0 top-0 z-50 w-full px-4">
-	<div
-		class="bg-main shadow-shadow mx-auto mt-4 flex h-[80px] w-full max-w-screen-xl items-center justify-between rounded-[var(--radius-base)] border-2 border-border px-6 transition-transform duration-300 ease-in-out"
-	>
+<!-- Apply background, border, shadow, and vertical padding to the outer nav -->
+<nav class="bg-main shadow-shadow w-full border-2 border-border py-2">
+	<!-- Keep max-width and centering on the inner div -->
+	<!-- Remove mt-4, bg-main, border, shadow from this inner div -->
+	<!-- Adjust height and padding as needed -->
+	<div class="mx-auto flex h-[64px] w-full max-w-screen-xl items-center justify-between px-6">
 		<!-- Logo -->
 		<h1
-			class="text-main-foreground min-w-[70px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
+			class="text-main-foreground min-w-[50px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
 		>
 			<a href="#home" class="text-main-foreground block">
 				{@html logoPlaceholder}
@@ -1094,18 +1462,6 @@ export {
 				<span class="sr-only">Toggle theme</span>
 			</Button>
 			<!-- Mobile Menu Trigger (Sheet) Removed -->
-			<!-- If adding back:
-            <Sheet>
-                <SheetTrigger asChild let:builder>
-                    <Button variant="neutral" size="icon" builders={[builder]} class="transform transition-transform hover:-rotate-3" aria-label="Open menu">
-                        {@html hamburgerIcon}
-                    </Button>
-                </SheetTrigger>
-                <SheetContent side="right" class="w-[300px] bg-main text-main-foreground">
-                    ... Sheet Content ...
-                </SheetContent>
-            </Sheet>
-            -->
 		</div>
 	</div>
 </nav>
@@ -1124,6 +1480,268 @@ export function cn(...inputs: ClassValue[]) {
 }
 </file>
 
+<file path="src/routes/blog/+page.svelte">
+<!-- src/routes/blog/+page.svelte -->
+<script lang="ts">
+	// Import the shared Header and Footer
+	import Header from '$lib/frontpage/Header.svelte';
+	import Footer from '$lib/frontpage/Footer.svelte';
+	import { onMount } from 'svelte';
+	import type { PageData } from './+page.server.js'; // Import the type for loaded data
+
+	// --- Theme Toggle State and Logic ---
+	// NOTE: Ideally, this logic should live in your root +layout.svelte
+	// so it applies globally and doesn't need repeating on each page.
+	// We're keeping it here for now to match the previous structure.
+	let isDark = false;
+	let mounted = false;
+
+	onMount(() => {
+		mounted = true;
+		const storedTheme = localStorage.getItem('theme');
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		if (storedTheme) {
+			isDark = storedTheme === 'dark';
+		} else {
+			isDark = prefersDark;
+		}
+		applyTheme();
+	});
+
+	function toggleTheme() {
+		isDark = !isDark;
+		localStorage.setItem('theme', isDark ? 'dark' : 'light');
+		applyTheme();
+	}
+
+	function applyTheme() {
+		if (typeof document !== 'undefined') {
+			if (isDark) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		}
+	}
+	// --- End Theme Logic ---
+
+	// Get the loaded posts from the page data provided by +page.server.ts
+	let { data }: { data: PageData } = $props();
+	console.log(data);
+</script>
+
+<div class="flex min-h-screen flex-col bg-background text-foreground">
+	<!-- Render Shared Header Component -->
+	<Header {mounted} {isDark} {toggleTheme} />
+
+	<!-- Main Blog Content Area -->
+	<main class="flex-grow">
+		<div class="container mx-auto p-8">
+			<h1 class="font-heading mb-6 border-b-2 border-border pb-4 text-4xl">Blog Posts</h1>
+
+			<!-- Check if there are posts loaded -->
+			{#if data.posts && data.posts.length > 0}
+				<div class="space-y-8">
+					<!-- Iterate over the loaded posts -->
+					{#each data.posts as post}
+						<!-- Apply the exact same classes as the original placeholder article -->
+						<article class="shadow-shadow rounded-[var(--radius-base)] border-2 border-border p-6">
+							<!-- Post Title - styled like original h2 -->
+							<h2 class="font-heading mb-2 text-2xl">{post.name}</h2>
+							<!-- Publication Date - styled like original date p -->
+							<p class="mb-4 text-sm text-foreground/80">
+								Published on: {post.date.toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'long',
+									day: 'numeric'
+								})}
+							</p>
+							<!-- Post Blurb/Excerpt - styled like original excerpt p -->
+							{#if post.blurb}
+								<p class="font-base mb-4">{post.blurb}</p>
+							{/if}
+							<!-- Read More Link - styled like original link -->
+							<a href="/blog/{post.slug}" class="text-main font-bold hover:underline">
+								Read More
+							</a>
+						</article>
+					{/each}
+				</div>
+			{:else}
+				<!-- Message if no posts are found - styled like original -->
+				<p class="font-base text-center italic">More posts coming soon!</p>
+				<!-- Or use: <p class="font-base text-center italic">No blog posts found yet.</p> -->
+			{/if}
+		</div>
+	</main>
+
+	<!-- Render Shared Footer Component -->
+	<Footer />
+</div>
+</file>
+
+<file path="src/app.html">
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>
+</file>
+
+<file path=".npmrc">
+engine-strict=true
+</file>
+
+<file path="components.json">
+{
+	"$schema": "https://next.shadcn-svelte.com/schema.json",
+	"style": "default",
+	"tailwind": {
+		"config": "tailwind.config.ts",
+		"css": "src/app.css",
+		"baseColor": "slate"
+	},
+	"aliases": {
+		"components": "$lib/components",
+		"utils": "$lib/utils",
+		"ui": "$lib/components/ui",
+		"hooks": "$lib/hooks"
+	},
+	"typescript": true,
+	"registry": "https://next.shadcn-svelte.com/registry"
+}
+</file>
+
+<file path="src/app.d.ts">
+// See https://svelte.dev/docs/kit/types#app.d.ts
+// for information about these interfaces
+declare global {
+	namespace App {
+		// interface Error {}
+		// interface Locals {}
+		// interface PageData {}
+		// interface PageState {}
+		// interface Platform {}
+	}
+}
+
+export {};
+</file>
+
+<file path=".gitignore">
+node_modules
+
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+</file>
+
+<file path=".prettierrc">
+{
+	"useTabs": true,
+	"singleQuote": true,
+	"trailingComma": "none",
+	"printWidth": 100,
+	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
+	"overrides": [
+		{
+			"files": "*.svelte",
+			"options": {
+				"parser": "svelte"
+			}
+		}
+	]
+}
+</file>
+
+<file path="README.md">
+# sv
+
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+
+## Creating a project
+
+If you're seeing this, you've probably already done this step. Congrats!
+
+```bash
+# create a new project in the current directory
+npx sv create
+
+# create a new project in my-app
+npx sv create my-app
+```
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+</file>
+
+<file path="tsconfig.json">
+{
+	"extends": "./.svelte-kit/tsconfig.json",
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"moduleResolution": "bundler"
+	}
+	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
+	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
+	//
+	// If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes
+	// from the referenced tsconfig.json - TypeScript does not merge them in
+}
+</file>
+
 <file path="src/routes/+layout.svelte">
 <script lang="ts">
 	import '../app.css';
@@ -1136,7 +1754,6 @@ export function cn(...inputs: ClassValue[]) {
 <file path="src/routes/+page.svelte">
 <!-- src/routes/+page.svelte -->
 <script lang="ts">
-	// Keep only imports needed for this page's content or logic
 	import Header from '$lib/frontpage/Header.svelte';
 	import Footer from '$lib/frontpage/Footer.svelte';
 	import { onMount } from 'svelte';
@@ -1179,11 +1796,8 @@ export function cn(...inputs: ClassValue[]) {
 	<!-- Render Header Component -->
 	<Header {mounted} {isDark} {toggleTheme} />
 
-	<!-- Main Content Area -->
-	<!-- Main Content Area -->
-	<main class="flex-grow pt-28">
-		<!-- <--- THIS PADDING IS THE SOLUTION -->
-		<!-- Added pt-28 to account for fixed header height + margin -->
+	<!-- Main Content Area - REMOVED pt-* class -->
+	<main class="flex-grow">
 		<div class="container mx-auto p-8">
 			<h1 class="font-heading mb-4 text-3xl">Main Content Area</h1>
 			<p class="font-base">This is where the main page content would go.</p>
@@ -1209,8 +1823,11 @@ export function cn(...inputs: ClassValue[]) {
 </file>
 
 <file path="src/app.css">
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 /* src/app.css */
-@import "tw-animate-css";
+@import 'tw-animate-css';
 /* Standard Tailwind directives */
 @tailwind base;
 @tailwind components;
@@ -1223,134 +1840,133 @@ export function cn(...inputs: ClassValue[]) {
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
+	/* Your :root variables using oklch */
+	:root {
+		/* Your Core Theme Variables */
+		--background: oklch(94.11% 0.036556 308.0303);
+		--secondary-background: oklch(100% 0 0);
+		--foreground: oklch(0% 0 0);
+		--main-foreground: oklch(0% 0 0);
+		--main: oklch(71.9% 0.198 310.03);
+		--border: oklch(0% 0 0);
+		--ring: oklch(0% 0 0);
+		/* Note: Original shadcn uses this for focus rings */
+		--overlay: oklch(0% 0 0 / 0.8);
+		--shadow: 2px 2px 0px 0px var(--border);
 
-  /* Your :root variables using oklch */
-  :root {
-    /* Your Core Theme Variables */
-    --background: oklch(94.11% 0.036556 308.0303);
-    --secondary-background: oklch(100% 0 0);
-    --foreground: oklch(0% 0 0);
-    --main-foreground: oklch(0% 0 0);
-    --main: oklch(71.9% 0.198 310.03);
-    --border: oklch(0% 0 0);
-    --ring: oklch(0% 0 0);
-    /* Note: Original shadcn uses this for focus rings */
-    --overlay: oklch(0% 0 0 / 0.8);
-    --shadow: 2px 2px 0px 0px var(--border);
+		/* Original shadcn variables (map your vars to these or update tailwind.config.ts) */
+		/* --foreground: 222.2 84% 4.9%; */
+		/* --muted: 210 40% 96.1%; */
+		/* --muted-foreground: 215.4 16.3% 46.9%; */
+		/* --popover: 0 0% 100%; */
+		/* --popover-foreground: 222.2 84% 4.9%; */
+		/* --card: 0 0% 100%; */
+		/* --card-foreground: 222.2 84% 4.9%; */
+		/* --border: 214.3 31.8% 91.4%; */
+		/* Replaced by your --border */
+		/* --input: 214.3 31.8% 91.4%; */
+		/* Often same as border */
+		/* --primary: 222.2 47.4% 11.2%; */
+		/* Map var(--main) here? */
+		/* --primary-foreground: 210 40% 98%; */
+		/* Map var(--main-foreground) here? */
+		/* --secondary: 210 40% 96.1%; */
+		/* Map var(--secondary-background) here? */
+		/* --secondary-foreground: 222.2 47.4% 11.2%; */
+		/* --accent: 210 40% 96.1%; */
+		/* --accent-foreground: 222.2 47.4% 11.2%; */
+		/* --destructive: 0 72.2% 50.6%; */
+		/* --destructive-foreground: 210 40% 98%; */
+		/* --ring: 222.2 84% 4.9%; */
+		/* Replaced by your --ring */
+		--radius: 10px;
+		/* Using --radius-base from @theme, adjust if needed */
+		/* --sidebar-background: 0 0% 98%; */
+		/* --sidebar-foreground: 240 5.3% 26.1%; */
+		/* ... other sidebar vars ... */
+	}
 
-    /* Original shadcn variables (map your vars to these or update tailwind.config.ts) */
-    /* --foreground: 222.2 84% 4.9%; */
-    /* --muted: 210 40% 96.1%; */
-    /* --muted-foreground: 215.4 16.3% 46.9%; */
-    /* --popover: 0 0% 100%; */
-    /* --popover-foreground: 222.2 84% 4.9%; */
-    /* --card: 0 0% 100%; */
-    /* --card-foreground: 222.2 84% 4.9%; */
-    /* --border: 214.3 31.8% 91.4%; */
-    /* Replaced by your --border */
-    /* --input: 214.3 31.8% 91.4%; */
-    /* Often same as border */
-    /* --primary: 222.2 47.4% 11.2%; */
-    /* Map var(--main) here? */
-    /* --primary-foreground: 210 40% 98%; */
-    /* Map var(--main-foreground) here? */
-    /* --secondary: 210 40% 96.1%; */
-    /* Map var(--secondary-background) here? */
-    /* --secondary-foreground: 222.2 47.4% 11.2%; */
-    /* --accent: 210 40% 96.1%; */
-    /* --accent-foreground: 222.2 47.4% 11.2%; */
-    /* --destructive: 0 72.2% 50.6%; */
-    /* --destructive-foreground: 210 40% 98%; */
-    /* --ring: 222.2 84% 4.9%; */
-    /* Replaced by your --ring */
-    --radius: 10px;
-    /* Using --radius-base from @theme, adjust if needed */
-    /* --sidebar-background: 0 0% 98%; */
-    /* --sidebar-foreground: 240 5.3% 26.1%; */
-    /* ... other sidebar vars ... */
-  }
+	/* Your .dark variables using oklch */
+	.dark {
+		/* Your Core Dark Theme Variables */
+		--background: oklch(29.68% 0.0791 315.62);
+		--secondary-background: oklch(23.93% 0 0);
+		--foreground: oklch(92.49% 0 0);
+		--main-foreground: oklch(0% 0 0);
+		--main: oklch(67.34% 0.2314 309.13);
+		--border: oklch(0% 0 0);
+		--ring: oklch(100% 0 0);
+		/* Note: Original shadcn uses this for focus rings */
+		--shadow: 2px 2px 0px 0px var(--border);
 
-  /* Your .dark variables using oklch */
-  .dark {
-    /* Your Core Dark Theme Variables */
-    --background: oklch(29.68% 0.0791 315.62);
-    --secondary-background: oklch(23.93% 0 0);
-    --foreground: oklch(92.49% 0 0);
-    --main-foreground: oklch(0% 0 0);
-    --main: oklch(67.34% 0.2314 309.13);
-    --border: oklch(0% 0 0);
-    --ring: oklch(100% 0 0);
-    /* Note: Original shadcn uses this for focus rings */
-    --shadow: 2px 2px 0px 0px var(--border);
+		/* Original shadcn dark variables (map your vars or update tailwind.config.ts) */
+		/* --foreground: 210 40% 98%; */
+		/* --muted: 217.2 32.6% 17.5%; */
+		/* --muted-foreground: 215 20.2% 65.1%; */
+		/* --popover: 222.2 84% 4.9%; */
+		/* --popover-foreground: 210 40% 98%; */
+		/* --card: 222.2 84% 4.9%; */
+		/* --card-foreground: 210 40% 98%; */
+		/* --border: 217.2 32.6% 17.5%; */
+		/* Replaced by your --border */
+		/* --input: 217.2 32.6% 17.5%; */
+		/* Often same as border */
+		/* --primary: 210 40% 98%; */
+		/* Map var(--main) here? */
+		/* --primary-foreground: 222.2 47.4% 11.2%; */
+		/* Map var(--main-foreground) here? */
+		/* --secondary: 217.2 32.6% 17.5%; */
+		/* Map var(--secondary-background) here? */
+		/* --secondary-foreground: 210 40% 98%; */
+		/* --accent: 217.2 32.6% 17.5%; */
+		/* --accent-foreground: 210 40% 98%; */
+		/* --destructive: 0 62.8% 30.6%; */
+		/* --destructive-foreground: 210 40% 98%; */
+		/* --ring: 212.7 26.8% 83.9%; */
+		/* Replaced by your --ring */
+		/* --sidebar-background: 240 5.9% 10%; */
+		/* --sidebar-foreground: 240 4.8% 95.9%; */
+		/* ... other dark sidebar vars ... */
+	}
 
-    /* Original shadcn dark variables (map your vars or update tailwind.config.ts) */
-    /* --foreground: 210 40% 98%; */
-    /* --muted: 217.2 32.6% 17.5%; */
-    /* --muted-foreground: 215 20.2% 65.1%; */
-    /* --popover: 222.2 84% 4.9%; */
-    /* --popover-foreground: 210 40% 98%; */
-    /* --card: 222.2 84% 4.9%; */
-    /* --card-foreground: 210 40% 98%; */
-    /* --border: 217.2 32.6% 17.5%; */
-    /* Replaced by your --border */
-    /* --input: 217.2 32.6% 17.5%; */
-    /* Often same as border */
-    /* --primary: 210 40% 98%; */
-    /* Map var(--main) here? */
-    /* --primary-foreground: 222.2 47.4% 11.2%; */
-    /* Map var(--main-foreground) here? */
-    /* --secondary: 217.2 32.6% 17.5%; */
-    /* Map var(--secondary-background) here? */
-    /* --secondary-foreground: 210 40% 98%; */
-    /* --accent: 217.2 32.6% 17.5%; */
-    /* --accent-foreground: 210 40% 98%; */
-    /* --destructive: 0 62.8% 30.6%; */
-    /* --destructive-foreground: 210 40% 98%; */
-    /* --ring: 212.7 26.8% 83.9%; */
-    /* Replaced by your --ring */
-    /* --sidebar-background: 240 5.9% 10%; */
-    /* --sidebar-foreground: 240 4.8% 95.9%; */
-    /* ... other dark sidebar vars ... */
-  }
+	/* Your @theme block */
+	/* Ensure required PostCSS plugins are configured for this */
+	@theme inline {
+		--color-main: var(--main);
+		--color-background: var(--background);
+		--color-secondary-background: var(--secondary-background);
+		--color-foreground: var(--foreground);
+		--color-main-foreground: var(--main-foreground);
+		--color-border: var(--border);
+		--color-overlay: var(--overlay);
+		--color-ring: var(--ring);
 
-  /* Your @theme block */
-  /* Ensure required PostCSS plugins are configured for this */
-  @theme inline {
-    --color-main: var(--main);
-    --color-background: var(--background);
-    --color-secondary-background: var(--secondary-background);
-    --color-foreground: var(--foreground);
-    --color-main-foreground: var(--main-foreground);
-    --color-border: var(--border);
-    --color-overlay: var(--overlay);
-    --color-ring: var(--ring);
+		--spacing-boxShadowX: 2px;
+		--spacing-boxShadowY: 2px;
+		--spacing-reverseBoxShadowX: -2px;
+		--spacing-reverseBoxShadowY: -2px;
+		--radius-base: 10px;
+		/* This sets the base radius */
+		--shadow-shadow: var(--shadow);
+		--font-weight-base: 500;
+		--font-weight-heading: 700;
+	}
 
-    --spacing-boxShadowX: 2px;
-    --spacing-boxShadowY: 2px;
-    --spacing-reverseBoxShadowX: -2px;
-    --spacing-reverseBoxShadowY: -2px;
-    --radius-base: 10px;
-    /* This sets the base radius */
-    --shadow-shadow: var(--shadow);
-    --font-weight-base: 500;
-    --font-weight-heading: 700;
-  }
+	/* Base styles from original file - these will now use your variables */
+	* {
+		@apply border-border;
+		/* Uses your --border */
+	}
 
-  /* Base styles from original file - these will now use your variables */
-  * {
-    @apply border-border;
-    /* Uses your --border */
-  }
+	body {
+		@apply bg-background text-foreground;
+		/* Uses your --background & --foreground */
+		/* You might want to apply base font weight here */
+		/* font-weight: var(--font-weight-base); */
+	}
 
-  body {
-    @apply bg-background text-foreground;
-    /* Uses your --background & --foreground */
-    /* You might want to apply base font weight here */
-    /* font-weight: var(--font-weight-base); */
-  }
-
-  /* Apply base heading font weight (example) */
-  /* h1, h2, h3, h4, h5, h6 {
+	/* Apply base heading font weight (example) */
+	/* h1, h2, h3, h4, h5, h6 {
     font-weight: var(--font-weight-heading);
   } */
 }
@@ -1365,67 +1981,6 @@ export function cn(...inputs: ClassValue[]) {
 */
 </file>
 
-<file path="src/app.d.ts">
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
-declare global {
-	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface PageState {}
-		// interface Platform {}
-	}
-}
-
-export {};
-</file>
-
-<file path="src/app.html">
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
-	</body>
-</html>
-</file>
-
-<file path=".gitignore">
-node_modules
-
-# Output
-.output
-.vercel
-.netlify
-.wrangler
-/.svelte-kit
-/build
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Env
-.env
-.env.*
-!.env.example
-!.env.test
-
-# Vite
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-</file>
-
-<file path=".npmrc">
-engine-strict=true
-</file>
-
 <file path=".prettierignore">
 # Package Managers
 package-lock.json
@@ -1433,42 +1988,123 @@ pnpm-lock.yaml
 yarn.lock
 </file>
 
-<file path=".prettierrc">
-{
-	"useTabs": true,
-	"singleQuote": true,
-	"trailingComma": "none",
-	"printWidth": 100,
-	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
-	"overrides": [
-		{
-			"files": "*.svelte",
-			"options": {
-				"parser": "svelte"
-			}
-		}
-	]
-}
+<file path="postcss.config.js">
+export default {
+	plugins: {
+		tailwindcss: {},
+		autoprefixer: {}
+	}
+};
 </file>
 
-<file path="components.json">
-{
-	"$schema": "https://next.shadcn-svelte.com/schema.json",
-	"style": "default",
-	"tailwind": {
-		"config": "tailwind.config.ts",
-		"css": "src/app.css",
-		"baseColor": "slate"
+<file path="tailwind.config.ts">
+import containerQueries from '@tailwindcss/container-queries';
+import typography from '@tailwindcss/typography';
+import { fontFamily } from 'tailwindcss/defaultTheme';
+import type { Config } from 'tailwindcss';
+import tailwindcssAnimate from 'tailwindcss-animate';
+
+const config: Config = {
+	darkMode: ['class'],
+	content: ['./src/**/*.{html,js,svelte,ts}'],
+	safelist: ['dark'],
+	theme: {
+		container: {
+			center: true,
+			padding: '2rem',
+			screens: {
+				'2xl': '1400px'
+			}
+		},
+		extend: {
+			colors: {
+				border: 'hsl(var(--border) / <alpha-value>)',
+				input: 'hsl(var(--input) / <alpha-value>)',
+				ring: 'hsl(var(--ring) / <alpha-value>)',
+				background: 'hsl(var(--background) / <alpha-value>)',
+				foreground: 'hsl(var(--foreground) / <alpha-value>)',
+				primary: {
+					DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
+					foreground: 'hsl(var(--primary-foreground) / <alpha-value>)'
+				},
+				secondary: {
+					DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
+					foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)'
+				},
+				destructive: {
+					DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
+					foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)'
+				},
+				muted: {
+					DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
+					foreground: 'hsl(var(--muted-foreground) / <alpha-value>)'
+				},
+				accent: {
+					DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
+					foreground: 'hsl(var(--accent-foreground) / <alpha-value>)'
+				},
+				popover: {
+					DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
+					foreground: 'hsl(var(--popover-foreground) / <alpha-value>)'
+				},
+				card: {
+					DEFAULT: 'hsl(var(--card) / <alpha-value>)',
+					foreground: 'hsl(var(--card-foreground) / <alpha-value>)'
+				},
+				sidebar: {
+					DEFAULT: 'hsl(var(--sidebar-background))',
+					foreground: 'hsl(var(--sidebar-foreground))',
+					primary: 'hsl(var(--sidebar-primary))',
+					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+					accent: 'hsl(var(--sidebar-accent))',
+					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+					border: 'hsl(var(--sidebar-border))',
+					ring: 'hsl(var(--sidebar-ring))'
+				}
+			},
+			borderRadius: {
+				xl: 'calc(var(--radius) + 4px)',
+				lg: 'var(--radius)',
+				md: 'calc(var(--radius) - 2px)',
+				sm: 'calc(var(--radius) - 4px)'
+			},
+			fontFamily: {
+				sans: [...fontFamily.sans]
+			},
+			keyframes: {
+				'accordion-down': {
+					from: { height: '0' },
+					to: { height: 'var(--bits-accordion-content-height)' }
+				},
+				'accordion-up': {
+					from: { height: 'var(--bits-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'caret-blink': {
+					'0%,70%,100%': { opacity: '1' },
+					'20%,50%': { opacity: '0' }
+				}
+			},
+			animation: {
+				'accordion-down': 'accordion-down 0.2s ease-out',
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'caret-blink': 'caret-blink 1.25s ease-out infinite'
+			}
+		}
 	},
-	"aliases": {
-		"components": "$lib/components",
-		"utils": "$lib/utils",
-		"ui": "$lib/components/ui",
-		"hooks": "$lib/hooks"
-	},
-	"typescript": true,
-	"registry": "https://next.shadcn-svelte.com/registry"
-}
+	plugins: [tailwindcssAnimate, typography, containerQueries]
+};
+
+export default config;
+</file>
+
+<file path="vite.config.ts">
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit()]
+});
 </file>
 
 <file path="eslint.config.js">
@@ -1556,59 +2192,11 @@ export default ts.config(
 	},
 	"packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
 	"dependencies": {
+		"marked": "^15.0.8",
+		"toml": "^3.0.0",
 		"tw-animate-css": "^1.2.5"
 	}
 }
-</file>
-
-<file path="postcss.config.js">
-export default {
-	plugins: {
-		tailwindcss: {},
-		autoprefixer: {}
-	}
-};
-</file>
-
-<file path="README.md">
-# sv
-
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
 </file>
 
 <file path="svelte.config.js">
@@ -1630,136 +2218,6 @@ const config = {
 };
 
 export default config;
-</file>
-
-<file path="tailwind.config.ts">
-import { fontFamily } from "tailwindcss/defaultTheme";
-import type { Config } from "tailwindcss";
-import tailwindcssAnimate from "tailwindcss-animate";
-
-const config: Config = {
-	darkMode: ["class"],
-	content: ["./src/**/*.{html,js,svelte,ts}"],
-	safelist: ["dark"],
-	theme: {
-		container: {
-			center: true,
-			padding: "2rem",
-			screens: {
-				"2xl": "1400px"
-			}
-		},
-		extend: {
-			colors: {
-				border: "hsl(var(--border) / <alpha-value>)",
-				input: "hsl(var(--input) / <alpha-value>)",
-				ring: "hsl(var(--ring) / <alpha-value>)",
-				background: "hsl(var(--background) / <alpha-value>)",
-				foreground: "hsl(var(--foreground) / <alpha-value>)",
-				primary: {
-					DEFAULT: "hsl(var(--primary) / <alpha-value>)",
-					foreground: "hsl(var(--primary-foreground) / <alpha-value>)"
-				},
-				secondary: {
-					DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
-					foreground: "hsl(var(--secondary-foreground) / <alpha-value>)"
-				},
-				destructive: {
-					DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
-					foreground: "hsl(var(--destructive-foreground) / <alpha-value>)"
-				},
-				muted: {
-					DEFAULT: "hsl(var(--muted) / <alpha-value>)",
-					foreground: "hsl(var(--muted-foreground) / <alpha-value>)"
-				},
-				accent: {
-					DEFAULT: "hsl(var(--accent) / <alpha-value>)",
-					foreground: "hsl(var(--accent-foreground) / <alpha-value>)"
-				},
-				popover: {
-					DEFAULT: "hsl(var(--popover) / <alpha-value>)",
-					foreground: "hsl(var(--popover-foreground) / <alpha-value>)"
-				},
-				card: {
-					DEFAULT: "hsl(var(--card) / <alpha-value>)",
-					foreground: "hsl(var(--card-foreground) / <alpha-value>)"
-				},
-				sidebar: {
-					DEFAULT: "hsl(var(--sidebar-background))",
-					foreground: "hsl(var(--sidebar-foreground))",
-					primary: "hsl(var(--sidebar-primary))",
-					"primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-					accent: "hsl(var(--sidebar-accent))",
-					"accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-					border: "hsl(var(--sidebar-border))",
-					ring: "hsl(var(--sidebar-ring))",
-        		},
-			},
-			borderRadius: {
-				xl: "calc(var(--radius) + 4px)",
-				lg: "var(--radius)",
-				md: "calc(var(--radius) - 2px)",
-				sm: "calc(var(--radius) - 4px)"
-			},
-			fontFamily: {
-				sans: [...fontFamily.sans]
-			},
-			keyframes: {
-				"accordion-down": {
-					from: { height: "0" },
-					to: { height: "var(--bits-accordion-content-height)" },
-				},
-				"accordion-up": {
-					from: { height: "var(--bits-accordion-content-height)" },
-					to: { height: "0" },
-				},
-				"caret-blink": {
-					"0%,70%,100%": { opacity: "1" },
-					"20%,50%": { opacity: "0" },
-				},
-			},
-			animation: {
-        		"accordion-down": "accordion-down 0.2s ease-out",
-        		"accordion-up": "accordion-up 0.2s ease-out",
-       			"caret-blink": "caret-blink 1.25s ease-out infinite",
-      		},
-		},
-	},
-	plugins: [tailwindcssAnimate],
-};
-
-export default config;
-</file>
-
-<file path="tsconfig.json">
-{
-	"extends": "./.svelte-kit/tsconfig.json",
-	"compilerOptions": {
-		"allowJs": true,
-		"checkJs": true,
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"sourceMap": true,
-		"strict": true,
-		"moduleResolution": "bundler"
-	}
-	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
-	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
-	//
-	// If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes
-	// from the referenced tsconfig.json - TypeScript does not merge them in
-}
-</file>
-
-<file path="vite.config.ts">
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-	plugins: [sveltekit()]
-});
 </file>
 
 </files>

@@ -1,0 +1,9 @@
+[[title]]
+name = "First Blog Post"
+slug = "first-blog-post"
+blurb = "A brief description of the article."
+tags = ["blog", "first"]
+date = "2024-10-05"
+content = """
+This is a short excerpt of the first blog post. Lorem ipsum dolor sit amet, consectetur adipiscing elit...
+"""

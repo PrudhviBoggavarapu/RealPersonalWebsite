@@ -41,7 +41,7 @@
 		<h1
 			class="text-main-foreground min-w-[50px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
 		>
-			<a href="#home" class="text-main-foreground block">
+			<a href="/" class="text-main-foreground block">
 				{@html logoPlaceholder}
 			</a>
 		</h1>
@@ -49,17 +49,17 @@
 		<!-- Desktop Navigation -->
 		<div class="font-base hidden items-center space-x-6 text-base md:flex lg:text-lg">
 			<a
-				href="#home"
+				href="/"
 				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
 				>Home</a
 			>
 			<a
-				href="#journey"
+				href="/"
 				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
 				>Journey</a
 			>
 			<a
-				href="#projects"
+				href="/"
 				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
 				>Projects</a
 			>
