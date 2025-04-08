@@ -1,0 +1,1765 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+<additional_info>
+
+</additional_info>
+
+</file_summary>
+
+<directory_structure>
+src/
+  lib/
+    components/
+      ui/
+        avatar/
+          avatar-fallback.svelte
+          avatar-image.svelte
+          avatar.svelte
+          index.ts
+        badge/
+          badge.svelte
+          index.ts
+        button/
+          button.svelte
+          index.ts
+        card/
+          card-action.svelte
+          card-content.svelte
+          card-description.svelte
+          card-footer.svelte
+          card-header.svelte
+          card-title.svelte
+          card.svelte
+          index.ts
+        separator/
+          index.ts
+          separator.svelte
+        sheet/
+          index.ts
+          sheet-content.svelte
+          sheet-description.svelte
+          sheet-footer.svelte
+          sheet-header.svelte
+          sheet-overlay.svelte
+          sheet-title.svelte
+    frontpage/
+      Footer.svelte
+      Header.svelte
+    index.ts
+    utils.ts
+  routes/
+    +layout.svelte
+    +page.svelte
+  app.css
+  app.d.ts
+  app.html
+.gitignore
+.npmrc
+.prettierignore
+.prettierrc
+components.json
+eslint.config.js
+package.json
+postcss.config.js
+README.md
+svelte.config.js
+tailwind.config.ts
+tsconfig.json
+vite.config.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="src/lib/components/ui/avatar/avatar-fallback.svelte">
+<script lang="ts">
+	import { Avatar as AvatarPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: AvatarPrimitive.FallbackProps = $props();
+</script>
+
+<AvatarPrimitive.Fallback
+	bind:ref
+	class={cn("bg-muted flex size-full items-center justify-center", className)}
+	{...restProps}
+/>
+</file>
+
+<file path="src/lib/components/ui/avatar/avatar-image.svelte">
+<script lang="ts">
+	import { Avatar as AvatarPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: AvatarPrimitive.ImageProps = $props();
+</script>
+
+<AvatarPrimitive.Image bind:ref class={cn("aspect-square size-full", className)} {...restProps} />
+</file>
+
+<file path="src/lib/components/ui/avatar/avatar.svelte">
+<script lang="ts">
+	import { Avatar as AvatarPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: AvatarPrimitive.RootProps = $props();
+</script>
+
+<AvatarPrimitive.Root
+	bind:ref
+	class={cn("relative flex size-10 shrink-0 overflow-hidden rounded-full", className)}
+	{...restProps}
+/>
+</file>
+
+<file path="src/lib/components/ui/avatar/index.ts">
+import Root from "./avatar.svelte";
+import Image from "./avatar-image.svelte";
+import Fallback from "./avatar-fallback.svelte";
+
+export {
+	Root,
+	Image,
+	Fallback,
+	//
+	Root as Avatar,
+	Image as AvatarImage,
+	Fallback as AvatarFallback,
+};
+</file>
+
+<file path="src/lib/components/ui/badge/badge.svelte">
+<script lang="ts" module>
+	import { type VariantProps, tv } from 'tailwind-variants';
+
+	// --- MODIFICATIONS START HERE ---
+	export const badgeVariants = tv({
+		// Updated base styles using CSS variables
+		base: 'inline-flex items-center justify-center rounded-[var(--radius-base)] border-2 border-[var(--border)] px-2.5 py-0.5 text-xs font-[var(--font-weight-base)] w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-[var(--ring)] focus-visible:ring-[var(--ring)]/50 focus-visible:ring-[3px] overflow-hidden',
+		variants: {
+			// Replaced variants with the new ones, using CSS variables
+			variant: {
+				default: 'bg-[var(--main)] text-[var(--main-foreground)]',
+				neutral: 'bg-[var(--secondary-background)] text-[var(--foreground)]'
+				// Original variants removed, add back if needed
+			}
+		},
+		// Kept default variant
+		defaultVariants: {
+			variant: 'default'
+		}
+	});
+	// --- MODIFICATIONS END HERE ---
+
+	// Type automatically adapts to the new variants
+	export type BadgeVariant = VariantProps<typeof badgeVariants>['variant'];
+</script>
+
+<script lang="ts">
+	// No changes needed for these imports
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAnchorAttributes } from 'svelte/elements';
+	import { cn } from '$lib/utils.js';
+	// REMOVED the conflicting import: import type { BadgeVariant } from "./badge.svelte";
+
+	// Props definition remains largely the same
+	// BadgeVariant type is directly available from the module script above
+	let {
+		ref = $bindable(null),
+		href,
+		class: className,
+		variant = 'default', // Default variant is now 'default' from new variants
+		children,
+		...restProps
+	}: WithElementRef<HTMLAnchorAttributes> & {
+		// Note: Original was Anchor, assuming span/a toggle is desired
+		variant?: BadgeVariant;
+	} = $props();
+</script>
+
+<!-- No changes in the template -->
+<svelte:element
+	this={href ? 'a' : 'span'}
+	bind:this={ref}
+	{href}
+	class={cn(badgeVariants({ variant }), className)}
+	{...restProps}
+>
+	{@render children?.()}
+</svelte:element>
+
+<!--
+  Reminder: This component now relies on CSS variables defined in your global CSS (src/app.css),
+  such as:
+  --radius-base, --border, --font-weight-base, --ring, --main, --main-foreground,
+  --secondary-background, --foreground
+
+  Ensure these are correctly defined for the styles to apply.
+-->
+</file>
+
+<file path="src/lib/components/ui/badge/index.ts">
+export { default as Badge } from "./badge.svelte";
+export { badgeVariants, type BadgeVariant } from "./badge.svelte";
+</file>
+
+<file path="src/lib/components/ui/button/button.svelte">
+<script lang="ts" module>
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
+	import { type VariantProps, tv } from 'tailwind-variants';
+
+	// --- MODIFICATIONS START HERE ---
+	export const buttonVariants = tv({
+		// Updated base styles using CSS variables where appropriate
+		base: 'inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] text-sm font-[var(--font-weight-base)] ring-offset-white transition-all gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+		variants: {
+			// Replaced variants with the new ones, using CSS variables
+			variant: {
+				default:
+					'text-[var(--main-foreground)] bg-[var(--main)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+				noShadow: 'text-[var(--main-foreground)] bg-[var(--main)] border-2 border-[var(--border)]',
+				neutral:
+					'bg-[var(--secondary-background)] text-[var(--foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+				reverse:
+					'text-[var(--main-foreground)] bg-[var(--main)] border-2 border-[var(--border)] hover:translate-x-[var(--spacing-reverseBoxShadowX)] hover:translate-y-[var(--spacing-reverseBoxShadowY)] hover:shadow-[var(--shadow-shadow)]'
+				// Original variants removed, add back if needed
+			},
+			// Kept original sizes, updated icon size slightly
+			size: {
+				default: 'h-10 px-4 py-2',
+				sm: 'h-9 rounded-md px-3', // Kept original Svelte sm style
+				lg: 'h-11 rounded-md px-8',
+				icon: 'size-10' // Updated to use size-* utility
+			}
+		},
+		// Kept default variants
+		defaultVariants: {
+			variant: 'default',
+			size: 'default'
+		}
+	});
+	// --- MODIFICATIONS END HERE ---
+
+	// Types automatically adapt to the new variants
+	export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
+	export type ButtonSize = VariantProps<typeof buttonVariants>['size'];
+
+	// Props definition remains the same
+	export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
+		WithElementRef<HTMLAnchorAttributes> & {
+			variant?: ButtonVariant;
+			size?: ButtonSize;
+		};
+</script>
+
+<script lang="ts">
+	// No changes needed for cn import
+	import { cn } from '$lib/utils.js';
+	// REMOVED the conflicting import: import type { ButtonProps } from "./button.svelte";
+
+	// ButtonProps type is directly available from the module script above
+	let {
+		class: className,
+		variant = 'default',
+		size = 'default',
+		ref = $bindable(null),
+		href = undefined,
+		type = 'button',
+		children,
+		...restProps
+	}: ButtonProps = $props();
+</script>
+
+<!-- No changes in the template -->
+{#if href}
+	<a bind:this={ref} class={cn(buttonVariants({ variant, size }), className)} {href} {...restProps}>
+		{@render children?.()}
+	</a>
+{:else}
+	<button
+		bind:this={ref}
+		class={cn(buttonVariants({ variant, size }), className)}
+		{type}
+		{...restProps}
+	>
+		{@render children?.()}
+	</button>
+{/if}
+
+<!--
+  Reminder: This component now heavily relies on CSS variables defined in your global CSS (src/app.css),
+  such as:
+  --radius-base, --font-weight-base, --main-foreground, --main, --border, --shadow-shadow,
+  --spacing-boxShadowX, --spacing-boxShadowY, --secondary-background, --foreground,
+  --spacing-reverseBoxShadowX, --spacing-reverseBoxShadowY
+
+  Ensure these are correctly defined for the styles to apply.
+-->
+</file>
+
+<file path="src/lib/components/ui/button/index.ts">
+import Root, {
+	type ButtonProps,
+	type ButtonSize,
+	type ButtonVariant,
+	buttonVariants,
+} from "./button.svelte";
+
+export {
+	Root,
+	type ButtonProps as Props,
+	//
+	Root as Button,
+	buttonVariants,
+	type ButtonProps,
+	type ButtonSize,
+	type ButtonVariant,
+};
+</file>
+
+<file path="src/lib/components/ui/card/card-action.svelte">
+<script lang="ts">
+	// New component for CardAction
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import { cn } from '$lib/utils.js';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+</script>
+
+<div
+	bind:this={ref}
+	data-slot="card-action"
+	class={cn(
+		// Classes for positioning within the CardHeader grid
+		'col-start-2 row-span-2 row-start-1 self-start justify-self-end',
+		className
+	)}
+	{...restProps}
+>
+	{@render children?.()}
+</div>
+</file>
+
+<file path="src/lib/components/ui/card/card-content.svelte">
+<script lang="ts">
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import { cn } from '$lib/utils.js';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+</script>
+
+<div
+	bind:this={ref}
+	data-slot="card-content"
+	class={cn(
+		// Updated classes
+		'px-6',
+		className
+	)}
+	{...restProps}
+>
+	{@render children?.()}
+</div>
+</file>
+
+<file path="src/lib/components/ui/card/card-description.svelte">
+<script lang="ts">
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import { cn } from '$lib/utils.js';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLParagraphElement>> = $props(); // Keep as <p> for semantics
+</script>
+
+<p
+	bind:this={ref}
+	data-slot="card-description"
+	class={cn(
+		// Updated classes using CSS variable
+		'text-sm font-[var(--font-base)]',
+		className
+	)}
+	{...restProps}
+>
+	{@render children?.()}
+</p>
+
+<!-- Depends on CSS variable: --font-base -->
+</file>
+
+<file path="src/lib/components/ui/card/card-footer.svelte">
+<script lang="ts">
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import { cn } from '$lib/utils.js';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+</script>
+
+<div
+	bind:this={ref}
+	data-slot="card-footer"
+	class={cn(
+		// Updated classes
+		'flex items-center px-6 [&.border-t]:pt-6',
+		className
+	)}
+	{...restProps}
+>
+	{@render children?.()}
+</div>
+</file>
+
+<file path="src/lib/components/ui/card/card-header.svelte">
+<script lang="ts">
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import { cn } from '$lib/utils.js';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+</script>
+
+<div
+	bind:this={ref}
+	data-slot="card-header"
+	class={cn(
+		// Updated classes using grid, container queries, and has selector
+		// Ensure Tailwind is configured for container queries (@tailwindcss/container-queries plugin)
+		// The `has:` selector requires Tailwind CSS v3.2+
+		'@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-[[data-slot=card-action]]:grid-cols-[1fr_auto] [&.border-b]:pb-6',
+		className
+	)}
+	{...restProps}
+>
+	{@render children?.()}
+</div>
+</file>
+
+<file path="src/lib/components/ui/card/card-title.svelte">
+<script lang="ts">
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import { cn } from '$lib/utils.js';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		level = 3, // Keep the semantic level prop
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+		level?: 1 | 2 | 3 | 4 | 5 | 6;
+	} = $props();
+</script>
+
+<div
+	role="heading"
+	aria-level={level}
+	bind:this={ref}
+	data-slot="card-title"
+	class={cn(
+		// Updated classes using CSS variable
+		'font-[var(--font-heading)] leading-none',
+		className
+	)}
+	{...restProps}
+>
+	{@render children?.()}
+</div>
+
+<!-- Depends on CSS variable: --font-heading -->
+</file>
+
+<file path="src/lib/components/ui/card/card.svelte">
+<script lang="ts">
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import { cn } from '$lib/utils.js';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+</script>
+
+<div
+	bind:this={ref}
+	data-slot="card"
+	class={cn(
+		// Updated classes using CSS variables
+		'flex flex-col gap-6 rounded-[var(--radius-base)] border-2 border-[var(--border)] bg-[var(--background)] py-6 font-[var(--font-base)] text-[var(--foreground)] shadow-[var(--shadow-shadow)]',
+		className
+	)}
+	{...restProps}
+>
+	{@render children?.()}
+</div>
+
+<!--
+  Depends on CSS variables:
+  --radius-base, --shadow-shadow, --border, --background, --foreground, --font-base
+-->
+</file>
+
+<file path="src/lib/components/ui/card/index.ts">
+import Root from "./card.svelte";
+import Content from "./card-content.svelte";
+import Description from "./card-description.svelte";
+import Footer from "./card-footer.svelte";
+import Header from "./card-header.svelte";
+import Title from "./card-title.svelte";
+import Action from "./card-action.svelte"; // <-- Import the new component
+
+export {
+	Root,
+	Content,
+	Description,
+	Footer,
+	Header,
+	Title,
+	Action, // <-- Export the new component
+	//
+	Root as Card,
+	Content as CardContent,
+	Description as CardDescription,
+	Footer as CardFooter,
+	Header as CardHeader,
+	Title as CardTitle,
+	Action as CardAction, // <-- Export the new component with alias
+};
+</file>
+
+<file path="src/lib/components/ui/separator/index.ts">
+import Root from "./separator.svelte";
+
+export {
+	Root,
+	//
+	Root as Separator,
+};
+</file>
+
+<file path="src/lib/components/ui/separator/separator.svelte">
+<script lang="ts">
+	import { Separator as SeparatorPrimitive } from 'bits-ui';
+	import { cn } from '$lib/utils.js';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		orientation = 'horizontal',
+		// Add a prop for thickness, defaulting to 8px (h-2 in Tailwind)
+		thickness = 'h-1', // Default thickness for horizontal
+		...restProps
+	}: SeparatorPrimitive.RootProps & { thickness?: string } = $props();
+
+	// Determine vertical thickness based on horizontal (e.g., w-2 if h-2)
+	// Or keep it fixed if preferred
+	const verticalThickness = thickness.replace('h-', 'w-'); // Simple replacement, adjust if needed
+</script>
+
+<SeparatorPrimitive.Root
+	bind:ref
+	class={cn(
+		// Change background to black
+		'shrink-0 bg-black',
+		// Use the thickness prop for height/width
+		orientation === 'horizontal'
+			? `${thickness} w-full` // e.g., h-2 w-full
+			: `min-h-full ${verticalThickness}`, // e.g., min-h-full w-2
+		className
+	)}
+	{orientation}
+	{...restProps}
+/>
+</file>
+
+<file path="src/lib/components/ui/sheet/index.ts">
+import { Dialog as SheetPrimitive } from "bits-ui";
+import Overlay from "./sheet-overlay.svelte";
+import Content from "./sheet-content.svelte";
+import Header from "./sheet-header.svelte";
+import Footer from "./sheet-footer.svelte";
+import Title from "./sheet-title.svelte";
+import Description from "./sheet-description.svelte";
+
+const Root = SheetPrimitive.Root;
+const Close = SheetPrimitive.Close;
+const Trigger = SheetPrimitive.Trigger;
+const Portal = SheetPrimitive.Portal;
+
+export {
+	Root,
+	Close,
+	Trigger,
+	Portal,
+	Overlay,
+	Content,
+	Header,
+	Footer,
+	Title,
+	Description,
+	//
+	Root as Sheet,
+	Close as SheetClose,
+	Trigger as SheetTrigger,
+	Portal as SheetPortal,
+	Overlay as SheetOverlay,
+	Content as SheetContent,
+	Header as SheetHeader,
+	Footer as SheetFooter,
+	Title as SheetTitle,
+	Description as SheetDescription,
+};
+</file>
+
+<file path="src/lib/components/ui/sheet/sheet-content.svelte">
+<script lang="ts" module>
+	import { tv, type VariantProps } from "tailwind-variants";
+	export const sheetVariants = tv({
+		base: "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 gap-4 p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+		variants: {
+			side: {
+				top: "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 border-b",
+				bottom: "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 border-t",
+				left: "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+				right: "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
+			},
+		},
+		defaultVariants: {
+			side: "right",
+		},
+	});
+
+	export type Side = VariantProps<typeof sheetVariants>["side"];
+</script>
+
+<script lang="ts">
+	import { Dialog as SheetPrimitive, type WithoutChildrenOrChild } from "bits-ui";
+	import X from "@lucide/svelte/icons/x";
+	import type { Snippet } from "svelte";
+	import SheetOverlay from "./sheet-overlay.svelte";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		side = "right",
+		portalProps,
+		children,
+		...restProps
+	}: WithoutChildrenOrChild<SheetPrimitive.ContentProps> & {
+		portalProps?: SheetPrimitive.PortalProps;
+		side?: Side;
+		children: Snippet;
+	} = $props();
+</script>
+
+<SheetPrimitive.Portal {...portalProps}>
+	<SheetOverlay />
+	<SheetPrimitive.Content bind:ref class={cn(sheetVariants({ side }), className)} {...restProps}>
+		{@render children?.()}
+		<SheetPrimitive.Close
+			class="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none"
+		>
+			<X class="size-4" />
+			<span class="sr-only">Close</span>
+		</SheetPrimitive.Close>
+	</SheetPrimitive.Content>
+</SheetPrimitive.Portal>
+</file>
+
+<file path="src/lib/components/ui/sheet/sheet-description.svelte">
+<script lang="ts">
+	import { Dialog as SheetPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: SheetPrimitive.DescriptionProps = $props();
+</script>
+
+<SheetPrimitive.Description
+	bind:ref
+	class={cn("text-muted-foreground text-sm", className)}
+	{...restProps}
+/>
+</file>
+
+<file path="src/lib/components/ui/sheet/sheet-footer.svelte">
+<script lang="ts">
+	import type { WithElementRef } from "bits-ui";
+	import type { HTMLAttributes } from "svelte/elements";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+</script>
+
+<div
+	bind:this={ref}
+	class={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
+	{...restProps}
+>
+	{@render children?.()}
+</div>
+</file>
+
+<file path="src/lib/components/ui/sheet/sheet-header.svelte">
+<script lang="ts">
+	import type { HTMLAttributes } from "svelte/elements";
+	import type { WithElementRef } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+</script>
+
+<div
+	bind:this={ref}
+	class={cn("flex flex-col space-y-2 text-center sm:text-left", className)}
+	{...restProps}
+>
+	{@render children?.()}
+</div>
+</file>
+
+<file path="src/lib/components/ui/sheet/sheet-overlay.svelte">
+<script lang="ts">
+	import { Dialog as SheetPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: SheetPrimitive.OverlayProps = $props();
+
+	export { className as class };
+</script>
+
+<SheetPrimitive.Overlay
+	bind:ref
+	class={cn(
+		"data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0  fixed inset-0 z-50 bg-black/80",
+		className
+	)}
+	{...restProps}
+/>
+</file>
+
+<file path="src/lib/components/ui/sheet/sheet-title.svelte">
+<script lang="ts">
+	import { Dialog as SheetPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: SheetPrimitive.TitleProps = $props();
+</script>
+
+<SheetPrimitive.Title
+	bind:ref
+	class={cn("text-foreground text-lg font-semibold", className)}
+	{...restProps}
+/>
+</file>
+
+<file path="src/lib/frontpage/Footer.svelte">
+<!-- src/lib/components/layout/Footer.svelte -->
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { Separator } from '$lib/components/ui/separator';
+
+	const currentYear = new Date().getFullYear();
+
+	// --- Placeholder SVGs (Specific to Footer) ---
+	const externalLinkIcon = `
+    <svg aria-hidden="true" focusable="false" width="1em" height="1em" style="display: inline-block; margin-left: 0.5rem;" viewBox="0 0 512 512" fill="currentColor"><path d="M352 0c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9L370.7 96 201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L416 141.3l41.4 41.4c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-128c0-17.7-14.3-32-32-32L352 0zM80 32C35.8 32 0 67.8 0 112L0 432c0 44.2 35.8 80 80 80l320 0c44.2 0 80-35.8 80-80l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-320c0-8.8 7.2-16 16-16l112 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 32z"></path></svg>
+  `;
+	const githubIcon = `
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 496 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+  `;
+	const linkedinIcon = `
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
+  `;
+</script>
+
+<footer class="w-full bg-background p-8">
+	<Separator thickness="h-2" class="mb-8" />
+	<!-- Use the black bar separator -->
+	<div class="mx-auto max-w-7xl">
+		<div class="mb-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+			<!-- Quick Links -->
+			<div>
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Quick Links
+				</h3>
+				<ul class="font-base space-y-3">
+					<li>
+						<a
+							href="#home"
+							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							>Home</a
+						>
+					</li>
+					<li>
+						<a
+							href="#journey"
+							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							>Journey</a
+						>
+					</li>
+					<li>
+						<a
+							href="#projects"
+							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							>Projects</a
+						>
+					</li>
+					<li>
+						<a
+							href="/blog/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:bg-main hover:text-main-foreground inline-flex items-center border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+						>
+							Blogs
+							{@html externalLinkIcon}
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<!-- Get in Touch -->
+			<div class="rotate-50 transform">
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Get in Touch!
+				</h3>
+				<div class="mb-8 flex flex-col items-start">
+					<div class="mb-6 flex space-x-6">
+						<a
+							href="https://github.com/prudhviboggavarapu"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
+							aria-label="GitHub"
+						>
+							{@html githubIcon}
+						</a>
+						<a
+							href="https://www.linkedin.com/in/prudhviboggavarapu/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
+							aria-label="LinkedIn"
+						>
+							{@html linkedinIcon}
+						</a>
+					</div>
+					<!-- You could add a contact button/form here -->
+					<Button variant="default" onclick={() => console.log('Footer Get in Touch clicked!')}>
+						Contact Me
+					</Button>
+				</div>
+			</div>
+
+			<!-- Column 3 (Optional) -->
+			<div>
+				<!-- Placeholder for potential third column content -->
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Placeholder
+				</h3>
+				<p class="font-base text-foreground">Maybe some extra info here.</p>
+			</div>
+		</div>
+
+		<!-- Footer Bottom -->
+		<Separator thickness="h-1" class="mb-8" />
+		<!-- Thinner separator -->
+		<div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+			<p class="text-center font-bold text-foreground md:text-left">
+				© {currentYear} Karma | Built with love by
+				<a href="https://karmajaderose.com" class="text-main-foreground underline">Karma</a>
+			</p>
+			<div
+				class="bg-black px-4 py-2 font-mono text-sm text-white dark:bg-background dark:text-foreground"
+			>
+				&lt;/&gt; with <a href="https://svelte.dev/" class="text-main-foreground hover:underline"
+					>SvelteKit</a
+				>
+				+
+				<a href="https://www.shadcn-svelte.com/" class="text-main-foreground hover:underline"
+					>Shadcn UI Svelte</a
+				>
+			</div>
+		</div>
+	</div>
+</footer>
+</file>
+
+<file path="src/lib/frontpage/Header.svelte">
+<!-- src/lib/components/layout/Header.svelte -->
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	// Import Sheet components if you decide to add the mobile menu back later
+	// import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from '$lib/components/ui/sheet';
+
+	// Props passed down from the parent (+page.svelte or +layout.svelte)
+	let {
+		mounted = false, // To prevent hydration mismatch for theme icons
+		isDark = false,
+		toggleTheme = () => {} // Default empty function
+	}: {
+		mounted: boolean;
+		isDark: boolean;
+		toggleTheme: () => void;
+	} = $props();
+
+	// --- Placeholder SVGs (Specific to Header) ---
+	const logoPlaceholder = `
+    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="10" fill="currentColor"/>
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="40" font-weight="bold" fill="var(--main-foreground)">RJ</text>
+    </svg>
+  `;
+	const externalLinkIcon = `
+    <svg aria-hidden="true" focusable="false" width="1em" height="1em" style="display: inline-block; margin-left: 0.5rem;" viewBox="0 0 512 512" fill="currentColor"><path d="M352 0c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9L370.7 96 201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L416 141.3l41.4 41.4c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-128c0-17.7-14.3-32-32-32L352 0zM80 32C35.8 32 0 67.8 0 112L0 432c0 44.2 35.8 80 80 80l320 0c44.2 0 80-35.8 80-80l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-320c0-8.8 7.2-16 16-16l112 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 32z"></path></svg>
+  `;
+	const sunIcon = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+  `;
+	const moonIcon = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+  `;
+	// const hamburgerIcon = `...`; // Keep if adding Sheet back
+</script>
+
+<nav class="fixed left-0 top-0 z-50 w-full px-4">
+	<div
+		class="bg-main shadow-shadow mx-auto mt-4 flex h-[80px] w-full max-w-screen-xl items-center justify-between rounded-[var(--radius-base)] border-2 border-border px-6 transition-transform duration-300 ease-in-out"
+	>
+		<!-- Logo -->
+		<h1
+			class="text-main-foreground min-w-[70px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
+		>
+			<a href="#home" class="text-main-foreground block">
+				{@html logoPlaceholder}
+			</a>
+		</h1>
+
+		<!-- Desktop Navigation -->
+		<div class="font-base hidden items-center space-x-6 text-base md:flex lg:text-lg">
+			<a
+				href="#home"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+				>Home</a
+			>
+			<a
+				href="#journey"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+				>Journey</a
+			>
+			<a
+				href="#projects"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+				>Projects</a
+			>
+			<a
+				href="/blog/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+			>
+				Blogs
+				{@html externalLinkIcon}
+			</a>
+			<div class="flex items-center gap-4">
+				<Button variant="neutral" onclick={() => console.log('Get in Touch clicked!')}>
+					Get in Touch!
+				</Button>
+				<Button variant="neutral" size="icon" onclick={toggleTheme} aria-label="Toggle theme">
+					{#if mounted}
+						{#if isDark}
+							{@html sunIcon}
+						{:else}
+							{@html moonIcon}
+						{/if}
+					{/if}
+					<span class="sr-only">Toggle theme</span>
+				</Button>
+			</div>
+		</div>
+
+		<!-- Mobile Navigation Controls -->
+		<div class="flex items-center gap-4 md:hidden">
+			<Button variant="neutral" size="icon" onclick={toggleTheme} aria-label="Toggle theme">
+				{#if mounted}
+					{#if isDark}
+						{@html sunIcon}
+					{:else}
+						{@html moonIcon}
+					{/if}
+				{/if}
+				<span class="sr-only">Toggle theme</span>
+			</Button>
+			<!-- Mobile Menu Trigger (Sheet) Removed -->
+			<!-- If adding back:
+            <Sheet>
+                <SheetTrigger asChild let:builder>
+                    <Button variant="neutral" size="icon" builders={[builder]} class="transform transition-transform hover:-rotate-3" aria-label="Open menu">
+                        {@html hamburgerIcon}
+                    </Button>
+                </SheetTrigger>
+                <SheetContent side="right" class="w-[300px] bg-main text-main-foreground">
+                    ... Sheet Content ...
+                </SheetContent>
+            </Sheet>
+            -->
+		</div>
+	</div>
+</nav>
+</file>
+
+<file path="src/lib/index.ts">
+// place files you want to import through the `$lib` alias in this folder.
+</file>
+
+<file path="src/lib/utils.ts">
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+	return twMerge(clsx(inputs));
+}
+</file>
+
+<file path="src/routes/+layout.svelte">
+<script lang="ts">
+	import '../app.css';
+	let { children } = $props();
+</script>
+
+{@render children()}
+</file>
+
+<file path="src/routes/+page.svelte">
+<!-- src/routes/+page.svelte -->
+<script lang="ts">
+	// Keep only imports needed for this page's content or logic
+	import Header from '$lib/frontpage/Header.svelte';
+	import Footer from '$lib/frontpage/Footer.svelte';
+	import { onMount } from 'svelte';
+
+	// --- Theme Toggle State and Logic (Keep here or move to +layout.svelte) ---
+	let isDark = false;
+	let mounted = false;
+
+	onMount(() => {
+		mounted = true;
+		const storedTheme = localStorage.getItem('theme');
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		if (storedTheme) {
+			isDark = storedTheme === 'dark';
+		} else {
+			isDark = prefersDark;
+		}
+		applyTheme();
+	});
+
+	function toggleTheme() {
+		isDark = !isDark;
+		localStorage.setItem('theme', isDark ? 'dark' : 'light');
+		applyTheme();
+	}
+
+	function applyTheme() {
+		if (typeof document !== 'undefined') {
+			if (isDark) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		}
+	}
+	// --- End Theme Logic ---
+</script>
+
+<div class="flex min-h-screen flex-col bg-background text-foreground">
+	<!-- Render Header Component -->
+	<Header {mounted} {isDark} {toggleTheme} />
+
+	<!-- Main Content Area -->
+	<!-- Main Content Area -->
+	<main class="flex-grow pt-28">
+		<!-- <--- THIS PADDING IS THE SOLUTION -->
+		<!-- Added pt-28 to account for fixed header height + margin -->
+		<div class="container mx-auto p-8">
+			<h1 class="font-heading mb-4 text-3xl">Main Content Area</h1>
+			<p class="font-base">This is where the main page content would go.</p>
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+				voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+				cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</p>
+			<!-- Add more placeholder content or actual sections here -->
+			<div
+				class="bg-secondary-background mt-8 flex h-96 items-center justify-center rounded-md border border-border"
+			>
+				Placeholder Content Block
+			</div>
+		</div>
+	</main>
+
+	<!-- Render Footer Component -->
+	<Footer />
+</div>
+</file>
+
+<file path="src/app.css">
+/* src/app.css */
+@import "tw-animate-css";
+/* Standard Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your custom imports */
+
+/* Your custom directives */
+/* Ensure required PostCSS plugins are configured for these */
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+
+  /* Your :root variables using oklch */
+  :root {
+    /* Your Core Theme Variables */
+    --background: oklch(94.11% 0.036556 308.0303);
+    --secondary-background: oklch(100% 0 0);
+    --foreground: oklch(0% 0 0);
+    --main-foreground: oklch(0% 0 0);
+    --main: oklch(71.9% 0.198 310.03);
+    --border: oklch(0% 0 0);
+    --ring: oklch(0% 0 0);
+    /* Note: Original shadcn uses this for focus rings */
+    --overlay: oklch(0% 0 0 / 0.8);
+    --shadow: 2px 2px 0px 0px var(--border);
+
+    /* Original shadcn variables (map your vars to these or update tailwind.config.ts) */
+    /* --foreground: 222.2 84% 4.9%; */
+    /* --muted: 210 40% 96.1%; */
+    /* --muted-foreground: 215.4 16.3% 46.9%; */
+    /* --popover: 0 0% 100%; */
+    /* --popover-foreground: 222.2 84% 4.9%; */
+    /* --card: 0 0% 100%; */
+    /* --card-foreground: 222.2 84% 4.9%; */
+    /* --border: 214.3 31.8% 91.4%; */
+    /* Replaced by your --border */
+    /* --input: 214.3 31.8% 91.4%; */
+    /* Often same as border */
+    /* --primary: 222.2 47.4% 11.2%; */
+    /* Map var(--main) here? */
+    /* --primary-foreground: 210 40% 98%; */
+    /* Map var(--main-foreground) here? */
+    /* --secondary: 210 40% 96.1%; */
+    /* Map var(--secondary-background) here? */
+    /* --secondary-foreground: 222.2 47.4% 11.2%; */
+    /* --accent: 210 40% 96.1%; */
+    /* --accent-foreground: 222.2 47.4% 11.2%; */
+    /* --destructive: 0 72.2% 50.6%; */
+    /* --destructive-foreground: 210 40% 98%; */
+    /* --ring: 222.2 84% 4.9%; */
+    /* Replaced by your --ring */
+    --radius: 10px;
+    /* Using --radius-base from @theme, adjust if needed */
+    /* --sidebar-background: 0 0% 98%; */
+    /* --sidebar-foreground: 240 5.3% 26.1%; */
+    /* ... other sidebar vars ... */
+  }
+
+  /* Your .dark variables using oklch */
+  .dark {
+    /* Your Core Dark Theme Variables */
+    --background: oklch(29.68% 0.0791 315.62);
+    --secondary-background: oklch(23.93% 0 0);
+    --foreground: oklch(92.49% 0 0);
+    --main-foreground: oklch(0% 0 0);
+    --main: oklch(67.34% 0.2314 309.13);
+    --border: oklch(0% 0 0);
+    --ring: oklch(100% 0 0);
+    /* Note: Original shadcn uses this for focus rings */
+    --shadow: 2px 2px 0px 0px var(--border);
+
+    /* Original shadcn dark variables (map your vars or update tailwind.config.ts) */
+    /* --foreground: 210 40% 98%; */
+    /* --muted: 217.2 32.6% 17.5%; */
+    /* --muted-foreground: 215 20.2% 65.1%; */
+    /* --popover: 222.2 84% 4.9%; */
+    /* --popover-foreground: 210 40% 98%; */
+    /* --card: 222.2 84% 4.9%; */
+    /* --card-foreground: 210 40% 98%; */
+    /* --border: 217.2 32.6% 17.5%; */
+    /* Replaced by your --border */
+    /* --input: 217.2 32.6% 17.5%; */
+    /* Often same as border */
+    /* --primary: 210 40% 98%; */
+    /* Map var(--main) here? */
+    /* --primary-foreground: 222.2 47.4% 11.2%; */
+    /* Map var(--main-foreground) here? */
+    /* --secondary: 217.2 32.6% 17.5%; */
+    /* Map var(--secondary-background) here? */
+    /* --secondary-foreground: 210 40% 98%; */
+    /* --accent: 217.2 32.6% 17.5%; */
+    /* --accent-foreground: 210 40% 98%; */
+    /* --destructive: 0 62.8% 30.6%; */
+    /* --destructive-foreground: 210 40% 98%; */
+    /* --ring: 212.7 26.8% 83.9%; */
+    /* Replaced by your --ring */
+    /* --sidebar-background: 240 5.9% 10%; */
+    /* --sidebar-foreground: 240 4.8% 95.9%; */
+    /* ... other dark sidebar vars ... */
+  }
+
+  /* Your @theme block */
+  /* Ensure required PostCSS plugins are configured for this */
+  @theme inline {
+    --color-main: var(--main);
+    --color-background: var(--background);
+    --color-secondary-background: var(--secondary-background);
+    --color-foreground: var(--foreground);
+    --color-main-foreground: var(--main-foreground);
+    --color-border: var(--border);
+    --color-overlay: var(--overlay);
+    --color-ring: var(--ring);
+
+    --spacing-boxShadowX: 2px;
+    --spacing-boxShadowY: 2px;
+    --spacing-reverseBoxShadowX: -2px;
+    --spacing-reverseBoxShadowY: -2px;
+    --radius-base: 10px;
+    /* This sets the base radius */
+    --shadow-shadow: var(--shadow);
+    --font-weight-base: 500;
+    --font-weight-heading: 700;
+  }
+
+  /* Base styles from original file - these will now use your variables */
+  * {
+    @apply border-border;
+    /* Uses your --border */
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Uses your --background & --foreground */
+    /* You might want to apply base font weight here */
+    /* font-weight: var(--font-weight-base); */
+  }
+
+  /* Apply base heading font weight (example) */
+  /* h1, h2, h3, h4, h5, h6 {
+    font-weight: var(--font-weight-heading);
+  } */
+}
+
+/*
+  Reminder: Check your tailwind.config.ts 'theme.extend.colors' section.
+  You likely need to map shadcn's color names (primary, secondary, card, etc.)
+  to use your new CSS variables (e.g., `primary: 'oklch(var(--main))'`)
+  for components to adopt the new theme correctly.
+  Also ensure the `borderRadius` in tailwind.config.ts uses `var(--radius)`
+  if you want it to respect the `--radius-base` set in @theme.
+*/
+</file>
+
+<file path="src/app.d.ts">
+// See https://svelte.dev/docs/kit/types#app.d.ts
+// for information about these interfaces
+declare global {
+	namespace App {
+		// interface Error {}
+		// interface Locals {}
+		// interface PageData {}
+		// interface PageState {}
+		// interface Platform {}
+	}
+}
+
+export {};
+</file>
+
+<file path="src/app.html">
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>
+</file>
+
+<file path=".gitignore">
+node_modules
+
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+</file>
+
+<file path=".npmrc">
+engine-strict=true
+</file>
+
+<file path=".prettierignore">
+# Package Managers
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+</file>
+
+<file path=".prettierrc">
+{
+	"useTabs": true,
+	"singleQuote": true,
+	"trailingComma": "none",
+	"printWidth": 100,
+	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
+	"overrides": [
+		{
+			"files": "*.svelte",
+			"options": {
+				"parser": "svelte"
+			}
+		}
+	]
+}
+</file>
+
+<file path="components.json">
+{
+	"$schema": "https://next.shadcn-svelte.com/schema.json",
+	"style": "default",
+	"tailwind": {
+		"config": "tailwind.config.ts",
+		"css": "src/app.css",
+		"baseColor": "slate"
+	},
+	"aliases": {
+		"components": "$lib/components",
+		"utils": "$lib/utils",
+		"ui": "$lib/components/ui",
+		"hooks": "$lib/hooks"
+	},
+	"typescript": true,
+	"registry": "https://next.shadcn-svelte.com/registry"
+}
+</file>
+
+<file path="eslint.config.js">
+import prettier from 'eslint-config-prettier';
+import js from '@eslint/js';
+import { includeIgnoreFile } from '@eslint/compat';
+import svelte from 'eslint-plugin-svelte';
+import globals from 'globals';
+import { fileURLToPath } from 'node:url';
+import ts from 'typescript-eslint';
+const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
+
+export default ts.config(
+	includeIgnoreFile(gitignorePath),
+	js.configs.recommended,
+	...ts.configs.recommended,
+	...svelte.configs['flat/recommended'],
+	prettier,
+	...svelte.configs['flat/prettier'],
+	{
+		languageOptions: {
+			globals: {
+				...globals.browser,
+				...globals.node
+			}
+		}
+	},
+	{
+		files: ['**/*.svelte'],
+
+		languageOptions: {
+			parserOptions: {
+				parser: ts.parser
+			}
+		}
+	}
+);
+</file>
+
+<file path="package.json">
+{
+	"name": "realwebsitesvelte5",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"format": "prettier --write .",
+		"lint": "prettier --check . && eslint ."
+	},
+	"devDependencies": {
+		"@eslint/compat": "^1.2.5",
+		"@eslint/js": "^9.18.0",
+		"@lucide/svelte": "^0.487.0",
+		"@sveltejs/adapter-cloudflare": "^5.0.1",
+		"@sveltejs/kit": "^2.16.0",
+		"@sveltejs/vite-plugin-svelte": "^5.0.0",
+		"@tailwindcss/container-queries": "^0.1.1",
+		"@tailwindcss/forms": "^0.5.10",
+		"@tailwindcss/typography": "^0.5.16",
+		"autoprefixer": "^10.4.20",
+		"bits-ui": "^1.3.18",
+		"clsx": "^2.1.1",
+		"eslint": "^9.18.0",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-svelte": "^2.46.1",
+		"globals": "^15.14.0",
+		"prettier": "^3.4.2",
+		"prettier-plugin-svelte": "^3.3.3",
+		"prettier-plugin-tailwindcss": "^0.6.10",
+		"svelte": "^5.0.0",
+		"svelte-check": "^4.0.0",
+		"tailwind-merge": "^3.2.0",
+		"tailwind-variants": "^1.0.0",
+		"tailwindcss": "^3.4.17",
+		"tailwindcss-animate": "^1.0.7",
+		"typescript": "^5.0.0",
+		"typescript-eslint": "^8.20.0",
+		"vite": "^6.0.0"
+	},
+	"packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
+	"dependencies": {
+		"tw-animate-css": "^1.2.5"
+	}
+}
+</file>
+
+<file path="postcss.config.js">
+export default {
+	plugins: {
+		tailwindcss: {},
+		autoprefixer: {}
+	}
+};
+</file>
+
+<file path="README.md">
+# sv
+
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+
+## Creating a project
+
+If you're seeing this, you've probably already done this step. Congrats!
+
+```bash
+# create a new project in the current directory
+npx sv create
+
+# create a new project in my-app
+npx sv create my-app
+```
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+</file>
+
+<file path="svelte.config.js">
+import adapter from '@sveltejs/adapter-cloudflare';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+	// Consult https://svelte.dev/docs/kit/integrations
+	// for more information about preprocessors
+	preprocess: vitePreprocess(),
+
+	kit: {
+		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
+		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
+		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
+		adapter: adapter(),
+	}
+};
+
+export default config;
+</file>
+
+<file path="tailwind.config.ts">
+import { fontFamily } from "tailwindcss/defaultTheme";
+import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
+
+const config: Config = {
+	darkMode: ["class"],
+	content: ["./src/**/*.{html,js,svelte,ts}"],
+	safelist: ["dark"],
+	theme: {
+		container: {
+			center: true,
+			padding: "2rem",
+			screens: {
+				"2xl": "1400px"
+			}
+		},
+		extend: {
+			colors: {
+				border: "hsl(var(--border) / <alpha-value>)",
+				input: "hsl(var(--input) / <alpha-value>)",
+				ring: "hsl(var(--ring) / <alpha-value>)",
+				background: "hsl(var(--background) / <alpha-value>)",
+				foreground: "hsl(var(--foreground) / <alpha-value>)",
+				primary: {
+					DEFAULT: "hsl(var(--primary) / <alpha-value>)",
+					foreground: "hsl(var(--primary-foreground) / <alpha-value>)"
+				},
+				secondary: {
+					DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
+					foreground: "hsl(var(--secondary-foreground) / <alpha-value>)"
+				},
+				destructive: {
+					DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+					foreground: "hsl(var(--destructive-foreground) / <alpha-value>)"
+				},
+				muted: {
+					DEFAULT: "hsl(var(--muted) / <alpha-value>)",
+					foreground: "hsl(var(--muted-foreground) / <alpha-value>)"
+				},
+				accent: {
+					DEFAULT: "hsl(var(--accent) / <alpha-value>)",
+					foreground: "hsl(var(--accent-foreground) / <alpha-value>)"
+				},
+				popover: {
+					DEFAULT: "hsl(var(--popover) / <alpha-value>)",
+					foreground: "hsl(var(--popover-foreground) / <alpha-value>)"
+				},
+				card: {
+					DEFAULT: "hsl(var(--card) / <alpha-value>)",
+					foreground: "hsl(var(--card-foreground) / <alpha-value>)"
+				},
+				sidebar: {
+					DEFAULT: "hsl(var(--sidebar-background))",
+					foreground: "hsl(var(--sidebar-foreground))",
+					primary: "hsl(var(--sidebar-primary))",
+					"primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+					accent: "hsl(var(--sidebar-accent))",
+					"accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+					border: "hsl(var(--sidebar-border))",
+					ring: "hsl(var(--sidebar-ring))",
+        		},
+			},
+			borderRadius: {
+				xl: "calc(var(--radius) + 4px)",
+				lg: "var(--radius)",
+				md: "calc(var(--radius) - 2px)",
+				sm: "calc(var(--radius) - 4px)"
+			},
+			fontFamily: {
+				sans: [...fontFamily.sans]
+			},
+			keyframes: {
+				"accordion-down": {
+					from: { height: "0" },
+					to: { height: "var(--bits-accordion-content-height)" },
+				},
+				"accordion-up": {
+					from: { height: "var(--bits-accordion-content-height)" },
+					to: { height: "0" },
+				},
+				"caret-blink": {
+					"0%,70%,100%": { opacity: "1" },
+					"20%,50%": { opacity: "0" },
+				},
+			},
+			animation: {
+        		"accordion-down": "accordion-down 0.2s ease-out",
+        		"accordion-up": "accordion-up 0.2s ease-out",
+       			"caret-blink": "caret-blink 1.25s ease-out infinite",
+      		},
+		},
+	},
+	plugins: [tailwindcssAnimate],
+};
+
+export default config;
+</file>
+
+<file path="tsconfig.json">
+{
+	"extends": "./.svelte-kit/tsconfig.json",
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"moduleResolution": "bundler"
+	}
+	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
+	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
+	//
+	// If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes
+	// from the referenced tsconfig.json - TypeScript does not merge them in
+}
+</file>
+
+<file path="vite.config.ts">
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit()]
+});
+</file>
+
+</files>
