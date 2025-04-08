@@ -1,6 +1,4 @@
 // src/lib/server/blogPosts.ts
-import fs from "node:fs";
-import path from "node:path";
 import toml from "toml";
 import { error } from "@sveltejs/kit";
 
@@ -27,118 +25,119 @@ export interface BlogPost {
 	date: Date; // Convert to Date object for easier use
 	image?: string;
 	content: string;
-	filePath: string; // Keep track of the original file
+	// filePath is removed as it's no longer needed at runtime
 }
 
-const articlesDir = path.resolve("src/articles"); // Path to your articles
+// --- Build-Time Data Loading using import.meta.glob ---
+// Use Vite's import.meta.glob to find all .toml files in src/articles
+// `eager: true` imports the modules immediately during build
+// `as: 'raw'` imports the raw string content of the files
+const rawTomlFiles = import.meta.glob("/src/articles/*.toml", {
+	eager: true,
+	as: "raw",
+});
+// Example rawTomlFiles structure at build time:
+// {
+//   '/src/articles/first_blog.toml': '[[title]]\nname = "First..."',
+//   '/src/articles/second_blog.toml': '[[title]]\nname = "Second..."',
+//   ...
+// }
+// -------------------------------------------------------
 
 let allPosts: BlogPost[] | null = null; // Cache the posts
+
 /**
- * Reads all .toml files from the articles directory, parses them,
- * sorts them by date (newest first), caches the result, and returns the array.
+ * Parses the TOML content fetched at build time, sorts the posts by date,
+ * caches the result, and returns the array.
  * Subsequent calls return the cached, sorted array directly.
+ * This function NO LONGER uses node:fs or node:path at runtime.
  */
 export function getAllPosts(): BlogPost[] {
-	// If posts are already loaded and cached, return the cached version directly.
-	// It was sorted before being cached.
+	// If posts are already processed and cached, return the cached version.
 	if (allPosts) {
 		return allPosts;
 	}
 
-	// If cache is empty, proceed to load, parse, and sort.
-	console.log("Cache empty. Loading and parsing posts..."); // Log cache miss
+	console.log("Processing build-time TOML data..."); // Log processing
 	const posts: BlogPost[] = [];
 
-	try {
-		const files = fs.readdirSync(articlesDir);
+	// Iterate over the raw TOML strings imported by import.meta.glob
+	for (const filePath in rawTomlFiles) {
+		const fileContent = rawTomlFiles[filePath];
+		// Extract a simple filename for logging purposes
+		const fileName = filePath.split("/").pop() || filePath;
 
-		for (const file of files) {
-			// console.log(`Processing file: ${file}`); // Keep if needed for debugging
-			if (path.extname(file).toLowerCase() === ".toml") {
-				const filePath = path.join(articlesDir, file);
-				try {
-					const fileContent = fs.readFileSync(filePath, "utf-8");
-					const parsedData = toml.parse(fileContent) as TomlArticleData;
+		try {
+			const parsedData = toml.parse(fileContent) as TomlArticleData;
 
-					// Validate the structure
-					if (
-						!parsedData.title ||
-						!Array.isArray(parsedData.title) ||
-						parsedData.title.length === 0
-					) {
-						console.warn(
-							`Skipping ${file}: Missing or invalid [[title]] array.`
-						);
-						continue;
-					}
-
-					const postData = parsedData.title[0];
-
-					// Validate required fields
-					if (
-						!postData.slug ||
-						!postData.name ||
-						!postData.date ||
-						!postData.content
-					) {
-						console.warn(
-							`Skipping ${file}: Missing required fields (slug, name, date, content) in title object.`
-						);
-						continue;
-					}
-
-					// Create the BlogPost object, converting date string to Date object
-					posts.push({
-						name: postData.name,
-						slug: postData.slug,
-						blurb: postData.blurb || "",
-						tags: postData.tags || [],
-						date: new Date(postData.date), // Convert string to Date here
-						image: postData.image,
-						content: postData.content,
-						filePath: filePath,
-					});
-				} catch (parseError: any) {
-					console.error(`Error parsing TOML file ${file}:`, parseError);
-				}
+			// Validate the structure
+			if (
+				!parsedData.title ||
+				!Array.isArray(parsedData.title) ||
+				parsedData.title.length === 0
+			) {
+				console.warn(
+					`Skipping ${fileName}: Missing or invalid [[title]] array.`
+				);
+				continue;
 			}
+
+			// Assume the first [[title]] entry contains the main post data
+			const postData = parsedData.title[0];
+
+			// Validate required fields
+			if (
+				!postData.slug ||
+				!postData.name ||
+				!postData.date ||
+				!postData.content
+			) {
+				console.warn(
+					`Skipping ${fileName}: Missing required fields (slug, name, date, content) in title object.`
+				);
+				continue;
+			}
+
+			// Create the BlogPost object, converting date string to Date object
+			posts.push({
+				name: postData.name,
+				slug: postData.slug,
+				blurb: postData.blurb || "", // Provide default empty string if missing
+				tags: postData.tags || [], // Provide default empty array if missing
+				date: new Date(postData.date), // Convert string to Date here
+				image: postData.image, // Will be undefined if missing
+				content: postData.content,
+				// filePath is removed
+			});
+		} catch (parseError: any) {
+			// Log the error with the specific file that failed
+			console.error(`Error parsing TOML from ${fileName}:`, parseError);
+			// Depending on requirements, you might want to stop the build here
+			// by re-throwing the error, potentially wrapped in a SvelteKit error.
+			// For now, we just log it and continue with other posts.
+			// throw error(500, `Failed to parse blog post: ${fileName}. Error: ${parseError.message}`);
 		}
-	} catch (readDirError: any) {
-		if (readDirError.code === "ENOENT") {
-			console.warn(
-				`Articles directory not found at ${articlesDir}. No posts loaded.`
-			);
-			allPosts = []; // Cache empty array if dir not found
-			return allPosts;
-		}
-		console.error(
-			`Error reading articles directory ${articlesDir}:`,
-			readDirError
-		);
-		throw error(500, "Could not read blog articles directory");
 	}
 
-	// Sort the newly loaded posts by date (newest first) *before* caching.
+	// Sort the newly processed posts by date (newest first) *before* caching.
 	// This uses the Date objects directly.
 	posts.sort((a, b) => b.date.getTime() - a.date.getTime());
-	console.log(`Loaded and sorted ${posts.length} posts.`);
+	console.log(`Processed and sorted ${posts.length} posts from build-time data.`);
 
-	// Cache the sorted result.
+	// Cache the processed and sorted result.
 	allPosts = posts;
 	return allPosts;
 }
 
 /**
  * Finds and returns a single blog post by its slug.
- * Uses the cached list generated by getAllPosts.
+ * Uses the cached list generated by getAllPosts (which now uses build-time data).
  *
  * @param slug The slug of the post to find.
  * @returns The found BlogPost or null if not found.
  */
 export function getPostBySlug(slug: string): BlogPost | null {
-	const posts = getAllPosts(); // Ensure posts are loaded and cached
+	const posts = getAllPosts(); // Ensure posts are processed and cached
 	const post = posts.find((p) => p.slug === slug);
-	//sort posts by date, newest first
-
-	return post || null;
+	return post || null; // Return the found post or null if not found
 }
