@@ -18,41 +18,52 @@ const config: Config = {
 		},
 		extend: {
 			colors: {
+				// --- Existing Shadcn/Theme Colors ---
 				border: 'hsl(var(--border) / <alpha-value>)',
-				input: 'hsl(var(--input) / <alpha-value>)',
+				input: 'hsl(var(--input) / <alpha-value>)', // Assuming you might define --input later
 				ring: 'hsl(var(--ring) / <alpha-value>)',
 				background: 'hsl(var(--background) / <alpha-value>)',
 				foreground: 'hsl(var(--foreground) / <alpha-value>)',
 				primary: {
-					DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
-					foreground: 'hsl(var(--primary-foreground) / <alpha-value>)'
+					// Assuming you might define --primary later, or map it to --main
+					DEFAULT: 'hsl(var(--main) / <alpha-value>)', // Map primary to --main
+					foreground: 'hsl(var(--main-foreground) / <alpha-value>)' // Map primary-foreground to --main-foreground
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
-					foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)'
+					// Map secondary to --secondary-background
+					DEFAULT: 'hsl(var(--secondary-background) / <alpha-value>)',
+					// Assuming secondary-foreground is same as main text on secondary bg
+					foreground: 'hsl(var(--foreground) / <alpha-value>)'
 				},
 				destructive: {
-					DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
-					foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)'
+					// Map destructive to danger-50
+					DEFAULT: 'hsl(var(--neobrutalism-danger-50) / <alpha-value>)',
+					// Assuming white/black text on danger
+					foreground: 'hsl(var(--main-foreground) / <alpha-value>)' // Or adjust as needed
 				},
 				muted: {
-					DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
-					foreground: 'hsl(var(--muted-foreground) / <alpha-value>)'
+					// You might map muted to a lighter decorative color or define --muted
+					DEFAULT: 'hsl(var(--neobrutalism-purple-90) / <alpha-value>)', // Example: Map to purple-90
+					foreground: 'hsl(var(--foreground) / 0.6 / <alpha-value>)' // Example: Dimmed foreground
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
-					foreground: 'hsl(var(--accent-foreground) / <alpha-value>)'
+					// Map accent to --main or another decorative color
+					DEFAULT: 'hsl(var(--main) / <alpha-value>)',
+					foreground: 'hsl(var(--main-foreground) / <alpha-value>)'
 				},
 				popover: {
-					DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
-					foreground: 'hsl(var(--popover-foreground) / <alpha-value>)'
+					// Map popover background/foreground, often similar to card
+					DEFAULT: 'hsl(var(--background) / <alpha-value>)',
+					foreground: 'hsl(var(--foreground) / <alpha-value>)'
 				},
 				card: {
-					DEFAULT: 'hsl(var(--card) / <alpha-value>)',
-					foreground: 'hsl(var(--card-foreground) / <alpha-value>)'
+					// Map card background/foreground
+					DEFAULT: 'hsl(var(--background) / <alpha-value>)',
+					foreground: 'hsl(var(--foreground) / <alpha-value>)'
 				},
+				// Keep sidebar if you use it, otherwise remove
 				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
+					DEFAULT: 'hsl(var(--sidebar-background))', // Define --sidebar-* vars if needed
 					foreground: 'hsl(var(--sidebar-foreground))',
 					primary: 'hsl(var(--sidebar-primary))',
 					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
@@ -60,7 +71,41 @@ const config: Config = {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+
+				// --- Neobrutalism Decorative Colors ---
+				'neobrutalism-pink-70': 'hsl(var(--neobrutalism-pink-70) / <alpha-value>)',
+				'neobrutalism-pink-90': 'hsl(var(--neobrutalism-pink-90) / <alpha-value>)',
+
+				'neobrutalism-purple-50': 'hsl(var(--neobrutalism-purple-50) / <alpha-value>)',
+				'neobrutalism-purple-70': 'hsl(var(--neobrutalism-purple-70) / <alpha-value>)',
+				'neobrutalism-purple-90': 'hsl(var(--neobrutalism-purple-90) / <alpha-value>)',
+
+				'neobrutalism-blue-50': 'hsl(var(--neobrutalism-blue-50) / <alpha-value>)',
+				'neobrutalism-blue-70': 'hsl(var(--neobrutalism-blue-70) / <alpha-value>)',
+				'neobrutalism-blue-90': 'hsl(var(--neobrutalism-blue-90) / <alpha-value>)',
+
+				'neobrutalism-yellow-50': 'hsl(var(--neobrutalism-yellow-50) / <alpha-value>)',
+				'neobrutalism-yellow-70': 'hsl(var(--neobrutalism-yellow-70) / <alpha-value>)',
+				'neobrutalism-yellow-90': 'hsl(var(--neobrutalism-yellow-90) / <alpha-value>)',
+
+				'neobrutalism-green-50': 'hsl(var(--neobrutalism-green-50) / <alpha-value>)',
+				'neobrutalism-green-70': 'hsl(var(--neobrutalism-green-70) / <alpha-value>)',
+				'neobrutalism-green-90': 'hsl(var(--neobrutalism-green-90) / <alpha-value>)',
+
+				// --- Feedback Colors ---
+				'neobrutalism-danger-50': 'hsl(var(--neobrutalism-danger-50) / <alpha-value>)',
+				'neobrutalism-danger-90': 'hsl(var(--neobrutalism-danger-90) / <alpha-value>)',
+				'neobrutalism-warning-50': 'hsl(var(--neobrutalism-warning-50) / <alpha-value>)',
+				'neobrutalism-warning-90': 'hsl(var(--neobrutalism-warning-90) / <alpha-value>)',
+				'neobrutalism-success-50': 'hsl(var(--neobrutalism-success-50) / <alpha-value>)',
+
+				// --- Other Palette Colors ---
+				'neobrutalism-primary-50': 'hsl(var(--neobrutalism-primary-50) / <alpha-value>)',
+				'neobrutalism-secondary-0': 'hsl(var(--neobrutalism-secondary-0) / <alpha-value>)',
+				'neobrutalism-separator-90': 'hsl(var(--neobrutalism-separator-90) / <alpha-value>)',
+				'neobrutalism-body-90': 'hsl(var(--neobrutalism-body-90) / <alpha-value>)',
+				'neobrutalism-white-100': 'hsl(var(--neobrutalism-white-100) / <alpha-value>)'
 			},
 			borderRadius: {
 				xl: 'calc(var(--radius) + 4px)',

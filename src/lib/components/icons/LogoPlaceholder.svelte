@@ -1,13 +1,9 @@
-<!-- src/lib/components/icons/LogoPlaceholder.svelte -->
+<!-- src/lib/components/icons/LogoK.svelte -->
 <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-	<rect width="100" height="100" rx="10" fill="currentColor" />
-	<text
-		x="50%"
-		y="50%"
-		dominant-baseline="middle"
-		text-anchor="middle"
-		font-size="40"
-		font-weight="bold"
-		fill="var(--main-foreground)">RJ</text
-	>
+	<!-- Vertical Stem -->
+	<path d="M 25 10 L 25 90" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+	<!-- Upper Diagonal Arm -->
+	<path d="M 25 50 L 75 10" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+	<!-- Lower Diagonal Arm -->
+	<path d="M 25 50 L 75 90" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
 </svg>

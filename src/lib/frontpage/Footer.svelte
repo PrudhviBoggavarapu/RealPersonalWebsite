@@ -13,10 +13,10 @@
 	// Removed SVG string variables
 </script>
 
-<footer class="w-full bg-background p-8">
-	<Separator class="mb-8" />
+<footer class="w-full bg-background">
+	<Separator class="mb-4" />
 	<div class="mx-auto">
-		<div class="mb-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+		<div class="mb- grid grid-cols-1 gap-8 px-8 md:grid-cols-3">
 			<!-- Quick Links -->
 			<div>
 				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
@@ -85,7 +85,11 @@
 						</a>
 					</div>
 					<!-- You could add a contact button/form here -->
-					<Button variant="default" onclick={() => console.log('Footer Get in Touch clicked!')}>
+					<Button
+						variant="default"
+						class="bg-[var(--neobrutalism-yellow-70)]"
+						onclick={() => console.log('Footer Get in Touch clicked!')}
+					>
 						Contact Me
 					</Button>
 				</div>
@@ -102,7 +106,7 @@
 		</div>
 
 		<!-- Footer Bottom -->
-		<Separator thickness="h-1" class="mb-8" />
+		<Separator class="mb-4" />
 		<!-- Thinner separator -->
 		<div class="flex flex-col items-center justify-between gap-4 md:flex-row">
 			<p class="text-center font-bold text-foreground md:text-left">

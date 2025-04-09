@@ -50,6 +50,13 @@ src/
     third_blog.toml
   lib/
     components/
+      icons/
+        ExternalLinkIcon.svelte
+        GithubIcon.svelte
+        LinkedinIcon.svelte
+        LogoPlaceholder.svelte
+        MoonIcon.svelte
+        SunIcon.svelte
       ui/
         avatar/
           avatar-fallback.svelte
@@ -87,6 +94,8 @@ src/
       Header.svelte
     server/
       blogPosts.ts
+    stores/
+      themeStore.ts
     index.ts
     themeUtils.ts
     utils.ts
@@ -112,6 +121,7 @@ firefoxtemp.sh
 package.json
 postcss.config.js
 README.md
+style.md
 svelte.config.js
 tailwind.config.ts
 tsconfig.json
@@ -121,78 +131,180 @@ vite.config.ts
 <files>
 This section contains the contents of the repository's files.
 
-<file path="src/lib/themeUtils.ts">
-/**
- * Applies the theme class to the document root.
- * Handles server-side rendering safety.
- * @param isDark - Whether the dark theme should be applied.
- */
-export function applyThemeClass(isDark: boolean): void {
-    if (typeof document !== 'undefined') {
-		const root = document.documentElement;
-        if (isDark) {
-			root.classList.add('dark');
-        } else {
-			root.classList.remove('dark');
-        }
-    }
-}
+<file path="style.md">
+# Colors
 
-/**
- * Gets the preferred theme based on localStorage or system preference.
- * Handles server-side rendering safety.
- * @returns 'dark' or 'light'
- */
-export function getPreferredTheme(): 'dark' | 'light' {
-    if (typeof window !== 'undefined') {
-        const storedTheme = localStorage.getItem('theme');
-		// Explicitly check for 'dark' or 'light' to avoid invalid values
-        if (storedTheme === 'dark' || storedTheme === 'light') {
-            return storedTheme;
-        }
-		// Check system preference only if no valid theme is stored
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        return prefersDark ? 'dark' : 'light';
-    }
-	// Return a default theme for SSR or environments without window
-	// Consider if 'light' or 'dark' makes more sense as your default fallback
-	return 'light';
-}
+## Fractal Design System by Snowball.xyz
 
-/**
- * Persists the chosen theme to localStorage.
- * Handles server-side rendering safety.
- * @param theme - 'dark' or 'light'
- */
-export function persistTheme(theme: 'dark' | 'light'): void {
-     if (typeof window !== 'undefined') {
-        localStorage.setItem('theme', theme);
-     }
-}
-</file>
+## Palette
 
-<file path="firefoxtemp.sh">
-#!/bin/bash
+### Primary
 
-# Create a temporary directory for the profile
-# mktemp creates a unique temporary directory securely
-TMP_PROFILE_DIR=$(mktemp -d -t firefox-temp-profile.XXXXXXXXXX)
+- `#FF8ACD` (Tone 50)
 
-# Ensure the directory is cleaned up even if the script is interrupted
-trap 'rm -rf "$TMP_PROFILE_DIR"' EXIT
+**✅ Use for:**
 
-echo "Launching Firefox with temporary profile: $TMP_PROFILE_DIR"
+- Display covers & primary marketing contents backgrounds
+- Headers backgrounds
+- Primary elements backgrounds
+- Primary illustrations decoration
+- Primary Active elements with Secondary Color background
 
-# Launch Firefox
-# -no-remote: Ensures this runs as a separate instance, not connecting to an existing one.
-# -profile: Specifies the directory to use for the profile.
-# "$@": Passes any additional arguments you give the script to Firefox.
-firefox -no-remote -profile "$TMP_PROFILE_DIR" "$@"
+**🚫 Don't:**
 
-echo "Firefox closed. Temporary profile will be removed."
+- Use for text colors on light backgrounds
+- Use for icons colors on light backgrounds
+- Use for strokes nor separators
 
-# The trap command handles the cleanup automatically on exit.
-exit 0
+---
+
+### Secondary
+
+- `#000000` (Tone 0)
+
+**✅ Use for:**
+
+- Texts color on light & colored backgrounds
+- Footers & Left navigation backgrounds
+- Strokes & Brutal shadows styles
+- Secondary buttons backgrounds
+- Illustrations & default icons on light backgrounds
+
+**🚫 Don't:**
+
+- Body background color
+- Cards backgrounds
+
+---
+
+### Decorative Pink
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#FFC6E7` | 70   |
+| `#FFE2F3` | 90   |
+
+---
+
+### Decorative Purple
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#B37DFF` | 50   |
+| `#D9BEFF` | 70   |
+| `#F0E5FF` | 90   |
+
+---
+
+### Decorative Blue
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#8AF1FF` | 50   |
+| `#B3F6FF` | 70   |
+| `#D6FAFF` | 90   |
+
+---
+
+### Decorative Yellow
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#FFE959` | 50   |
+| `#FFF29B` | 70   |
+| `#FFF8C5` | 90   |
+
+---
+
+### Decorative Green
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#76F7AE` | 50   |
+| `#ADFACE` | 70   |
+| `#CFFCE3` | 90   |
+
+_(Usage rules below likely associated with Tones 70 & 90)_
+
+**✅ Use for:**
+
+- Illustrations decorations
+- Tertiary cards backgrounds
+- Lower page hierarchy backgrounds
+- Low interactions hierarchy backgrounds
+- Labels/cartouches backgrounds
+- Listed items:
+  - Drop downs Hovers
+  - Icons containers backgrounds
+  - Checkboxes checked status
+
+**🚫 Don't:**
+
+- Text colors
+- Stokes, borders nor separators
+- Icons
+- Buttons backgrounds
+
+---
+
+### Feedback Danger
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#FF5454` | 50   |
+| `#FFD6D6` | 90   |
+
+---
+
+### Feedback Warning
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#FF9F69` | 50   |
+| `#FFEAD1` | 90   |
+
+---
+
+### Feedback Success
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#3CD39D` | 50   |
+
+**✅ Use for: Feedback system only**
+
+---
+
+### Separator
+
+- `#E2E2E2` (Tone 90)
+  **✅ Use for: separator strokes only**
+
+---
+
+### Body
+
+- `#FFFBEE` (Tone 90)
+  **✅ Use for: body background only**
+
+---
+
+### White
+
+- `#FFFFFF` (Tone 100)
+  **✅ Use for:**
+- Primary cards backgrounds
+- Text colors on dark & backgrounds
+- Icons colors on dark backgrounds
+- Strokes, borders & brutal shadows on dark backgrounds
+
+---
+
+## Palette Tone
+
+(Visual representation: 0 [Black] <-----> 100 [White])
+
+The 0 tone is always 100% black, the darkest tone in the range; the 100 tone is always 100% white, the lightest tone in the range.
 </file>
 
 <file path="src/articles/first_blog.toml">
@@ -255,6 +367,100 @@ Intrigued? Getting started with programming has never been more accessible. Nume
 
 Programming is more than just a technical skill; it's a powerful tool for creation and innovation. It empowers you to build solutions, automate processes, and bring ideas to life in the digital realm. Whether you aim to become a professional software developer or simply want to understand the technology shaping our world, learning to program opens up a universe of possibilities.
 """
+</file>
+
+<file path="src/lib/components/icons/ExternalLinkIcon.svelte">
+<!-- src/lib/components/icons/ExternalLinkIcon.svelte -->
+<svg
+	aria-hidden="true"
+	focusable="false"
+	width="1em"
+	height="1em"
+	style="display: inline-block; margin-left: 0.5rem;"
+	viewBox="0 0 512 512"
+	fill="currentColor"
+	><path
+		d="M352 0c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9L370.7 96 201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L416 141.3l41.4 41.4c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-128c0-17.7-14.3-32-32-32L352 0zM80 32C35.8 32 0 67.8 0 112L0 432c0 44.2 35.8 80 80 80l320 0c44.2 0 80-35.8 80-80l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-320c0-8.8 7.2-16 16-16l112 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 32z"
+	></path></svg
+>
+</file>
+
+<file path="src/lib/components/icons/GithubIcon.svelte">
+<!-- src/lib/components/icons/GithubIcon.svelte -->
+<svg
+	stroke="currentColor"
+	fill="currentColor"
+	stroke-width="0"
+	viewBox="0 0 496 512"
+	height="1em"
+	width="1em"
+	xmlns="http://www.w3.org/2000/svg"
+	><path
+		d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"
+	></path></svg
+>
+</file>
+
+<file path="src/lib/components/icons/LinkedinIcon.svelte">
+<!-- src/lib/components/icons/LinkedinIcon.svelte -->
+<svg
+	stroke="currentColor"
+	fill="currentColor"
+	stroke-width="0"
+	viewBox="0 0 448 512"
+	height="1em"
+	width="1em"
+	xmlns="http://www.w3.org/2000/svg"
+	><path
+		d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"
+	></path></svg
+>
+</file>
+
+<file path="src/lib/components/icons/LogoPlaceholder.svelte">
+<!-- src/lib/components/icons/LogoK.svelte -->
+<svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<!-- Vertical Stem -->
+	<path d="M 25 10 L 25 90" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+	<!-- Upper Diagonal Arm -->
+	<path d="M 25 50 L 75 10" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+	<!-- Lower Diagonal Arm -->
+	<path d="M 25 50 L 75 90" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+</svg>
+</file>
+
+<file path="src/lib/components/icons/MoonIcon.svelte">
+<!-- src/lib/components/icons/MoonIcon.svelte -->
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="1em"
+	height="1em"
+	viewBox="0 0 24 24"
+	fill="none"
+	stroke="currentColor"
+	stroke-width="2"
+	stroke-linecap="round"
+	stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg
+>
+</file>
+
+<file path="src/lib/components/icons/SunIcon.svelte">
+<!-- src/lib/components/icons/SunIcon.svelte -->
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="1em"
+	height="1em"
+	viewBox="0 0 24 24"
+	fill="none"
+	stroke="currentColor"
+	stroke-width="2"
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path
+		d="m4.93 4.93 1.41 1.41"
+	></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"
+	></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg
+>
 </file>
 
 <file path="src/lib/components/ui/avatar/avatar-fallback.svelte">
@@ -415,12 +621,12 @@ export { badgeVariants, type BadgeVariant } from "./badge.svelte";
 			// Replaced variants with the new ones, using CSS variables
 			variant: {
 				default:
-					'text-[var(--main-foreground)] bg-[var(--main)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
-				noShadow: 'text-[var(--main-foreground)] bg-[var(--main)] border-2 border-[var(--border)]',
+					'text-[var(--main-foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+				noShadow: 'text-[var(--main-foreground)] border-2 border-[var(--border)]',
 				neutral:
-					'bg-[var(--secondary-background)] text-[var(--foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+					'text-[var(--foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
 				reverse:
-					'text-[var(--main-foreground)] bg-[var(--main)] border-2 border-[var(--border)] hover:translate-x-[var(--spacing-reverseBoxShadowX)] hover:translate-y-[var(--spacing-reverseBoxShadowY)] hover:shadow-[var(--shadow-shadow)]'
+					'text-[var(--main-foreground)] border-2 border-[var(--border)] hover:translate-x-[var(--spacing-reverseBoxShadowX)] hover:translate-y-[var(--spacing-reverseBoxShadowY)] hover:shadow-[var(--shadow-shadow)]'
 				// Original variants removed, add back if needed
 			},
 			// Kept original sizes, updated icon size slightly
@@ -454,7 +660,6 @@ export { badgeVariants, type BadgeVariant } from "./badge.svelte";
 <script lang="ts">
 	// No changes needed for cn import
 	import { cn } from '$lib/utils.js';
-	// REMOVED the conflicting import: import type { ButtonProps } from "./button.svelte";
 
 	// ButtonProps type is directly available from the module script above
 	let {
@@ -790,13 +995,14 @@ export {
 	bind:ref
 	class={cn(
 		// Change background to black
-		'shrink-0 bg-black',
+		'shrink-0 ', // Use foreground color for the separator's background
 		// Use the thickness prop for height/width
 		orientation === 'horizontal'
 			? `${thickness} w-full` // e.g., h-2 w-full
 			: `min-h-full ${verticalThickness}`, // e.g., min-h-full w-2
 		className
 	)}
+	style="background-color: var(--foreground);"
 	{orientation}
 	{...restProps}
 />
@@ -1005,66 +1211,105 @@ export {
 />
 </file>
 
+<file path="src/lib/stores/themeStore.ts">
+// src/lib/stores/themeStore.ts
+import { writable, type Writable } from 'svelte/store';
+import { applyThemeClass, getPreferredTheme, persistTheme } from '$lib/themeUtils';
+
+interface ThemeStore {
+    isDark: boolean;
+    mounted: boolean; // To track if client-side logic can run
+}
+
+// Create the writable store
+const { subscribe, set, update }: Writable<ThemeStore> = writable({
+    isDark: false, // Initial default, will be updated on mount
+    mounted: false
+});
+
+// Function to initialize the theme based on preference/storage
+function initializeTheme(): void {
+    if (typeof window !== 'undefined') {
+        const preferredTheme = getPreferredTheme();
+        const newIsDark = preferredTheme === 'dark';
+        update((store) => ({ ...store, isDark: newIsDark, mounted: true }));
+        applyThemeClass(newIsDark); // Apply initial theme class
+        console.log('Theme initialized:', preferredTheme);
+    }
+}
+
+// Function to toggle the theme
+function toggleTheme(): void {
+    update((store) => {
+        const newIsDark = !store.isDark;
+        persistTheme(newIsDark ? 'dark' : 'light');
+        applyThemeClass(newIsDark);
+        console.log('Theme toggled to:', newIsDark ? 'dark' : 'light');
+        return { ...store, isDark: newIsDark };
+    });
+}
+
+// Export the store and actions
+export const themeStore = {
+    subscribe,
+    initialize: initializeTheme,
+    toggle: toggleTheme
+    // Note: We don't export set or update directly to control state changes
+};
+</file>
+
 <file path="src/lib/index.ts">
 // place files you want to import through the `$lib` alias in this folder.
 </file>
 
-<file path="src/lib/utils.ts">
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-import { marked } from 'marked';
-// Optional: Add sanitizer later if needed
-// import DOMPurify from 'dompurify';
-
-export function cn(...inputs: ClassValue[]) {
-	return twMerge(clsx(inputs));
+<file path="src/lib/themeUtils.ts">
+// src/lib/themeUtils.ts
+/**
+ * Applies the theme class to the document root.
+ * Handles server-side rendering safety.
+ * @param isDark - Whether the dark theme should be applied.
+ */
+export function applyThemeClass(isDark: boolean): void {
+    if (typeof document !== 'undefined') {
+        const root = document.documentElement;
+        if (isDark) {
+            root.classList.add('dark');
+        } else {
+            root.classList.remove('dark');
+        }
+    }
 }
 
 /**
- * Formats a date object into a standard string format for display (e.g., "October 5, 2024").
- * @param date - The Date object, or a string/number that can be parsed into a Date.
- * @returns The formatted date string, or "Invalid Date" if input is invalid.
+ * Gets the preferred theme based on localStorage or system preference.
+ * Handles server-side rendering safety.
+ * @returns 'dark' or 'light'
  */
-export function formatDisplayDate(date: Date | string | number): string {
-    // Attempt to create a Date object
-    const dateObj = new Date(date);
-
-    // Check if the Date object is valid
-    if (isNaN(dateObj.getTime())) {
-        console.warn("formatDisplayDate received invalid date input:", date);
-        return "Invalid Date";
+export function getPreferredTheme(): 'dark' | 'light' {
+    if (typeof window !== 'undefined') {
+        const storedTheme = localStorage.getItem('theme');
+        // Explicitly check for 'dark' or 'light' to avoid invalid values
+        if (storedTheme === 'dark' || storedTheme === 'light') {
+            return storedTheme;
+        }
+        // Check system preference only if no valid theme is stored
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return prefersDark ? 'dark' : 'light';
     }
-
-    // Format the valid date
-    return dateObj.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    // Return a default theme for SSR or environments without window
+    // Consider if 'light' or 'dark' makes more sense as your default fallback
+    return 'light';
 }
 
-
 /**
- * Parses a Markdown string into HTML.
- * WARNING: Does not sanitize by default. Add sanitization if content is not trusted.
- * @param markdownContent - The Markdown string.
- * @returns The parsed HTML string, or an empty string if input is null/undefined.
+ * Persists the chosen theme to localStorage.
+ * Handles server-side rendering safety.
+ * @param theme - 'dark' or 'light'
  */
-export function parseMarkdown(markdownContent: string | null | undefined): string {
-    if (!markdownContent) {
-        return '';
+export function persistTheme(theme: 'dark' | 'light'): void {
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('theme', theme);
     }
-    // Basic parsing:
-    const rawHtml = marked.parse(markdownContent) as string;
-
-    // TODO: Add Sanitization if needed!
-    // Example using DOMPurify (requires installation: pnpm add dompurify @types/dompurify)
-    // Make sure DOMPurify runs only in the browser context
-    // if (typeof window !== 'undefined') {
-    //     return DOMPurify.sanitize(rawHtml);
-    // }
-    // Return raw HTML for SSR or if no sanitization needed (use with caution)
-    return rawHtml;
 }
 </file>
 
@@ -1261,246 +1506,28 @@ engine-strict=true
 }
 </file>
 
-<file path="src/lib/frontpage/Footer.svelte">
-<!-- src/lib/components/layout/Footer.svelte -->
-<script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import { Separator } from '$lib/components/ui/separator';
+<file path="firefoxtemp.sh">
+#!/bin/bash
 
-	const currentYear = new Date().getFullYear();
+# Create a temporary directory for the profile
+# mktemp creates a unique temporary directory securely
+TMP_PROFILE_DIR=$(mktemp -d -t firefox-temp-profile.XXXXXXXXXX)
 
-	// --- Placeholder SVGs (Specific to Footer) ---
-	const externalLinkIcon = `
-    <svg aria-hidden="true" focusable="false" width="1em" height="1em" style="display: inline-block; margin-left: 0.5rem;" viewBox="0 0 512 512" fill="currentColor"><path d="M352 0c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9L370.7 96 201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L416 141.3l41.4 41.4c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-128c0-17.7-14.3-32-32-32L352 0zM80 32C35.8 32 0 67.8 0 112L0 432c0 44.2 35.8 80 80 80l320 0c44.2 0 80-35.8 80-80l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-320c0-8.8 7.2-16 16-16l112 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 32z"></path></svg>
-  `;
-	const githubIcon = `
-    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 496 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
-  `;
-	const linkedinIcon = `
-    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
-  `;
-</script>
+# Ensure the directory is cleaned up even if the script is interrupted
+trap 'rm -rf "$TMP_PROFILE_DIR"' EXIT
 
-<footer class="w-full bg-background p-8">
-	<Separator class="mb-8" />
-	<div class="mx-auto">
-		<div class="mb-12 grid grid-cols-1 gap-8 md:grid-cols-3">
-			<!-- Quick Links -->
-			<div>
-				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
-					Quick Links
-				</h3>
-				<ul class="font-base space-y-3">
-					<li>
-						<a
-							href="/"
-							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
-							>Home</a
-						>
-					</li>
-					<li>
-						<a
-							href="/"
-							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
-							>Journey</a
-						>
-					</li>
-					<li>
-						<a
-							href="/"
-							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
-							>Projects</a
-						>
-					</li>
-					<li>
-						<a
-							href="/blog/"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hover:bg-main hover:text-main-foreground inline-flex items-center border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
-						>
-							Blogs
-							{@html externalLinkIcon}
-						</a>
-					</li>
-				</ul>
-			</div>
+echo "Launching Firefox with temporary profile: $TMP_PROFILE_DIR"
 
-			<!-- Get in Touch -->
-			<div class="rotate-50 transform">
-				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
-					Get in Touch!
-				</h3>
-				<div class="mb-8 flex flex-col items-start">
-					<div class="mb-6 flex space-x-6">
-						<a
-							href="https://github.com/prudhviboggavarapu"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
-							aria-label="GitHub"
-						>
-							{@html githubIcon}
-						</a>
-						<a
-							href="https://www.linkedin.com/in/prudhviboggavarapu/"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
-							aria-label="LinkedIn"
-						>
-							{@html linkedinIcon}
-						</a>
-					</div>
-					<!-- You could add a contact button/form here -->
-					<Button variant="default" onclick={() => console.log('Footer Get in Touch clicked!')}>
-						Contact Me
-					</Button>
-				</div>
-			</div>
+# Launch Firefox
+# -no-remote: Ensures this runs as a separate instance, not connecting to an existing one.
+# -profile: Specifies the directory to use for the profile.
+# "$@": Passes any additional arguments you give the script to Firefox.
+firefox -no-remote -profile "$TMP_PROFILE_DIR" "$@"
 
-			<!-- Column 3 (Optional) -->
-			<div>
-				<!-- Placeholder for potential third column content -->
-				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
-					Placeholder
-				</h3>
-				<p class="font-base text-foreground">Maybe some extra info here.</p>
-			</div>
-		</div>
+echo "Firefox closed. Temporary profile will be removed."
 
-		<!-- Footer Bottom -->
-		<Separator thickness="h-1" class="mb-8" />
-		<!-- Thinner separator -->
-		<div class="flex flex-col items-center justify-between gap-4 md:flex-row">
-			<p class="text-center font-bold text-foreground md:text-left">
-				© {currentYear} Karma | Built with love by
-				<a href="https://karmajaderose.com" class="text-main-foreground underline">Karma</a>
-			</p>
-			<div
-				class="bg-black px-4 py-2 font-mono text-sm text-white dark:bg-background dark:text-foreground"
-			>
-				&lt;/&gt; with <a href="https://svelte.dev/" class="text-main-foreground hover:underline"
-					>SvelteKit</a
-				>
-				+
-				<a href="https://www.shadcn-svelte.com/" class="text-main-foreground hover:underline"
-					>Shadcn UI Svelte</a
-				>
-			</div>
-		</div>
-	</div>
-</footer>
-</file>
-
-<file path="src/lib/frontpage/Header.svelte">
-<!-- src/lib/frontpage/Header.svelte -->
-<script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-
-	// Props passed down from the parent (+page.svelte or +layout.svelte)
-	let {
-		mounted = false, // To prevent hydration mismatch for theme icons
-		isDark = false,
-		toggleTheme = () => {} // Default empty function
-	}: {
-		mounted: boolean;
-		isDark: boolean;
-		toggleTheme: () => void;
-	} = $props();
-
-	// --- Placeholder SVGs (Specific to Header) ---
-	const logoPlaceholder = `
-    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="100" height="100" rx="10" fill="currentColor"/>
-      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="40" font-weight="bold" fill="var(--main-foreground)">RJ</text>
-    </svg>
-  `;
-	const externalLinkIcon = `
-    <svg aria-hidden="true" focusable="false" width="1em" height="1em" style="display: inline-block; margin-left: 0.5rem;" viewBox="0 0 512 512" fill="currentColor"><path d="M352 0c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9L370.7 96 201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L416 141.3l41.4 41.4c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-128c0-17.7-14.3-32-32-32L352 0zM80 32C35.8 32 0 67.8 0 112L0 432c0 44.2 35.8 80 80 80l320 0c44.2 0 80-35.8 80-80l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-320c0-8.8 7.2-16 16-16l112 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 32z"></path></svg>
-  `;
-	const sunIcon = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
-  `;
-	const moonIcon = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
-  `;
-</script>
-
-<!-- Apply background, border, shadow, and vertical padding to the outer nav -->
-<nav class="bg-main shadow-shadow w-full border-2 border-border py-2">
-	<!-- Keep max-width and centering on the inner div -->
-	<!-- Remove mt-4, bg-main, border, shadow from this inner div -->
-	<!-- Adjust height and padding as needed -->
-	<div class="mx-auto flex h-[64px] w-full max-w-screen-xl items-center justify-between px-6">
-		<!-- Logo -->
-		<h1
-			class="text-main-foreground min-w-[50px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
-		>
-			<a href="/" class="text-main-foreground block">
-				{@html logoPlaceholder}
-			</a>
-		</h1>
-
-		<!-- Desktop Navigation -->
-		<div class="font-base hidden items-center space-x-6 text-base md:flex lg:text-lg">
-			<a
-				href="/"
-				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
-				>Home</a
-			>
-			<a
-				href="/"
-				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
-				>Journey</a
-			>
-			<a
-				href="/"
-				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
-				>Projects</a
-			>
-			<a
-				href="/blog/"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
-			>
-				Blogs
-				{@html externalLinkIcon}
-			</a>
-			<div class="flex items-center gap-4">
-				<Button variant="neutral" onclick={() => console.log('Get in Touch clicked!')}>
-					Get in Touch!
-				</Button>
-				<Button variant="neutral" size="icon" onclick={toggleTheme} aria-label="Toggle theme">
-					{#if mounted}
-						{#if isDark}
-							{@html sunIcon}
-						{:else}
-							{@html moonIcon}
-						{/if}
-					{/if}
-					<span class="sr-only">Toggle theme</span>
-				</Button>
-			</div>
-		</div>
-
-		<!-- Mobile Navigation Controls -->
-		<div class="flex items-center gap-4 md:hidden">
-			<Button variant="neutral" size="icon" onclick={toggleTheme} aria-label="Toggle theme">
-				{#if mounted}
-					{#if isDark}
-						{@html sunIcon}
-					{:else}
-						{@html moonIcon}
-					{/if}
-				{/if}
-				<span class="sr-only">Toggle theme</span>
-			</Button>
-			<!-- Mobile Menu Trigger (Sheet) Removed -->
-		</div>
-	</div>
-</nav>
+# The trap command handles the cleanup automatically on exit.
+exit 0
 </file>
 
 <file path="src/lib/server/blogPosts.ts">
@@ -1649,101 +1676,63 @@ export function getPostBySlug(slug: string): BlogPost | null {
 }
 </file>
 
-<file path="src/routes/blog/+page.svelte">
-<!-- src/routes/blog/+page.svelte -->
-<script lang="ts">
-	// Import the shared Header and Footer
-	import Header from '$lib/frontpage/Header.svelte';
-	import Footer from '$lib/frontpage/Footer.svelte';
-	import { onMount } from 'svelte';
-	import type { PageData } from './+page.server.js'; // Import the type for loaded data
+<file path="src/lib/utils.ts">
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { marked } from 'marked';
+// Optional: Add sanitizer later if needed
+// import DOMPurify from 'dompurify';
 
-	// --- Theme Toggle State and Logic ---
-	// NOTE: Ideally, this logic should live in your root +layout.svelte
-	// so it applies globally and doesn't need repeating on each page.
-	// We're keeping it here for now to match the previous structure.
-	let isDark = $state(false);
-	let mounted = $state(false);
+export function cn(...inputs: ClassValue[]) {
+	return twMerge(clsx(inputs));
+}
 
-	onMount(() => {
-		mounted = true;
-		const storedTheme = localStorage.getItem('theme');
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		if (storedTheme) {
-			isDark = storedTheme === 'dark';
-		} else {
-			isDark = prefersDark;
-		}
-		applyTheme();
-	});
+/**
+ * Formats a date object into a standard string format for display (e.g., "October 5, 2024").
+ * @param date - The Date object, or a string/number that can be parsed into a Date.
+ * @returns The formatted date string, or "Invalid Date" if input is invalid.
+ */
+export function formatDisplayDate(date: Date | string | number): string {
+    // Attempt to create a Date object
+    const dateObj = new Date(date);
 
-	function toggleTheme() {
-		isDark = !isDark;
-		localStorage.setItem('theme', isDark ? 'dark' : 'light');
-		applyTheme();
-	}
+    // Check if the Date object is valid
+    if (isNaN(dateObj.getTime())) {
+        console.warn("formatDisplayDate received invalid date input:", date);
+        return "Invalid Date";
+    }
 
-	function applyTheme() {
-		if (typeof document !== 'undefined') {
-			if (isDark) {
-				document.documentElement.classList.add('dark');
-			} else {
-				document.documentElement.classList.remove('dark');
-			}
-		}
-	}
-	// --- End Theme Logic ---
+    // Format the valid date
+    return dateObj.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
 
-	// Get the loaded posts from the page data provided by +page.server.ts
-	let { data }: { data: PageData } = $props();
-</script>
 
-<div class="flex min-h-screen flex-col bg-background text-foreground">
-	<!-- Render Shared Header Component -->
-	<Header {mounted} {isDark} {toggleTheme} />
+/**
+ * Parses a Markdown string into HTML.
+ * WARNING: Does not sanitize by default. Add sanitization if content is not trusted.
+ * @param markdownContent - The Markdown string.
+ * @returns The parsed HTML string, or an empty string if input is null/undefined.
+ */
+export function parseMarkdown(markdownContent: string | null | undefined): string {
+    if (!markdownContent) {
+        return '';
+    }
+    // Basic parsing:
+    const rawHtml = marked.parse(markdownContent) as string;
 
-	<!-- Main Blog Content Area -->
-	<main class="flex-grow">
-		<div class="container mx-auto p-8">
-			<h1 class="font-heading mb-6 border-b-2 border-border pb-4 text-4xl">Blog Posts</h1>
-
-			<!-- Check if there are posts loaded -->
-			{#if data.posts && data.posts.length > 0}
-				<div class="space-y-8">
-					<!-- Iterate over the loaded posts -->
-					{#each data.posts as post}
-						<!-- Apply the exact same classes as the original placeholder article -->
-						<article class="shadow-shadow rounded-[var(--radius-base)] border-2 border-border p-6">
-							<!-- Post Title - styled like original h2 -->
-							<h2 class="font-heading mb-2 text-2xl">{post.name}</h2>
-							<!-- Publication Date - styled like original date p -->
-							<p class="mb-4 text-sm text-foreground/80">
-								Published on: {post.date.toLocaleDateString('en-US', {
-									year: 'numeric',
-									month: 'long',
-									day: 'numeric'
-								})}
-							</p>
-							<!-- Post Blurb/Excerpt - styled like original excerpt p -->
-							{#if post.blurb}
-								<p class="font-base mb-4">{post.blurb}</p>
-							{/if}
-							<!-- Read More Link - styled like original link -->
-							<a href="/blog/{post.slug}" class="text-main font-bold hover:underline">
-								Read More
-							</a>
-						</article>
-					{/each}
-				</div>
-			{:else}
-				<p class="font-base text-center italic">More posts coming soon!</p>
-			{/if}
-		</div>
-	</main>
-
-	<!-- Render Shared Footer Component -->
-	<Footer />
-</div>
+    // TODO: Add Sanitization if needed!
+    // Example using DOMPurify (requires installation: pnpm add dompurify @types/dompurify)
+    // Make sure DOMPurify runs only in the browser context
+    // if (typeof window !== 'undefined') {
+    //     return DOMPurify.sanitize(rawHtml);
+    // }
+    // Return raw HTML for SSR or if no sanitization needed (use with caution)
+    return rawHtml;
+}
 </file>
 
 <file path="src/app.d.ts">
@@ -1843,83 +1832,334 @@ You can preview the production build with `npm run preview`.
 }
 </file>
 
-<file path="src/routes/+layout.svelte">
+<file path="src/lib/frontpage/Footer.svelte">
+<!-- src/lib/components/layout/Footer.svelte -->
 <script lang="ts">
-	import '../app.css';
-	let { children } = $props();
+	import { Button } from '$lib/components/ui/button';
+	import { Separator } from '$lib/components/ui/separator';
+
+	// Import Icon Components
+	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
+	import GithubIcon from '$lib/components/icons/GithubIcon.svelte';
+	import LinkedinIcon from '$lib/components/icons/LinkedinIcon.svelte';
+
+	const currentYear = new Date().getFullYear();
+
+	// Removed SVG string variables
 </script>
 
-{@render children()}
+<footer class="w-full bg-background">
+	<Separator class="mb-4" />
+	<div class="mx-auto">
+		<div class="mb- grid grid-cols-1 gap-8 px-8 md:grid-cols-3">
+			<!-- Quick Links -->
+			<div>
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Quick Links
+				</h3>
+				<ul class="font-base space-y-3">
+					<li>
+						<a
+							href="/"
+							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							>Home</a
+						>
+					</li>
+					<li>
+						<a
+							href="/"
+							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							>Journey</a
+						>
+					</li>
+					<li>
+						<a
+							href="/"
+							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							>Projects</a
+						>
+					</li>
+					<li>
+						<a
+							href="/blog/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:bg-main hover:text-main-foreground inline-flex items-center border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+						>
+							Blogs
+							<ExternalLinkIcon />
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<!-- Get in Touch -->
+			<div class="rotate-50 transform">
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Get in Touch!
+				</h3>
+				<div class="mb-8 flex flex-col items-start">
+					<div class="mb-6 flex space-x-6">
+						<a
+							href="https://github.com/prudhviboggavarapu"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
+							aria-label="GitHub"
+						>
+							<GithubIcon />
+						</a>
+						<a
+							href="https://www.linkedin.com/in/prudhviboggavarapu/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
+							aria-label="LinkedIn"
+						>
+							<LinkedinIcon />
+						</a>
+					</div>
+					<!-- You could add a contact button/form here -->
+					<Button
+						variant="default"
+						class="bg-[var(--neobrutalism-yellow-70)]"
+						onclick={() => console.log('Footer Get in Touch clicked!')}
+					>
+						Contact Me
+					</Button>
+				</div>
+			</div>
+
+			<!-- Column 3 (Optional) -->
+			<div>
+				<!-- Placeholder for potential third column content -->
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Placeholder
+				</h3>
+				<p class="font-base text-foreground">Maybe some extra info here.</p>
+			</div>
+		</div>
+
+		<!-- Footer Bottom -->
+		<Separator class="mb-4" />
+		<!-- Thinner separator -->
+		<div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+			<p class="text-center font-bold text-foreground md:text-left">
+				© {currentYear} Karma | Built with love by
+				<a href="https://karmajaderose.com" class="text-main-foreground underline">Karma</a>
+			</p>
+			<div
+				class="bg-black px-4 py-2 font-mono text-sm text-white dark:bg-background dark:text-foreground"
+			>
+				&lt;/&gt; with <a href="https://svelte.dev/" class="text-main-foreground hover:underline"
+					>SvelteKit</a
+				>
+				+
+				<a href="https://www.shadcn-svelte.com/" class="text-main-foreground hover:underline"
+					>Shadcn UI Svelte</a
+				>
+			</div>
+		</div>
+	</div>
+</footer>
 </file>
 
-<file path="src/routes/+page.svelte">
-<!-- src/routes/+page.svelte -->
+<file path="src/lib/frontpage/Header.svelte">
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { themeStore } from '$lib/stores/themeStore';
+	import {
+		Sheet,
+		SheetContent,
+		SheetHeader,
+		SheetTitle,
+		SheetTrigger,
+		SheetClose
+	} from '$lib/components/ui/sheet';
+	import { Separator } from '$lib/components/ui/separator';
+	import { goto } from '$app/navigation';
+
+	import LogoPlaceholder from '$lib/components/icons/LogoPlaceholder.svelte';
+	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
+	import SunIcon from '$lib/components/icons/SunIcon.svelte';
+	import MoonIcon from '$lib/components/icons/MoonIcon.svelte';
+	import Menu from '@lucide/svelte/icons/menu';
+</script>
+
+<nav class="bg-main shadow-shadow w-full border-4 border-border">
+	<div class="mx-auto flex h-[64px] w-full max-w-screen-xl items-center justify-between px-6">
+		<h1
+			class="text-main-foreground min-w-[50px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
+		>
+			<a href="/" class="text-main-foreground block">
+				<LogoPlaceholder />
+			</a>
+		</h1>
+
+		<div class="font-base hidden items-center space-x-6 text-base md:flex lg:text-lg">
+			<a
+				href="/"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+				>Home</a
+			>
+			<Separator orientation="vertical"></Separator>
+			<a
+				href="/"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+				>Journey</a
+			>
+			<a
+				href="/"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+				>Projects</a
+			>
+			<a
+				href="/blog/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+			>
+				Blogs
+				<ExternalLinkIcon />
+			</a>
+			<div class="flex items-center gap-4">
+				<Button variant="default" onclick={() => goto('/linktree')}>Contact Me</Button>
+				<Button variant="neutral" size="icon" onclick={themeStore.toggle} aria-label="Toggle theme">
+					{#if $themeStore.mounted}
+						{#if $themeStore.isDark}
+							<SunIcon />
+						{:else}
+							<MoonIcon />
+						{/if}
+					{/if}
+					<span class="sr-only">Toggle theme</span>
+				</Button>
+			</div>
+		</div>
+
+		<div class="flex items-center gap-4 md:hidden">
+			<Button variant="neutral" size="icon" onclick={themeStore.toggle} aria-label="Toggle theme">
+				{#if $themeStore.mounted}
+					{#if $themeStore.isDark}
+						<SunIcon />
+					{:else}
+						<MoonIcon />
+					{/if}
+				{/if}
+				<span class="sr-only">Toggle theme</span>
+			</Button>
+
+			<Sheet>
+				<SheetTrigger
+					class="inline-flex h-10 w-10 items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] border-2 border-[var(--border)] text-sm font-[var(--font-weight-base)] shadow-[var(--shadow-shadow)] ring-offset-white transition-all hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+					aria-label="Open menu"
+				>
+					<Menu class="size-5" />
+					<span class="sr-only">Open menu</span>
+				</SheetTrigger>
+				<SheetContent side="right" class="w-[280px] border-l-4 border-border bg-background p-6">
+					<SheetHeader class="mb-6 text-left">
+						<SheetTitle class="font-heading text-2xl">Menu</SheetTitle>
+					</SheetHeader>
+					<nav class="flex flex-col space-y-4">
+						<SheetClose>
+							<a href="/" class="hover:text-main block text-lg font-bold text-foreground">Home</a>
+						</SheetClose>
+						<SheetClose>
+							<a href="/" class="hover:text-main block text-lg font-bold text-foreground">Journey</a
+							>
+						</SheetClose>
+						<SheetClose>
+							<a href="/" class="hover:text-main block text-lg font-bold text-foreground"
+								>Projects</a
+							>
+						</SheetClose>
+						<SheetClose>
+							<a
+								href="/blog/"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="hover:text-main inline-flex items-center gap-1 text-lg font-bold text-foreground"
+							>
+								Blogs
+								<ExternalLinkIcon />
+							</a>
+						</SheetClose>
+
+						<Separator class="my-4" />
+
+						<SheetClose>
+							<Button
+								variant="default"
+								class="w-full"
+								onclick={() => {
+									goto('/linktree');
+								}}
+							>
+								Contact Me
+							</Button>
+						</SheetClose>
+					</nav>
+				</SheetContent>
+			</Sheet>
+		</div>
+	</div>
+</nav>
+</file>
+
+<file path="src/routes/blog/+page.svelte">
+<!-- src/routes/blog/+page.svelte -->
 <script lang="ts">
 	import Header from '$lib/frontpage/Header.svelte';
 	import Footer from '$lib/frontpage/Footer.svelte';
-	import { onMount } from 'svelte';
+	import type { PageData } from './+page.server.js'; // Import the type for loaded data
 
-	// --- Theme Toggle State and Logic (Keep here or move to +layout.svelte) ---
-	let isDark = false;
-	let mounted = false;
-
-	onMount(() => {
-		mounted = true;
-		const storedTheme = localStorage.getItem('theme');
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		if (storedTheme) {
-			isDark = storedTheme === 'dark';
-		} else {
-			isDark = prefersDark;
-		}
-		applyTheme();
-	});
-
-	function toggleTheme() {
-		isDark = !isDark;
-		localStorage.setItem('theme', isDark ? 'dark' : 'light');
-		applyTheme();
-	}
-
-	function applyTheme() {
-		if (typeof document !== 'undefined') {
-			if (isDark) {
-				document.documentElement.classList.add('dark');
-			} else {
-				document.documentElement.classList.remove('dark');
-			}
-		}
-	}
-	// --- End Theme Logic ---
+	// Get the loaded posts from the page data provided by +page.server.ts
+	let { data }: { data: PageData } = $props();
 </script>
 
 <div class="flex min-h-screen flex-col bg-background text-foreground">
-	<!-- Render Header Component -->
-	<Header {mounted} {isDark} {toggleTheme} />
+	<!-- Render Shared Header Component - No longer needs theme props -->
+	<Header />
 
-	<!-- Main Content Area - REMOVED pt-* class -->
+	<!-- Main Blog Content Area -->
 	<main class="flex-grow">
 		<div class="container mx-auto p-8">
-			<h1 class="font-heading mb-4 text-3xl">Main Content Area</h1>
-			<p class="font-base">This is where the main page content would go.</p>
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-				labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-				voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-				cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</p>
-			<!-- Add more placeholder content or actual sections here -->
-			<div
-				class="bg-secondary-background mt-8 flex h-96 items-center justify-center rounded-md border border-border"
-			>
-				Placeholder Content Block
-			</div>
+			<h1 class="font-heading mb-6 border-b-2 border-border pb-4 text-4xl">Blog Posts</h1>
+
+			<!-- Check if there are posts loaded -->
+			{#if data.posts && data.posts.length > 0}
+				<div class="space-y-8">
+					<!-- Iterate over the loaded posts -->
+					{#each data.posts as post}
+						<!-- Apply the exact same classes as the original placeholder article -->
+						<article class="shadow-shadow rounded-[var(--radius-base)] border-2 border-border p-6">
+							<!-- Post Title - styled like original h2 -->
+							<h2 class="font-heading mb-2 text-2xl">{post.name}</h2>
+							<!-- Publication Date - styled like original date p -->
+							<p class="mb-4 text-sm text-foreground/80">
+								Published on: {post.date.toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'long',
+									day: 'numeric'
+								})}
+							</p>
+							<!-- Post Blurb/Excerpt - styled like original excerpt p -->
+							{#if post.blurb}
+								<p class="font-base mb-4">{post.blurb}</p>
+							{/if}
+							<!-- Read More Link - styled like original link -->
+							<a href="/blog/{post.slug}" class="text-main font-bold hover:underline">
+								Read More
+							</a>
+						</article>
+					{/each}
+				</div>
+			{:else}
+				<p class="font-base text-center italic">More posts coming soon!</p>
+			{/if}
 		</div>
 	</main>
-
-	<!-- Render Footer Component -->
-	<Footer />
 </div>
 </file>
 
@@ -1948,13 +2188,63 @@ export default defineConfig({
 });
 </file>
 
+<file path="src/routes/+layout.svelte">
+<!-- src/routes/+layout.svelte -->
+<script lang="ts">
+	import '../app.css';
+	import { onMount } from 'svelte';
+	import { themeStore } from '$lib/stores/themeStore';
+
+	let { children } = $props();
+
+	// Initialize theme on client-side mount
+	onMount(() => {
+		themeStore.initialize();
+	});
+</script>
+
+{@render children()}
+</file>
+
+<file path="src/routes/+page.svelte">
+<!-- src/routes/+page.svelte -->
+<script lang="ts">
+	import Header from '$lib/frontpage/Header.svelte';
+	import Footer from '$lib/frontpage/Footer.svelte';
+	// Removed onMount and theme logic variables/functions
+</script>
+
+<div class="flex min-h-screen flex-col bg-background text-foreground">
+	<Header />
+
+	<!-- Main Content Area -->
+	<main class="flex-grow">
+		<div class="container mx-auto bg-background p-8">
+			<h1 class="font-heading mb-4 text-3xl">Main Content Area</h1>
+			<p class="font-base">This is where the main page content would go.</p>
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+				voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+				cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</p>
+			<!-- Add more placeholder content or actual sections here -->
+			<div
+				class="bg-secondary-background mt-8 flex h-96 items-center justify-center rounded-md border border-border"
+			>
+				Placeholder Content Block
+			</div>
+		</div>
+	</main>
+
+	<!-- Render Footer Component -->
+	<Footer />
+</div>
+</file>
+
 <file path="src/app.css">
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-/* src/app.css */
 @import 'tw-animate-css';
-/* Standard Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -1966,97 +2256,104 @@ export default defineConfig({
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
-	/* Your :root variables using oklch */
+
+	/* --- Neobrutalist Light/Dark Purple Theme --- */
+
+	/* :root variables (Light Mode) */
 	:root {
-		/* Your Core Theme Variables */
-		--background: oklch(94.11% 0.036556 308.0303);
+		/* Core Theme Variables */
+		--background: var(--neobrutalism-purple-70);
+		/* Light Purple background */
 		--secondary-background: oklch(100% 0 0);
+		/* White secondary for contrast */
 		--foreground: oklch(0% 0 0);
-		--main-foreground: oklch(0% 0 0);
-		--main: oklch(71.9% 0.198 310.03);
+		/* Black text */
+		--main: #9723C9;
+		/* Vibrant Purple accent */
+		--main-foreground: oklch(100% 0 0);
+		/* White text on accent */
 		--border: oklch(0% 0 0);
+		/* Black borders */
 		--ring: oklch(0% 0 0);
-		/* Note: Original shadcn uses this for focus rings */
+		/* Black focus ring */
 		--overlay: oklch(0% 0 0 / 0.8);
+		/* Black overlay */
 		--shadow: 2px 2px 0px 0px var(--border);
-
-		/* Original shadcn variables (map your vars to these or update tailwind.config.ts) */
-		/* --foreground: 222.2 84% 4.9%; */
-		/* --muted: 210 40% 96.1%; */
-		/* --muted-foreground: 215.4 16.3% 46.9%; */
-		/* --popover: 0 0% 100%; */
-		/* --popover-foreground: 222.2 84% 4.9%; */
-		/* --card: 0 0% 100%; */
-		/* --card-foreground: 222.2 84% 4.9%; */
-		/* --border: 214.3 31.8% 91.4%; */
-		/* Replaced by your --border */
-		/* --input: 214.3 31.8% 91.4%; */
-		/* Often same as border */
-		/* --primary: 222.2 47.4% 11.2%; */
-		/* Map var(--main) here? */
-		/* --primary-foreground: 210 40% 98%; */
-		/* Map var(--main-foreground) here? */
-		/* --secondary: 210 40% 96.1%; */
-		/* Map var(--secondary-background) here? */
-		/* --secondary-foreground: 222.2 47.4% 11.2%; */
-		/* --accent: 210 40% 96.1%; */
-		/* --accent-foreground: 222.2 47.4% 11.2%; */
-		/* --destructive: 0 72.2% 50.6%; */
-		/* --destructive-foreground: 210 40% 98%; */
-		/* --ring: 222.2 84% 4.9%; */
-		/* Replaced by your --ring */
+		/* Solid black offset shadow */
 		--radius: 10px;
-		/* Using --radius-base from @theme, adjust if needed */
-		/* --sidebar-background: 0 0% 98%; */
-		/* --sidebar-foreground: 240 5.3% 26.1%; */
-		/* ... other sidebar vars ... */
+		/* Decorative Pink */
+		--neobrutalism-pink-70: #FFC6E7;
+		--neobrutalism-pink-90: #FFE2F3;
+
+		/* Decorative Purple */
+		--neobrutalism-purple-50: #B37DFF;
+		--neobrutalism-purple-70: #D9BEFF;
+		--neobrutalism-purple-90: #F0E5FF;
+		/* Same as --background */
+
+		/* Decorative Blue */
+		--neobrutalism-blue-50: #8AF1FF;
+		--neobrutalism-blue-70: #B3F6FF;
+		--neobrutalism-blue-90: #D6FAFF;
+
+		/* Decorative Yellow */
+		--neobrutalism-yellow-50: #FFE959;
+		--neobrutalism-yellow-70: #FFF29B;
+		--neobrutalism-yellow-90: #FFF8C5;
+
+		/* Decorative Green */
+		--neobrutalism-green-50: #76F7AE;
+		--neobrutalism-green-70: #ADFACE;
+		--neobrutalism-green-90: #CFFCE3;
+
+		/* --- Feedback Colors (Optional, added for completeness) --- */
+		/* Feedback Danger */
+		--neobrutalism-danger-50: #FF5454;
+		--neobrutalism-danger-90: #FFD6D6;
+
+		/* Feedback Warning */
+		--neobrutalism-warning-50: #FF9F69;
+		--neobrutalism-warning-90: #FFEAD1;
+
+		/* Feedback Success */
+		--neobrutalism-success-50: #3CD39D;
+
+		/* --- Other Palette Colors (Optional) --- */
+		--neobrutalism-primary-50: #FF8ACD;
+		--neobrutalism-secondary-0: #000000;
+		/* Same as --foreground */
+		--neobrutalism-separator-90: #E2E2E2;
+		--neobrutalism-body-90: #FFFBEE;
+		--neobrutalism-white-100: #FFFFFF;
+		/* Same as --secondary-background & --main-foreground */
 	}
 
-	/* Your .dark variables using oklch */
+	/* .dark variables (Dark Mode) */
 	.dark {
-		/* Your Core Dark Theme Variables */
-		--background: oklch(29.68% 0.0791 315.62);
-		--secondary-background: oklch(23.93% 0 0);
-		--foreground: oklch(92.49% 0 0);
-		--main-foreground: oklch(0% 0 0);
-		--main: oklch(67.34% 0.2314 309.13);
-		--border: oklch(0% 0 0);
+		/* Core Dark Theme Variables */
+		--background: #241933;
+		/* Dark Purple background */
+		--secondary-background: oklch(0% 0 0);
+		/* Black secondary for contrast */
+		--foreground: oklch(100% 0 0);
+		/* White text */
+		--main: #9723C9;
+		/* Vibrant Purple accent */
+		--main-foreground: oklch(100% 0 0);
+		/* White text on accent */
+		--border: oklch(100% 0 0);
+		/* White borders for contrast */
 		--ring: oklch(100% 0 0);
-		/* Note: Original shadcn uses this for focus rings */
+		/* White focus ring */
+		--overlay: oklch(0% 0 0 / 0.8);
+		/* Black overlay */
 		--shadow: 2px 2px 0px 0px var(--border);
-
-		/* Original shadcn dark variables (map your vars or update tailwind.config.ts) */
-		/* --foreground: 210 40% 98%; */
-		/* --muted: 217.2 32.6% 17.5%; */
-		/* --muted-foreground: 215 20.2% 65.1%; */
-		/* --popover: 222.2 84% 4.9%; */
-		/* --popover-foreground: 210 40% 98%; */
-		/* --card: 222.2 84% 4.9%; */
-		/* --card-foreground: 210 40% 98%; */
-		/* --border: 217.2 32.6% 17.5%; */
-		/* Replaced by your --border */
-		/* --input: 217.2 32.6% 17.5%; */
-		/* Often same as border */
-		/* --primary: 210 40% 98%; */
-		/* Map var(--main) here? */
-		/* --primary-foreground: 222.2 47.4% 11.2%; */
-		/* Map var(--main-foreground) here? */
-		/* --secondary: 217.2 32.6% 17.5%; */
-		/* Map var(--secondary-background) here? */
-		/* --secondary-foreground: 210 40% 98%; */
-		/* --accent: 217.2 32.6% 17.5%; */
-		/* --accent-foreground: 210 40% 98%; */
-		/* --destructive: 0 62.8% 30.6%; */
-		/* --destructive-foreground: 210 40% 98%; */
-		/* --ring: 212.7 26.8% 83.9%; */
-		/* Replaced by your --ring */
-		/* --sidebar-background: 240 5.9% 10%; */
-		/* --sidebar-foreground: 240 4.8% 95.9%; */
-		/* ... other dark sidebar vars ... */
+		/* Solid white offset shadow */
+		/* --radius: 10px; */
+		/* Inherited */
 	}
 
-	/* Your @theme block */
-	/* Ensure required PostCSS plugins are configured for this */
+	/* @theme block - No changes needed here, it just maps variables */
 	@theme inline {
 		--color-main: var(--main);
 		--color-background: var(--background);
@@ -2071,40 +2368,28 @@ export default defineConfig({
 		--spacing-boxShadowY: 2px;
 		--spacing-reverseBoxShadowX: -2px;
 		--spacing-reverseBoxShadowY: -2px;
-		--radius-base: 10px;
-		/* This sets the base radius */
+		--radius-base: var(--radius);
+		/* Use --radius variable */
 		--shadow-shadow: var(--shadow);
+		/* Use --shadow variable */
 		--font-weight-base: 500;
 		--font-weight-heading: 700;
 	}
 
-	/* Base styles from original file - these will now use your variables */
+	/* Base styles */
 	* {
 		@apply border-border;
-		/* Uses your --border */
+		/* Uses --border variable */
 	}
 
 	body {
-		@apply bg-background text-foreground;
-		/* Uses your --background & --foreground */
-		/* You might want to apply base font weight here */
-		/* font-weight: var(--font-weight-base); */
+		/* Apply background using the variable, NOT @apply */
+		background-color: var(--background);
+		/* Apply text color using the variable */
+		color: var(--foreground);
 	}
 
-	/* Apply base heading font weight (example) */
-	/* h1, h2, h3, h4, h5, h6 {
-    font-weight: var(--font-weight-heading);
-  } */
 }
-
-/*
-  Reminder: Check your tailwind.config.ts 'theme.extend.colors' section.
-  You likely need to map shadcn's color names (primary, secondary, card, etc.)
-  to use your new CSS variables (e.g., `primary: 'oklch(var(--main))'`)
-  for components to adopt the new theme correctly.
-  Also ensure the `borderRadius` in tailwind.config.ts uses `var(--radius)`
-  if you want it to respect the `--radius-base` set in @theme.
-*/
 </file>
 
 <file path=".gitignore">
@@ -2195,41 +2480,52 @@ const config: Config = {
 		},
 		extend: {
 			colors: {
+				// --- Existing Shadcn/Theme Colors ---
 				border: 'hsl(var(--border) / <alpha-value>)',
-				input: 'hsl(var(--input) / <alpha-value>)',
+				input: 'hsl(var(--input) / <alpha-value>)', // Assuming you might define --input later
 				ring: 'hsl(var(--ring) / <alpha-value>)',
 				background: 'hsl(var(--background) / <alpha-value>)',
 				foreground: 'hsl(var(--foreground) / <alpha-value>)',
 				primary: {
-					DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
-					foreground: 'hsl(var(--primary-foreground) / <alpha-value>)'
+					// Assuming you might define --primary later, or map it to --main
+					DEFAULT: 'hsl(var(--main) / <alpha-value>)', // Map primary to --main
+					foreground: 'hsl(var(--main-foreground) / <alpha-value>)' // Map primary-foreground to --main-foreground
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
-					foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)'
+					// Map secondary to --secondary-background
+					DEFAULT: 'hsl(var(--secondary-background) / <alpha-value>)',
+					// Assuming secondary-foreground is same as main text on secondary bg
+					foreground: 'hsl(var(--foreground) / <alpha-value>)'
 				},
 				destructive: {
-					DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
-					foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)'
+					// Map destructive to danger-50
+					DEFAULT: 'hsl(var(--neobrutalism-danger-50) / <alpha-value>)',
+					// Assuming white/black text on danger
+					foreground: 'hsl(var(--main-foreground) / <alpha-value>)' // Or adjust as needed
 				},
 				muted: {
-					DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
-					foreground: 'hsl(var(--muted-foreground) / <alpha-value>)'
+					// You might map muted to a lighter decorative color or define --muted
+					DEFAULT: 'hsl(var(--neobrutalism-purple-90) / <alpha-value>)', // Example: Map to purple-90
+					foreground: 'hsl(var(--foreground) / 0.6 / <alpha-value>)' // Example: Dimmed foreground
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
-					foreground: 'hsl(var(--accent-foreground) / <alpha-value>)'
+					// Map accent to --main or another decorative color
+					DEFAULT: 'hsl(var(--main) / <alpha-value>)',
+					foreground: 'hsl(var(--main-foreground) / <alpha-value>)'
 				},
 				popover: {
-					DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
-					foreground: 'hsl(var(--popover-foreground) / <alpha-value>)'
+					// Map popover background/foreground, often similar to card
+					DEFAULT: 'hsl(var(--background) / <alpha-value>)',
+					foreground: 'hsl(var(--foreground) / <alpha-value>)'
 				},
 				card: {
-					DEFAULT: 'hsl(var(--card) / <alpha-value>)',
-					foreground: 'hsl(var(--card-foreground) / <alpha-value>)'
+					// Map card background/foreground
+					DEFAULT: 'hsl(var(--background) / <alpha-value>)',
+					foreground: 'hsl(var(--foreground) / <alpha-value>)'
 				},
+				// Keep sidebar if you use it, otherwise remove
 				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
+					DEFAULT: 'hsl(var(--sidebar-background))', // Define --sidebar-* vars if needed
 					foreground: 'hsl(var(--sidebar-foreground))',
 					primary: 'hsl(var(--sidebar-primary))',
 					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
@@ -2237,7 +2533,41 @@ const config: Config = {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+
+				// --- Neobrutalism Decorative Colors ---
+				'neobrutalism-pink-70': 'hsl(var(--neobrutalism-pink-70) / <alpha-value>)',
+				'neobrutalism-pink-90': 'hsl(var(--neobrutalism-pink-90) / <alpha-value>)',
+
+				'neobrutalism-purple-50': 'hsl(var(--neobrutalism-purple-50) / <alpha-value>)',
+				'neobrutalism-purple-70': 'hsl(var(--neobrutalism-purple-70) / <alpha-value>)',
+				'neobrutalism-purple-90': 'hsl(var(--neobrutalism-purple-90) / <alpha-value>)',
+
+				'neobrutalism-blue-50': 'hsl(var(--neobrutalism-blue-50) / <alpha-value>)',
+				'neobrutalism-blue-70': 'hsl(var(--neobrutalism-blue-70) / <alpha-value>)',
+				'neobrutalism-blue-90': 'hsl(var(--neobrutalism-blue-90) / <alpha-value>)',
+
+				'neobrutalism-yellow-50': 'hsl(var(--neobrutalism-yellow-50) / <alpha-value>)',
+				'neobrutalism-yellow-70': 'hsl(var(--neobrutalism-yellow-70) / <alpha-value>)',
+				'neobrutalism-yellow-90': 'hsl(var(--neobrutalism-yellow-90) / <alpha-value>)',
+
+				'neobrutalism-green-50': 'hsl(var(--neobrutalism-green-50) / <alpha-value>)',
+				'neobrutalism-green-70': 'hsl(var(--neobrutalism-green-70) / <alpha-value>)',
+				'neobrutalism-green-90': 'hsl(var(--neobrutalism-green-90) / <alpha-value>)',
+
+				// --- Feedback Colors ---
+				'neobrutalism-danger-50': 'hsl(var(--neobrutalism-danger-50) / <alpha-value>)',
+				'neobrutalism-danger-90': 'hsl(var(--neobrutalism-danger-90) / <alpha-value>)',
+				'neobrutalism-warning-50': 'hsl(var(--neobrutalism-warning-50) / <alpha-value>)',
+				'neobrutalism-warning-90': 'hsl(var(--neobrutalism-warning-90) / <alpha-value>)',
+				'neobrutalism-success-50': 'hsl(var(--neobrutalism-success-50) / <alpha-value>)',
+
+				// --- Other Palette Colors ---
+				'neobrutalism-primary-50': 'hsl(var(--neobrutalism-primary-50) / <alpha-value>)',
+				'neobrutalism-secondary-0': 'hsl(var(--neobrutalism-secondary-0) / <alpha-value>)',
+				'neobrutalism-separator-90': 'hsl(var(--neobrutalism-separator-90) / <alpha-value>)',
+				'neobrutalism-body-90': 'hsl(var(--neobrutalism-body-90) / <alpha-value>)',
+				'neobrutalism-white-100': 'hsl(var(--neobrutalism-white-100) / <alpha-value>)'
 			},
 			borderRadius: {
 				xl: 'calc(var(--radius) + 4px)',

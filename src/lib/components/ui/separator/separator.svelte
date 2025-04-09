@@ -20,13 +20,14 @@
 	bind:ref
 	class={cn(
 		// Change background to black
-		'shrink-0 bg-black',
+		'shrink-0 ', // Use foreground color for the separator's background
 		// Use the thickness prop for height/width
 		orientation === 'horizontal'
 			? `${thickness} w-full` // e.g., h-2 w-full
 			: `min-h-full ${verticalThickness}`, // e.g., min-h-full w-2
 		className
 	)}
+	style="background-color: var(--foreground);"
 	{orientation}
 	{...restProps}
 />

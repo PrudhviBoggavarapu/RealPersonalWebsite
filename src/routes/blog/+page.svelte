@@ -50,7 +50,4 @@
 			{/if}
 		</div>
 	</main>
-
-	<!-- Render Shared Footer Component -->
-	<Footer />
 </div>

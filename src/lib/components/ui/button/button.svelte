@@ -11,12 +11,12 @@
 			// Replaced variants with the new ones, using CSS variables
 			variant: {
 				default:
-					'text-[var(--main-foreground)] bg-[var(--main)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
-				noShadow: 'text-[var(--main-foreground)] bg-[var(--main)] border-2 border-[var(--border)]',
+					'text-[var(--main-foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+				noShadow: 'text-[var(--main-foreground)] border-2 border-[var(--border)]',
 				neutral:
-					'bg-[var(--secondary-background)] text-[var(--foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+					'text-[var(--foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
 				reverse:
-					'text-[var(--main-foreground)] bg-[var(--main)] border-2 border-[var(--border)] hover:translate-x-[var(--spacing-reverseBoxShadowX)] hover:translate-y-[var(--spacing-reverseBoxShadowY)] hover:shadow-[var(--shadow-shadow)]'
+					'text-[var(--main-foreground)] border-2 border-[var(--border)] hover:translate-x-[var(--spacing-reverseBoxShadowX)] hover:translate-y-[var(--spacing-reverseBoxShadowY)] hover:shadow-[var(--shadow-shadow)]'
 				// Original variants removed, add back if needed
 			},
 			// Kept original sizes, updated icon size slightly
@@ -50,7 +50,6 @@
 <script lang="ts">
 	// No changes needed for cn import
 	import { cn } from '$lib/utils.js';
-	// REMOVED the conflicting import: import type { ButtonProps } from "./button.svelte";
 
 	// ButtonProps type is directly available from the module script above
 	let {

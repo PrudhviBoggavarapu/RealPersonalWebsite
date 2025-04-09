@@ -1,25 +1,26 @@
-<!-- src/lib/frontpage/Header.svelte -->
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { themeStore } from '$lib/stores/themeStore'; // Import the store
+	import { themeStore } from '$lib/stores/themeStore';
+	import {
+		Sheet,
+		SheetContent,
+		SheetHeader,
+		SheetTitle,
+		SheetTrigger,
+		SheetClose
+	} from '$lib/components/ui/sheet';
+	import { Separator } from '$lib/components/ui/separator';
+	import { goto } from '$app/navigation';
 
-	// Import Icon Components
 	import LogoPlaceholder from '$lib/components/icons/LogoPlaceholder.svelte';
 	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
 	import SunIcon from '$lib/components/icons/SunIcon.svelte';
 	import MoonIcon from '$lib/components/icons/MoonIcon.svelte';
-
-	// Removed theme props: mounted, isDark, toggleTheme
-	// Removed SVG string variables
+	import Menu from '@lucide/svelte/icons/menu';
 </script>
 
-<!-- Apply background, border, shadow, and vertical padding to the outer nav -->
-<nav class="bg-main shadow-shadow w-full border-2 border-border py-2">
-	<!-- Keep max-width and centering on the inner div -->
-	<!-- Remove mt-4, bg-main, border, shadow from this inner div -->
-	<!-- Adjust height and padding as needed -->
+<nav class="bg-main shadow-shadow w-full border-4 border-border">
 	<div class="mx-auto flex h-[64px] w-full max-w-screen-xl items-center justify-between px-6">
-		<!-- Logo -->
 		<h1
 			class="text-main-foreground min-w-[50px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
 		>
@@ -28,13 +29,13 @@
 			</a>
 		</h1>
 
-		<!-- Desktop Navigation -->
 		<div class="font-base hidden items-center space-x-6 text-base md:flex lg:text-lg">
 			<a
 				href="/"
 				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
 				>Home</a
 			>
+			<Separator orientation="vertical"></Separator>
 			<a
 				href="/"
 				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
@@ -55,10 +56,7 @@
 				<ExternalLinkIcon />
 			</a>
 			<div class="flex items-center gap-4">
-				<Button variant="neutral" onclick={() => console.log('Get in Touch clicked!')}>
-					Get in Touch!
-				</Button>
-				<!-- Use themeStore directly -->
+				<Button variant="default" onclick={() => goto('/linktree')}>Contact Me</Button>
 				<Button variant="neutral" size="icon" onclick={themeStore.toggle} aria-label="Toggle theme">
 					{#if $themeStore.mounted}
 						{#if $themeStore.isDark}
@@ -72,9 +70,7 @@
 			</div>
 		</div>
 
-		<!-- Mobile Navigation Controls -->
 		<div class="flex items-center gap-4 md:hidden">
-			<!-- Use themeStore directly -->
 			<Button variant="neutral" size="icon" onclick={themeStore.toggle} aria-label="Toggle theme">
 				{#if $themeStore.mounted}
 					{#if $themeStore.isDark}
@@ -85,7 +81,60 @@
 				{/if}
 				<span class="sr-only">Toggle theme</span>
 			</Button>
-			<!-- Mobile Menu Trigger (Sheet) Removed -->
+
+			<Sheet>
+				<SheetTrigger
+					class="inline-flex h-10 w-10 items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] border-2 border-[var(--border)] text-sm font-[var(--font-weight-base)] shadow-[var(--shadow-shadow)] ring-offset-white transition-all hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+					aria-label="Open menu"
+				>
+					<Menu class="size-5" />
+					<span class="sr-only">Open menu</span>
+				</SheetTrigger>
+				<SheetContent side="right" class="w-[280px] border-l-4 border-border bg-background p-6">
+					<SheetHeader class="mb-6 text-left">
+						<SheetTitle class="font-heading text-2xl">Menu</SheetTitle>
+					</SheetHeader>
+					<nav class="flex flex-col space-y-4">
+						<SheetClose>
+							<a href="/" class="hover:text-main block text-lg font-bold text-foreground">Home</a>
+						</SheetClose>
+						<SheetClose>
+							<a href="/" class="hover:text-main block text-lg font-bold text-foreground">Journey</a
+							>
+						</SheetClose>
+						<SheetClose>
+							<a href="/" class="hover:text-main block text-lg font-bold text-foreground"
+								>Projects</a
+							>
+						</SheetClose>
+						<SheetClose>
+							<a
+								href="/blog/"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="hover:text-main inline-flex items-center gap-1 text-lg font-bold text-foreground"
+							>
+								Blogs
+								<ExternalLinkIcon />
+							</a>
+						</SheetClose>
+
+						<Separator class="my-4" />
+
+						<SheetClose>
+							<Button
+								variant="default"
+								class="w-full"
+								onclick={() => {
+									goto('/linktree');
+								}}
+							>
+								Contact Me
+							</Button>
+						</SheetClose>
+					</nav>
+				</SheetContent>
+			</Sheet>
 		</div>
 	</div>
 </nav>

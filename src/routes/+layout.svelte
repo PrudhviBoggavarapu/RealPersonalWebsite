@@ -10,14 +10,6 @@
 	onMount(() => {
 		themeStore.initialize();
 	});
-
-	// Optional: Effect to reactively apply class if needed elsewhere,
-	// but applyThemeClass is already called by initialize/toggle.
-	// $effect(() => {
-	//   if ($themeStore.mounted) {
-	//     applyThemeClass($themeStore.isDark);
-	//   }
-	// });
 </script>
 
 {@render children()}

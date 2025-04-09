@@ -6,12 +6,11 @@
 </script>
 
 <div class="flex min-h-screen flex-col bg-background text-foreground">
-	<!-- Render Header Component - No longer needs theme props -->
 	<Header />
 
 	<!-- Main Content Area -->
 	<main class="flex-grow">
-		<div class="container mx-auto p-8">
+		<div class="container mx-auto bg-background p-8">
 			<h1 class="font-heading mb-4 text-3xl">Main Content Area</h1>
 			<p class="font-base">This is where the main page content would go.</p>
 			<p>
