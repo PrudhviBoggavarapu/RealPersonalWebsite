@@ -1,54 +1,16 @@
 <!-- src/routes/blog/+page.svelte -->
 <script lang="ts">
-	// Import the shared Header and Footer
 	import Header from '$lib/frontpage/Header.svelte';
 	import Footer from '$lib/frontpage/Footer.svelte';
-	import { onMount } from 'svelte';
 	import type { PageData } from './+page.server.js'; // Import the type for loaded data
-
-	// --- Theme Toggle State and Logic ---
-	// NOTE: Ideally, this logic should live in your root +layout.svelte
-	// so it applies globally and doesn't need repeating on each page.
-	// We're keeping it here for now to match the previous structure.
-	let isDark = $state(false);
-	let mounted = $state(false);
-
-	onMount(() => {
-		mounted = true;
-		const storedTheme = localStorage.getItem('theme');
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		if (storedTheme) {
-			isDark = storedTheme === 'dark';
-		} else {
-			isDark = prefersDark;
-		}
-		applyTheme();
-	});
-
-	function toggleTheme() {
-		isDark = !isDark;
-		localStorage.setItem('theme', isDark ? 'dark' : 'light');
-		applyTheme();
-	}
-
-	function applyTheme() {
-		if (typeof document !== 'undefined') {
-			if (isDark) {
-				document.documentElement.classList.add('dark');
-			} else {
-				document.documentElement.classList.remove('dark');
-			}
-		}
-	}
-	// --- End Theme Logic ---
 
 	// Get the loaded posts from the page data provided by +page.server.ts
 	let { data }: { data: PageData } = $props();
 </script>
 
 <div class="flex min-h-screen flex-col bg-background text-foreground">
-	<!-- Render Shared Header Component -->
-	<Header {mounted} {isDark} {toggleTheme} />
+	<!-- Render Shared Header Component - No longer needs theme props -->
+	<Header />
 
 	<!-- Main Blog Content Area -->
 	<main class="flex-grow">

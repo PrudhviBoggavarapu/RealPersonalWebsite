@@ -2,47 +2,14 @@
 <script lang="ts">
 	import Header from '$lib/frontpage/Header.svelte';
 	import Footer from '$lib/frontpage/Footer.svelte';
-	import { onMount } from 'svelte';
-
-	// --- Theme Toggle State and Logic (Keep here or move to +layout.svelte) ---
-	let isDark = false;
-	let mounted = false;
-
-	onMount(() => {
-		mounted = true;
-		const storedTheme = localStorage.getItem('theme');
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		if (storedTheme) {
-			isDark = storedTheme === 'dark';
-		} else {
-			isDark = prefersDark;
-		}
-		applyTheme();
-	});
-
-	function toggleTheme() {
-		isDark = !isDark;
-		localStorage.setItem('theme', isDark ? 'dark' : 'light');
-		applyTheme();
-	}
-
-	function applyTheme() {
-		if (typeof document !== 'undefined') {
-			if (isDark) {
-				document.documentElement.classList.add('dark');
-			} else {
-				document.documentElement.classList.remove('dark');
-			}
-		}
-	}
-	// --- End Theme Logic ---
+	// Removed onMount and theme logic variables/functions
 </script>
 
 <div class="flex min-h-screen flex-col bg-background text-foreground">
-	<!-- Render Header Component -->
-	<Header {mounted} {isDark} {toggleTheme} />
+	<!-- Render Header Component - No longer needs theme props -->
+	<Header />
 
-	<!-- Main Content Area - REMOVED pt-* class -->
+	<!-- Main Content Area -->
 	<main class="flex-grow">
 		<div class="container mx-auto p-8">
 			<h1 class="font-heading mb-4 text-3xl">Main Content Area</h1>

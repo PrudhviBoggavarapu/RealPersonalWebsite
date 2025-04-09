@@ -88,6 +88,7 @@ src/
     server/
       blogPosts.ts
     index.ts
+    themeUtils.ts
     utils.ts
   routes/
     blog/
@@ -107,6 +108,7 @@ src/
 .prettierrc
 components.json
 eslint.config.js
+firefoxtemp.sh
 package.json
 postcss.config.js
 README.md
@@ -118,6 +120,80 @@ vite.config.ts
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="src/lib/themeUtils.ts">
+/**
+ * Applies the theme class to the document root.
+ * Handles server-side rendering safety.
+ * @param isDark - Whether the dark theme should be applied.
+ */
+export function applyThemeClass(isDark: boolean): void {
+    if (typeof document !== 'undefined') {
+		const root = document.documentElement;
+        if (isDark) {
+			root.classList.add('dark');
+        } else {
+			root.classList.remove('dark');
+        }
+    }
+}
+
+/**
+ * Gets the preferred theme based on localStorage or system preference.
+ * Handles server-side rendering safety.
+ * @returns 'dark' or 'light'
+ */
+export function getPreferredTheme(): 'dark' | 'light' {
+    if (typeof window !== 'undefined') {
+        const storedTheme = localStorage.getItem('theme');
+		// Explicitly check for 'dark' or 'light' to avoid invalid values
+        if (storedTheme === 'dark' || storedTheme === 'light') {
+            return storedTheme;
+        }
+		// Check system preference only if no valid theme is stored
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return prefersDark ? 'dark' : 'light';
+    }
+	// Return a default theme for SSR or environments without window
+	// Consider if 'light' or 'dark' makes more sense as your default fallback
+	return 'light';
+}
+
+/**
+ * Persists the chosen theme to localStorage.
+ * Handles server-side rendering safety.
+ * @param theme - 'dark' or 'light'
+ */
+export function persistTheme(theme: 'dark' | 'light'): void {
+     if (typeof window !== 'undefined') {
+        localStorage.setItem('theme', theme);
+     }
+}
+</file>
+
+<file path="firefoxtemp.sh">
+#!/bin/bash
+
+# Create a temporary directory for the profile
+# mktemp creates a unique temporary directory securely
+TMP_PROFILE_DIR=$(mktemp -d -t firefox-temp-profile.XXXXXXXXXX)
+
+# Ensure the directory is cleaned up even if the script is interrupted
+trap 'rm -rf "$TMP_PROFILE_DIR"' EXIT
+
+echo "Launching Firefox with temporary profile: $TMP_PROFILE_DIR"
+
+# Launch Firefox
+# -no-remote: Ensures this runs as a separate instance, not connecting to an existing one.
+# -profile: Specifies the directory to use for the profile.
+# "$@": Passes any additional arguments you give the script to Firefox.
+firefox -no-remote -profile "$TMP_PROFILE_DIR" "$@"
+
+echo "Firefox closed. Temporary profile will be removed."
+
+# The trap command handles the cleanup automatically on exit.
+exit 0
+</file>
 
 <file path="src/articles/first_blog.toml">
 [[title]]
@@ -929,153 +1005,6 @@ export {
 />
 </file>
 
-<file path="src/lib/server/blogPosts.ts">
-// src/lib/server/blogPosts.ts
-import fs from "node:fs";
-import path from "node:path";
-import toml from "toml";
-import { error } from "@sveltejs/kit";
-
-// Define the structure of your article data based on the TOML
-// Note: Your TOML uses [[title]], which creates an array. We'll assume
-// you want the first element of that array for the main post details.
-interface TomlArticleData {
-	title: {
-		name: string;
-		slug: string;
-		blurb: string;
-		tags: string[];
-		date: string; // Keep as string initially for sorting
-		image?: string; // Optional image
-		content: string;
-	}[]; // Array due to [[title]]
-}
-
-export interface BlogPost {
-	name: string;
-	slug: string;
-	blurb: string;
-	tags: string[];
-	date: Date; // Convert to Date object for easier use
-	image?: string;
-	content: string;
-	filePath: string; // Keep track of the original file
-}
-
-const articlesDir = path.resolve("src/articles"); // Path to your articles
-
-let allPosts: BlogPost[] | null = null; // Cache the posts
-/**
- * Reads all .toml files from the articles directory, parses them,
- * sorts them by date (newest first), caches the result, and returns the array.
- * Subsequent calls return the cached, sorted array directly.
- */
-export function getAllPosts(): BlogPost[] {
-	// If posts are already loaded and cached, return the cached version directly.
-	// It was sorted before being cached.
-	if (allPosts) {
-		return allPosts;
-	}
-
-	// If cache is empty, proceed to load, parse, and sort.
-	console.log("Cache empty. Loading and parsing posts..."); // Log cache miss
-	const posts: BlogPost[] = [];
-
-	try {
-		const files = fs.readdirSync(articlesDir);
-
-		for (const file of files) {
-			// console.log(`Processing file: ${file}`); // Keep if needed for debugging
-			if (path.extname(file).toLowerCase() === ".toml") {
-				const filePath = path.join(articlesDir, file);
-				try {
-					const fileContent = fs.readFileSync(filePath, "utf-8");
-					const parsedData = toml.parse(fileContent) as TomlArticleData;
-
-					// Validate the structure
-					if (
-						!parsedData.title ||
-						!Array.isArray(parsedData.title) ||
-						parsedData.title.length === 0
-					) {
-						console.warn(
-							`Skipping ${file}: Missing or invalid [[title]] array.`
-						);
-						continue;
-					}
-
-					const postData = parsedData.title[0];
-
-					// Validate required fields
-					if (
-						!postData.slug ||
-						!postData.name ||
-						!postData.date ||
-						!postData.content
-					) {
-						console.warn(
-							`Skipping ${file}: Missing required fields (slug, name, date, content) in title object.`
-						);
-						continue;
-					}
-
-					// Create the BlogPost object, converting date string to Date object
-					posts.push({
-						name: postData.name,
-						slug: postData.slug,
-						blurb: postData.blurb || "",
-						tags: postData.tags || [],
-						date: new Date(postData.date), // Convert string to Date here
-						image: postData.image,
-						content: postData.content,
-						filePath: filePath,
-					});
-				} catch (parseError: any) {
-					console.error(`Error parsing TOML file ${file}:`, parseError);
-				}
-			}
-		}
-	} catch (readDirError: any) {
-		if (readDirError.code === "ENOENT") {
-			console.warn(
-				`Articles directory not found at ${articlesDir}. No posts loaded.`
-			);
-			allPosts = []; // Cache empty array if dir not found
-			return allPosts;
-		}
-		console.error(
-			`Error reading articles directory ${articlesDir}:`,
-			readDirError
-		);
-		throw error(500, "Could not read blog articles directory");
-	}
-
-	// Sort the newly loaded posts by date (newest first) *before* caching.
-	// This uses the Date objects directly.
-	posts.sort((a, b) => b.date.getTime() - a.date.getTime());
-	console.log(`Loaded and sorted ${posts.length} posts.`);
-
-	// Cache the sorted result.
-	allPosts = posts;
-	return allPosts;
-}
-
-/**
- * Finds and returns a single blog post by its slug.
- * Uses the cached list generated by getAllPosts.
- *
- * @param slug The slug of the post to find.
- * @returns The found BlogPost or null if not found.
- */
-export function getPostBySlug(slug: string): BlogPost | null {
-	const posts = getAllPosts(); // Ensure posts are loaded and cached
-	const post = posts.find((p) => p.slug === slug);
-	//sort posts by date, newest first
-
-	return post || null;
-}
-</file>
-
 <file path="src/lib/index.ts">
 // place files you want to import through the `$lib` alias in this folder.
 </file>
@@ -1083,9 +1012,59 @@ export function getPostBySlug(slug: string): BlogPost | null {
 <file path="src/lib/utils.ts">
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { marked } from 'marked';
+// Optional: Add sanitizer later if needed
+// import DOMPurify from 'dompurify';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
+}
+
+/**
+ * Formats a date object into a standard string format for display (e.g., "October 5, 2024").
+ * @param date - The Date object, or a string/number that can be parsed into a Date.
+ * @returns The formatted date string, or "Invalid Date" if input is invalid.
+ */
+export function formatDisplayDate(date: Date | string | number): string {
+    // Attempt to create a Date object
+    const dateObj = new Date(date);
+
+    // Check if the Date object is valid
+    if (isNaN(dateObj.getTime())) {
+        console.warn("formatDisplayDate received invalid date input:", date);
+        return "Invalid Date";
+    }
+
+    // Format the valid date
+    return dateObj.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+
+/**
+ * Parses a Markdown string into HTML.
+ * WARNING: Does not sanitize by default. Add sanitization if content is not trusted.
+ * @param markdownContent - The Markdown string.
+ * @returns The parsed HTML string, or an empty string if input is null/undefined.
+ */
+export function parseMarkdown(markdownContent: string | null | undefined): string {
+    if (!markdownContent) {
+        return '';
+    }
+    // Basic parsing:
+    const rawHtml = marked.parse(markdownContent) as string;
+
+    // TODO: Add Sanitization if needed!
+    // Example using DOMPurify (requires installation: pnpm add dompurify @types/dompurify)
+    // Make sure DOMPurify runs only in the browser context
+    // if (typeof window !== 'undefined') {
+    //     return DOMPurify.sanitize(rawHtml);
+    // }
+    // Return raw HTML for SSR or if no sanitization needed (use with caution)
+    return rawHtml;
 }
 </file>
 
@@ -1524,6 +1503,152 @@ engine-strict=true
 </nav>
 </file>
 
+<file path="src/lib/server/blogPosts.ts">
+// src/lib/server/blogPosts.ts
+import toml from "toml";
+import { error } from "@sveltejs/kit";
+
+// Define the structure of your article data based on the TOML
+// Note: Your TOML uses [[title]], which creates an array. We'll assume
+// you want the first element of that array for the main post details.
+interface TomlArticleData {
+	title: {
+		name: string;
+		slug: string;
+		blurb: string;
+		tags: string[];
+		date: string; // Keep as string initially for sorting
+		image?: string; // Optional image
+		content: string;
+	}[]; // Array due to [[title]]
+}
+
+export interface BlogPost {
+	name: string;
+	slug: string;
+	blurb: string;
+	tags: string[];
+	date: Date; // Convert to Date object for easier use
+	image?: string;
+	content: string;
+	// filePath is removed as it's no longer needed at runtime
+}
+
+// --- Build-Time Data Loading using import.meta.glob ---
+// Use Vite's import.meta.glob to find all .toml files in src/articles
+// `eager: true` imports the modules immediately during build
+// `as: 'raw'` imports the raw string content of the files
+const rawTomlFiles = import.meta.glob("/src/articles/*.toml", {
+	eager: true,
+	as: "raw",
+});
+// Example rawTomlFiles structure at build time:
+// {
+//   '/src/articles/first_blog.toml': '[[title]]\nname = "First..."',
+//   '/src/articles/second_blog.toml': '[[title]]\nname = "Second..."',
+//   ...
+// }
+// -------------------------------------------------------
+
+let allPosts: BlogPost[] | null = null; // Cache the posts
+
+/**
+ * Parses the TOML content fetched at build time, sorts the posts by date,
+ * caches the result, and returns the array.
+ * Subsequent calls return the cached, sorted array directly.
+ * This function NO LONGER uses node:fs or node:path at runtime.
+ */
+export function getAllPosts(): BlogPost[] {
+	// If posts are already processed and cached, return the cached version.
+	if (allPosts) {
+		return allPosts;
+	}
+
+	console.log("Processing build-time TOML data..."); // Log processing
+	const posts: BlogPost[] = [];
+
+	// Iterate over the raw TOML strings imported by import.meta.glob
+	for (const filePath in rawTomlFiles) {
+		const fileContent = rawTomlFiles[filePath];
+		// Extract a simple filename for logging purposes
+		const fileName = filePath.split("/").pop() || filePath;
+
+		try {
+			const parsedData = toml.parse(fileContent) as TomlArticleData;
+
+			// Validate the structure
+			if (
+				!parsedData.title ||
+				!Array.isArray(parsedData.title) ||
+				parsedData.title.length === 0
+			) {
+				console.warn(
+					`Skipping ${fileName}: Missing or invalid [[title]] array.`
+				);
+				continue;
+			}
+
+			// Assume the first [[title]] entry contains the main post data
+			const postData = parsedData.title[0];
+
+			// Validate required fields
+			if (
+				!postData.slug ||
+				!postData.name ||
+				!postData.date ||
+				!postData.content
+			) {
+				console.warn(
+					`Skipping ${fileName}: Missing required fields (slug, name, date, content) in title object.`
+				);
+				continue;
+			}
+
+			// Create the BlogPost object, converting date string to Date object
+			posts.push({
+				name: postData.name,
+				slug: postData.slug,
+				blurb: postData.blurb || "", // Provide default empty string if missing
+				tags: postData.tags || [], // Provide default empty array if missing
+				date: new Date(postData.date), // Convert string to Date here
+				image: postData.image, // Will be undefined if missing
+				content: postData.content,
+				// filePath is removed
+			});
+		} catch (parseError: any) {
+			// Log the error with the specific file that failed
+			console.error(`Error parsing TOML from ${fileName}:`, parseError);
+			// Depending on requirements, you might want to stop the build here
+			// by re-throwing the error, potentially wrapped in a SvelteKit error.
+			// For now, we just log it and continue with other posts.
+			// throw error(500, `Failed to parse blog post: ${fileName}. Error: ${parseError.message}`);
+		}
+	}
+
+	// Sort the newly processed posts by date (newest first) *before* caching.
+	// This uses the Date objects directly.
+	posts.sort((a, b) => b.date.getTime() - a.date.getTime());
+	console.log(`Processed and sorted ${posts.length} posts from build-time data.`);
+
+	// Cache the processed and sorted result.
+	allPosts = posts;
+	return allPosts;
+}
+
+/**
+ * Finds and returns a single blog post by its slug.
+ * Uses the cached list generated by getAllPosts (which now uses build-time data).
+ *
+ * @param slug The slug of the post to find.
+ * @returns The found BlogPost or null if not found.
+ */
+export function getPostBySlug(slug: string): BlogPost | null {
+	const posts = getAllPosts(); // Ensure posts are processed and cached
+	const post = posts.find((p) => p.slug === slug);
+	return post || null; // Return the found post or null if not found
+}
+</file>
+
 <file path="src/routes/blog/+page.svelte">
 <!-- src/routes/blog/+page.svelte -->
 <script lang="ts">
@@ -1798,35 +1923,6 @@ You can preview the production build with `npm run preview`.
 </div>
 </file>
 
-<file path=".gitignore">
-node_modules
-
-# Output
-.output
-.vercel
-.netlify
-.wrangler
-/.svelte-kit
-/build
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Env
-.env
-.env.*
-!.env.example
-!.env.test
-
-# Vite
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-
-# Repomix
-repomix-output.xml
-</file>
-
 <file path=".prettierignore">
 # Package Managers
 package-lock.json
@@ -2009,6 +2105,36 @@ export default defineConfig({
   Also ensure the `borderRadius` in tailwind.config.ts uses `var(--radius)`
   if you want it to respect the `--radius-base` set in @theme.
 */
+</file>
+
+<file path=".gitignore">
+node_modules
+
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Repomix
+**/repomix-output.xml
+repomix-output.xml
 </file>
 
 <file path="eslint.config.js">
