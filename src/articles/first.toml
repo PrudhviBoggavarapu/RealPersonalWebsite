@@ -9,12 +9,12 @@ tags = [
     "Optimization",
     "Data Processing",
     "Big Data",
-    "Language Choice",
-    "zstd",
+    "Zstd",
     "FEC",
 ]
 date = "2025-4-13"
 content = """
+# Who Am I
 
 For those who don't know, my name is karma jade rose. I am a python dev turned rust dev ,along the way I learned web dev, as well as low level avr stuff for robotics. In short, I'm in a lot of fields, and because of this, I may offer a unique point of view programming design. This documents my time as a programmer in a start up, working with technology that is pretty new to me. Working on performance related tasks when I could choose what language and what tools to do.
 
@@ -64,7 +64,7 @@ The reason why Python can be pretty slow for this is because it just doesn't let
 
 I don't think rust is always the right answer for the job, but in this case, I really like the way that rust tends to handle thing like memory management. I ended up writing basically the same implementation in Python, reducing the memory overhead to 1GB and sped things up to about 1 day. This was a 6x speedup, just by switching languages. Look at the profiling data, Python was spending a lot of time dropping variables and cleaning things up. It also took a lot of time getting the row of the file. When the compiler can know when and where to drop things, it speeds up.
 
-## From 1 Day to 6 Hours: Optimizing String Parsing
+# From 1 Day to 6 Hours: Optimizing String Parsing
 
 Looking again at the profiling data, I found that more than 80 percent of my time is spent parsing the string, with a bunch of memory allocations happening in the from_str. So let's look at the code
 
@@ -136,4 +136,4 @@ String parsing could be faster, because of how the compressed archive reader wor
 
 I have tried rewriting the rust implementation into Nom, and it went faster in the 1E7 case, but when it went to the full file, it did not change the speed by more than 3%, so I decided to scrap the implementation. Once I wrote this blog I looked more into Apache arrow, but could not find a way to export things to that format without my machine running out of memory.
 
-In other news, this is the first time I am writing a blog. Tell me every change you would make to this blog post. Do not change anything other than punctuation and spelling of words."""
+In other news, this is the first time I am writing a blog. Let me know how it reads."""

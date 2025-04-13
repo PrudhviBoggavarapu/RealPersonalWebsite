@@ -1,7 +1,6 @@
 <!-- src/routes/blog/+page.svelte -->
 <script lang="ts">
 	import Header from '$lib/frontpage/Header.svelte';
-	import Footer from '$lib/frontpage/Footer.svelte';
 	import type { PageData } from './+page.server.js'; // Import the type for loaded data
 
 	// Get the loaded posts from the page data provided by +page.server.ts
