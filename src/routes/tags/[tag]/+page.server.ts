@@ -3,9 +3,7 @@ import { getAllPosts, type BlogPost } from '$lib/server/blogPosts';
 import { error } from '@sveltejs/kit';
 
 export interface PageData {
-    /** The tag name requested from the URL. */
     tagName: string;
-    /** An array of blog posts that include the requested tag. */
     filteredPosts: BlogPost[];
 }
 
@@ -17,11 +15,6 @@ export function load({ params }): PageData {
 
     const allPosts = getAllPosts();
 
-    // Filter posts: keep only those whose tags array includes the requested tag.
-    // Consider case-insensitivity if your tags might vary in casing:
-    // const filteredPosts = allPosts.filter(post =>
-    //     post.tags?.some(t => t.toLowerCase() === requestedTag.toLowerCase())
-    // );
     const filteredPosts = allPosts.filter((post) =>
         post.tags?.includes(requestedTag)
     );
@@ -30,10 +23,6 @@ export function load({ params }): PageData {
         `Found ${filteredPosts.length} posts for tag: ${requestedTag}`
     ); // Optional logging
 
-    // Optional: Could throw 404 if no posts found, but showing an empty list might be better UX.
-    // if (filteredPosts.length === 0) {
-    //     throw error(404, `No posts found for tag: ${requestedTag}`);
-    // }
 
     return {
         tagName: requestedTag,
@@ -41,7 +30,6 @@ export function load({ params }): PageData {
     };
 }
 
-// --- Prerendering Support ---
 export function entries() {
     const posts = getAllPosts();
     const allTags: string[] = [];
@@ -52,9 +40,7 @@ export function entries() {
     });
     const uniqueTags = [...new Set(allTags)];
 
-    // Return an array of objects mapping the unique tags to the `tag` parameter
     return uniqueTags.map((tag) => ({ tag: encodeURIComponent(tag) }));
-    // Example output: [ { tag: 'blog' }, { tag: 'first' }, { tag: 'second' }, ... ]
 }
 
 export const prerender = true; // Enable prerendering for these tag pages

@@ -60,7 +60,7 @@
 </script>
 
 <div class="flex min-h-screen flex-col bg-background text-foreground">
-	<Header {mounted} {isDark} {toggleTheme} />
+	<Header />
 
 	<main class="flex-grow">
 		<article class="container mx-auto items-center p-8">

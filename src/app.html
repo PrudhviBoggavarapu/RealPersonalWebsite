@@ -13,29 +13,21 @@
                 try {
                     const storedTheme = localStorage.getItem('theme');
                     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    // Determine theme: stored preference > OS preference > default (light)
                     const theme = storedTheme === 'dark' || (! storedTheme && prefersDark) ? 'dark' : 'light';
 
                     if (theme === 'dark') {
                         document.documentElement.classList.add('dark');
-                        // Optional: Set inline background color if needed for absolute earliest paint
-                        // document.documentElement.style.backgroundColor = '#241933'; // Your dark bg
-                    } else { // Ensure dark class is removed if light is preferred/stored
+                    } else {
                         document.documentElement.classList.remove('dark');
-                        // Optional: Set light background if needed
-                        // document.documentElement.style.backgroundColor = '#F0E5FF'; // Your light bg
                     }
-                } catch (e) { // Ignore errors (e.g., localStorage access denied)
+                } catch (e) {
                     console.error('Error applying initial theme:', e);
                 }
             })();
         </script>
-        <!-- === END: Theme Initialization Script === -->
-
         %sveltekit.head%
     </head>
     <body data-sveltekit-preload-data="hover">
         <div style="display: contents">%sveltekit.body%</div>
     </body>
 </html>
-

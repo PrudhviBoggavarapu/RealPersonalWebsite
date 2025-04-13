@@ -1,4 +1,3 @@
-// src/lib/themeUtils.ts
 /**
  * Applies the theme class to the document root.
  * Handles server-side rendering safety.
@@ -23,16 +22,12 @@ export function applyThemeClass(isDark: boolean): void {
 export function getPreferredTheme(): 'dark' | 'light' {
     if (typeof window !== 'undefined') {
         const storedTheme = localStorage.getItem('theme');
-        // Explicitly check for 'dark' or 'light' to avoid invalid values
         if (storedTheme === 'dark' || storedTheme === 'light') {
             return storedTheme;
         }
-        // Check system preference only if no valid theme is stored
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         return prefersDark ? 'dark' : 'light';
     }
-    // Return a default theme for SSR or environments without window
-    // Consider if 'light' or 'dark' makes more sense as your default fallback
     return 'light';
 }
 

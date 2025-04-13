@@ -1,9 +1,9 @@
 <!-- src/routes/tags/+page.svelte -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Fuse from 'fuse.js'; // Import the fuzzy search library
-	import Header from '$lib/frontpage/Header.svelte';
-	import Footer from '$lib/frontpage/Footer.svelte';
+	import Fuse, { type IFuseOptions } from 'fuse.js';
+	import Header from '$lib/blog_stuff/Header.svelte';
+	import Footer from '$lib/blog_stuff/Footer.svelte';
 	import { Input } from '$lib/components/ui/input'; // Assuming you have an Input component
 	import { Badge } from '$lib/components/ui/badge';
 	import type { PageData } from './+page.server.js';
@@ -19,7 +19,7 @@
 
 	// --- Initialize Fuse.js on Mount ---
 	onMount(() => {
-		const options: Fuse.IFuseOptions<string> = {
+		const options: IFuseOptions<string> = {
 			threshold: 0.4, // Adjust for sensitivity
 			minMatchCharLength: 1
 		};

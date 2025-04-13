@@ -45,10 +45,11 @@ The content is organized as follows:
 <directory_structure>
 src/
   articles/
-    first_blog.toml
-    seccond_blog.toml
-    third_blog.toml
+    first.toml
   lib/
+    blog_stuff/
+      Footer.svelte
+      Header.svelte
     components/
       icons/
         ExternalLinkIcon.svelte
@@ -78,6 +79,9 @@ src/
           card-title.svelte
           card.svelte
           index.ts
+        input/
+          index.ts
+          input.svelte
         separator/
           index.ts
           separator.svelte
@@ -102,6 +106,14 @@ src/
   routes/
     blog/
       [slug]/
+        +page.server.ts
+        +page.svelte
+      +page.server.ts
+      +page.svelte
+    linktree/
+      +page.svelte
+    tags/
+      [tag]/
         +page.server.ts
         +page.svelte
       +page.server.ts
@@ -131,66 +143,266 @@ vite.config.ts
 <files>
 This section contains the contents of the repository's files.
 
-<file path="src/articles/first_blog.toml">
-[[title]]
-name = "First Blog Post"
-slug = "first-blog-post"
-blurb = "A brief description of the article."
-tags = ["blog", "first"]
-date = "2024-10-05"
-content = """
-This is a short excerpt of the first blog post. Lorem ipsum dolor sit amet, consectetur adipiscing elit...
-"""
+<file path="src/lib/blog_stuff/Footer.svelte">
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { Separator } from '$lib/components/ui/separator';
+	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
+	import GithubIcon from '$lib/components/icons/GithubIcon.svelte';
+	import LinkedinIcon from '$lib/components/icons/LinkedinIcon.svelte';
+	import { goto } from '$app/navigation';
+
+	const currentYear = new Date().getFullYear();
+</script>
+
+<footer class="w-full bg-background">
+	<Separator />
+	<div class="mx-auto">
+		<div class="flex flex-col gap-8 md:flex md:flex-row md:items-stretch">
+			<Separator orientation="vertical" class="w-1" />
+
+			<div class="ml-8 mt-2 flex-1">
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Quick Links
+				</h3>
+				<ul class="font-base space-y-3">
+					<li>
+						<a
+							href="/"
+							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							>Home</a
+						>
+					</li>
+					<li>
+						<a
+							href="/"
+							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							>Projects</a
+						>
+					</li>
+					<li>
+						<a
+							href="/blog/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:bg-main hover:text-main-foreground inline-flex items-center border-4 border-transparent px-4 pb-4 text-foreground transition-all duration-200 hover:border-border"
+						>
+							Blogs
+							<ExternalLinkIcon />
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<Separator orientation="vertical" class="w-1" />
+
+			<div class="mt-2 flex-1">
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Get in Touch!
+				</h3>
+				<div class="mb-8 flex flex-col items-start">
+					<div class="mb-6 flex space-x-6">
+						<a
+							href="https://github.com/prudhviboggavarapu"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
+							aria-label="GitHub"
+						>
+							<GithubIcon />
+						</a>
+						<a
+							href="https://www.linkedin.com/in/prudhviboggavarapu/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
+							aria-label="LinkedIn"
+						>
+							<LinkedinIcon />
+						</a>
+					</div>
+					<Button
+						variant="default"
+						class="bg-[var(--neobrutalism-yellow-50)] text-black dark:bg-[var(--neobrutalism-yellow-50)]"
+						onclick={() => goto('/linktree')}
+					>
+						Contact Me
+					</Button>
+				</div>
+			</div>
+
+			<Separator orientation="vertical" class="hidden md:block" />
+			<div class="mt-2 flex-1">
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Placeholder
+				</h3>
+				<p class="font-base text-foreground">Maybe some extra info here.</p>
+			</div>
+			<Separator orientation="vertical" class="w-1" />
+		</div>
+
+		<Separator />
+
+		<div
+			class="flex flex-col items-center justify-between gap-4 md:flex md:flex-row md:items-stretch"
+		>
+			<p class="ml-8 text-center font-bold text-foreground md:text-left">
+				© {currentYear} Karma | Built with love by
+				<a href="https://karmajaderose.com" class="text-main-foreground underline">Karma</a>
+			</p>
+
+			<Separator class="w-1/2 md:hidden" />
+
+			<div
+				class="content-evenly bg-black px-2 font-mono text-sm text-white dark:bg-background dark:text-foreground"
+			>
+				&lt;/&gt; with <a href="https://svelte.dev/" class="text-main-foreground hover:underline"
+					>SvelteKit</a
+				>
+				+
+				<a href="https://www.shadcn-svelte.com/" class="text-main-foreground hover:underline"
+					>Shadcn UI Svelte</a
+				>
+			</div>
+		</div>
+		
+	</div>
+</footer>
 </file>
 
-<file path="src/articles/seccond_blog.toml">
-[[title]]
-name = "Second Blog Post"
-slug = "second-blog-post"
-blurb = "A brief description of the article."
-tags = ["blog", "second"]
-date = "2025-10-05"
-image = "/images/first-blog-post.jpg"
-content = """
-This is a short excerpt of the first blog post. Lorem ipsum dolor sit amet, consectetur adipiscing elit...
-"""
-</file>
+<file path="src/lib/blog_stuff/Header.svelte">
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { themeStore } from '$lib/stores/themeStore';
+	import {
+		Sheet,
+		SheetContent,
+		SheetHeader,
+		SheetTitle,
+		SheetTrigger,
+		SheetClose
+	} from '$lib/components/ui/sheet';
+	import { Separator } from '$lib/components/ui/separator';
+	import { goto } from '$app/navigation';
 
-<file path="src/articles/third_blog.toml">
-[[title]]
-name = "Third Blog Post"
-slug = "third-blog-post"
-blurb = "A brief description of the third article."
-tags = ["blog", "third"]
-date = "2020-10-05"
-content = """# The World of Programming: Building the Digital Future
+	import LogoPlaceholder from '$lib/components/icons/LogoPlaceholder.svelte';
+	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
+	import SunIcon from '$lib/components/icons/SunIcon.svelte';
+	import MoonIcon from '$lib/components/icons/MoonIcon.svelte';
+	import Menu from '@lucide/svelte/icons/menu';
+</script>
 
-In today's digitally driven world, "programming" or "coding" are terms we hear constantly. But what do they actually mean? At its core, programming is the process of giving instructions to a computer to perform a specific task. Think of it like writing a very precise recipe or a set of detailed directions that a computer, which understands only specific languages, can follow step-by-step. From the apps on your smartphone to the websites you browse, the complex systems managing traffic lights, and the algorithms powering artificial intelligence – programming is the invisible engine behind it all.
+<nav class="bg-main shadow-shadow w-full border-4 border-border">
+	<div class="mx-auto flex h-[64px] w-full items-center justify-between px-6">
+		<h1
+			class="text-main-foreground min-w-[50px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
+		>
+			<a href="/" class="text-main-foreground block">
+				<LogoPlaceholder />
+			</a>
+		</h1>
 
-## What Exactly is Programming?
+		<div class="font-base hidden items-center space-x-6 text-base md:flex lg:text-lg">
+			<a
+				href="/"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+				>Home</a
+			>
 
-Computers don't understand human languages like English or Spanish natively. They operate on binary code – sequences of 1s and 0s. Programming languages act as a bridge, allowing humans to write instructions in a more readable format, which are then translated (compiled or interpreted) into machine code that the computer's processor can execute. This process involves logic, problem-solving, and creativity. Programmers analyze problems, design solutions (algorithms), write the code, test it rigorously, and fix any errors (debugging).
+			<a
+				href="/tags"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+				>Tag Search</a
+			>
+			<a
+				href="/blog/"
+				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+			>
+				Blogs
+			</a>
+			<div class="flex items-center gap-4">
+				<Button variant="default" onclick={() => goto('/linktree')}>Contact Me</Button>
+				<Button variant="neutral" size="icon" onclick={themeStore.toggle} aria-label="Toggle theme">
+					{#if $themeStore.mounted}
+						{#if $themeStore.isDark}
+							<SunIcon />
+						{:else}
+							<MoonIcon />
+						{/if}
+					{/if}
+					<span class="sr-only">Toggle theme</span>
+				</Button>
+			</div>
+		</div>
 
-## The Building Blocks: Core Concepts
+		<div class="flex items-center gap-4 md:hidden">
+			<Button variant="neutral" size="icon" onclick={themeStore.toggle} aria-label="Toggle theme">
+				{#if $themeStore.mounted}
+					{#if $themeStore.isDark}
+						<SunIcon />
+					{:else}
+						<MoonIcon />
+					{/if}
+				{/if}
+				<span class="sr-only">Toggle theme</span>
+			</Button>
 
-While there are hundreds of programming languages, many share fundamental concepts. **Variables** are like containers used to store information (numbers, text, etc.). **Data types** define what kind of information a variable can hold. **Control structures**, such as 'if/else' statements, allow programs to make decisions based on conditions, while **loops** enable the repetition of tasks. **Functions** or **methods** group blocks of code that perform a specific action, making code reusable and organized. Understanding these core ideas is crucial, as they form the foundation for writing any program.
+			<Sheet>
+				<SheetTrigger
+					class="inline-flex h-10 w-10 items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] border-2 border-[var(--border)] text-sm font-[var(--font-weight-base)] shadow-[var(--shadow-shadow)] ring-offset-white transition-all hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+					aria-label="Open menu"
+				>
+					<Menu class="size-5" />
+					<span class="sr-only">Open menu</span>
+				</SheetTrigger>
+				<SheetContent side="right" class="w-[280px] border-l-4 border-border bg-background p-6">
+					<SheetHeader class="mb-6 text-left">
+						<SheetTitle class="font-heading text-2xl">Menu</SheetTitle>
+					</SheetHeader>
+					<nav class="flex flex-col space-y-4">
+						<SheetClose>
+							<a href="/" class="hover:text-main block text-lg font-bold text-foreground">Home</a>
+						</SheetClose>
+						<SheetClose>
+							<a href="/" class="hover:text-main block text-lg font-bold text-foreground">Journey</a
+							>
+						</SheetClose>
+						<SheetClose>
+							<a href="/" class="hover:text-main block text-lg font-bold text-foreground"
+								>Projects</a
+							>
+						</SheetClose>
+						<SheetClose>
+							<a
+								href="/blog/"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="hover:text-main inline-flex items-center gap-1 text-lg font-bold text-foreground"
+							>
+								Blogs
+								<ExternalLinkIcon />
+							</a>
+						</SheetClose>
 
-## A Multitude of Tongues: Programming Languages
+						<Separator class="my-4" />
 
-The diversity of programming languages reflects the vast range of tasks computers perform. **Python** is renowned for its readability and is popular in data science, AI, and web development. **JavaScript** is the backbone of interactive websites. **Java** is widely used for large-scale enterprise applications and Android app development. **C++** and **C** are known for performance and are often used in game development and system software. Choosing a language often depends on the project's goal, but learning one language makes picking up others much easier due to the shared core concepts.
-
-## More Than Just Typing: The Programming Process
-
-Writing code is just one part of programming. A significant amount of time is spent understanding the problem, planning the solution, testing the code to find bugs, and refining it. Debugging – the process of finding and fixing errors – is an essential skill. Collaboration, using version control systems like Git, and continuously learning are also vital aspects of a programmer's life. It's a field that demands patience, persistence, and a logical mindset.
-
-## Embarking on Your Journey: Getting Started
-
-Intrigued? Getting started with programming has never been more accessible. Numerous online platforms offer interactive courses (like Codecademy, freeCodeCamp, Coursera), tutorials, and documentation. Start with a beginner-friendly language like Python. Focus on understanding the fundamentals rather than memorizing syntax. Practice by working on small projects – build a simple calculator, a basic game, or automate a repetitive task. Join online communities, ask questions, and don't be afraid to make mistakes; they are part of the learning process.
-
-## The Endless Possibilities
-
-Programming is more than just a technical skill; it's a powerful tool for creation and innovation. It empowers you to build solutions, automate processes, and bring ideas to life in the digital realm. Whether you aim to become a professional software developer or simply want to understand the technology shaping our world, learning to program opens up a universe of possibilities.
-"""
+						<SheetClose>
+							<Button
+								variant="default"
+								class="w-full"
+								onclick={() => {
+									goto('/linktree');
+								}}
+							>
+								Contact Me
+							</Button>
+						</SheetClose>
+					</nav>
+				</SheetContent>
+			</Sheet>
+		</div>
+	</div>
+</nav>
 </file>
 
 <file path="src/lib/components/icons/ExternalLinkIcon.svelte">
@@ -680,6 +892,70 @@ export {
 };
 </file>
 
+<file path="src/lib/components/ui/input/index.ts">
+import Root from "./input.svelte";
+
+export {
+	Root,
+	//
+	Root as Input,
+};
+</file>
+
+<file path="src/lib/components/ui/input/input.svelte">
+<script lang="ts">
+	import type { HTMLInputAttributes, HTMLInputTypeAttribute } from 'svelte/elements';
+	import type { WithElementRef } from 'bits-ui';
+	import { cn } from '$lib/utils.js';
+
+	type InputType = Exclude<HTMLInputTypeAttribute, 'file'>;
+
+	type Props = WithElementRef<
+		Omit<HTMLInputAttributes, 'type'> &
+			({ type: 'file'; files?: FileList } | { type?: InputType; files?: undefined })
+	>;
+
+	let {
+		ref = $bindable(null),
+		value = $bindable(),
+		type,
+		files = $bindable(),
+		class: className,
+		...restProps
+	}: Props = $props();
+
+	// Define the shared classes based on the React component
+	// Use outline-none instead of outline-hidden (standard Tailwind)
+	const inputClasses = cn(
+		'flex h-10 w-full rounded-base border-2 border-border bg-secondary-background selection:bg-main selection:text-main-foreground px-3 py-2 text-sm font-base text-foreground file:border-0 file:bg-transparent file:text-sm file:font-heading placeholder:text-foreground/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+		className // Merge passed className here
+	);
+</script>
+
+{#if type === 'file'}
+	<input
+		bind:this={ref}
+		data-slot="input"
+		class={inputClasses}
+		type="file"
+		bind:files
+		bind:value
+		{...restProps}
+	/>
+{:else}
+	<input bind:this={ref} data-slot="input" class={inputClasses} {type} bind:value {...restProps} />
+{/if}
+
+<!--
+  Reminder: This component now relies on CSS variables defined in your global CSS (src/app.css),
+  such as:
+  --radius-base, --border, --secondary-background, --main, --main-foreground,
+  --font-base, --foreground, --font-heading
+
+  Ensure these are correctly defined for the styles to apply as intended.
+-->
+</file>
+
 <file path="src/lib/components/ui/separator/index.ts">
 import Root from "./separator.svelte";
 
@@ -1149,19 +1425,395 @@ export function load(): PageData {
 }
 </file>
 
-<file path="src/app.html">
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
-	</body>
-</html>
+<file path="src/routes/linktree/+page.svelte">
+<script lang="ts">
+	import Header from '$lib/frontpage/Header.svelte';
+	import { Button } from '$lib/components/ui/button';
+	import Icon from '@iconify/svelte'; // Import Iconify component
+	import { Avatar, AvatarFallback, AvatarImage } from '$lib/components/ui/avatar';
+
+	// Define the links for the Linktree, using Iconify strings for icons
+	const links = [
+		{
+			href: '/blog', // Assuming this is an internal link
+			label: 'Blog',
+			icon: 'mdi:post-outline',
+			variant: 'neutral' as const
+		},
+		{
+			href: 'https://github.com/prudhviboggavarapu',
+			label: 'GitHub',
+			icon: 'simple-icons:github',
+			variant: 'default' as const
+		},
+		// {
+		// 	href: 'https://www.linkedin.com/in/prudhviboggavarapu/',
+		// 	label: 'LinkedIn',
+		// 	icon: 'simple-icons:linkedin',
+		// 	variant: 'default' as const
+		// },
+        {
+            href: 'https://www.youtube.com/@LetsLearnThingsLive', // Added YouTube link
+            label: 'YouTube',
+            icon: 'simple-icons:youtube', // Added YouTube icon
+            variant: 'default' as const
+        },
+        {
+            href: 'https://twitch.tv/letslearnthingslive',
+            label: 'Twitch',
+            icon: 'simple-icons:twitch',
+            variant: 'default' as const
+        },
+		{
+			href: 'https://bsky.app/profile/thethornyrose.bsky.social',
+			label: 'Bluesky',
+			icon: 'simple-icons:bluesky',
+			variant: 'default' as const
+		},
+		{
+			href: 'https://www.snapchat.com/add/soulcrusher6942?share_id=mO4CkjwaURo&locale=en-US',
+			label: 'Snapchat',
+			icon: 'simple-icons:snapchat',
+			variant: 'default' as const
+		},
+		{
+			href: 'https://wa.me/qr/LJWL6RUQD2TJE1',
+			label: 'WhatsApp',
+			icon: 'simple-icons:whatsapp',
+			variant: 'default' as const
+		},
+		{
+			href: 'mailto:codingpabs@gmail.com',
+			label: 'Email Me',
+			icon: 'mdi:email-outline',
+			variant: 'neutral' as const
+		},
+		{
+			// --- IMPORTANT: Replace with the ACTUAL URL to your vCard file ---
+			href: '/contact.vcf', // Placeholder URL - you need to host the .vcf file
+			label: 'Add to Contacts (vCard)',
+			icon: 'mdi:card-account-details-outline',
+			variant: 'neutral' as const
+		}
+	];
+</script>
+
+<div class="flex min-h-screen flex-col bg-background text-foreground">
+	<Header />
+
+	<!-- Main Content Area: Centered horizontally, starts near the top -->
+	<main class="flex flex-grow items-start justify-center pb-12 pt-12">
+		<div class="container mx-auto flex max-w-md flex-col items-center p-4">
+			<!-- Profile Avatar and Name -->
+			<Avatar class="shadow-shadow mb-4 size-24 border-4 border-border">
+				<!-- Replace with your actual image URL -->
+				<AvatarImage src="/placeholder-avatar.jpg" alt="Karma Jade Rose" />
+				<AvatarFallback class="text-4xl font-bold">KJ</AvatarFallback>
+			</Avatar>
+			<h1 class="font-heading mb-2 text-3xl">Karma Jade Rose</h1>
+			<p class="font-base mb-8 text-center text-foreground/80">
+				Rust & Python Developer | Web Dev Enthusiast | Robotics Tinkerer
+			</p>
+
+			<!-- Links Section -->
+			<div class="flex w-full flex-col space-y-4">
+				{#each links as link (link.href)}
+					{#if link.label === 'Add to Contacts (vCard)'}
+						<!-- Special handling for vCard download link -->
+						<a
+							href={link.href}
+							class="w-full no-underline"
+							download="KarmaJadeRose_Contact.vcf"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<Button variant={link.variant} size="lg" class="w-full justify-center text-lg">
+								{#if link.icon}
+									<Icon icon={link.icon} class="mr-2 size-6" />
+								{/if}
+								{link.label}
+							</Button>
+						</a>
+					{:else}
+						<!-- Standard link handling -->
+						<a
+							href={link.href}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="w-full no-underline"
+						>
+							<Button variant={link.variant} size="lg" class="w-full justify-center text-lg">
+								{#if link.icon}
+									<Icon icon={link.icon} class="mr-2 size-6" />
+								{/if}
+								{link.label}
+							</Button>
+						</a>
+					{/if}
+				{/each}
+			</div>
+		</div>
+	</main>
+</div>
+</file>
+
+<file path="src/routes/tags/[tag]/+page.server.ts">
+// src/routes/tags/[tag]/+page.server.ts
+import { getAllPosts, type BlogPost } from '$lib/server/blogPosts';
+import { error } from '@sveltejs/kit';
+
+export interface PageData {
+    /** The tag name requested from the URL. */
+    tagName: string;
+    /** An array of blog posts that include the requested tag. */
+    filteredPosts: BlogPost[];
+}
+
+export function load({ params }): PageData {
+    const requestedTag = params.tag; // Get tag from URL (already decoded by SvelteKit)
+    if (!requestedTag) {
+        throw error(400, 'Tag parameter is missing');
+    }
+
+    const allPosts = getAllPosts();
+
+    // Filter posts: keep only those whose tags array includes the requested tag.
+    // Consider case-insensitivity if your tags might vary in casing:
+    // const filteredPosts = allPosts.filter(post =>
+    //     post.tags?.some(t => t.toLowerCase() === requestedTag.toLowerCase())
+    // );
+    const filteredPosts = allPosts.filter((post) =>
+        post.tags?.includes(requestedTag)
+    );
+
+    console.log(
+        `Found ${filteredPosts.length} posts for tag: ${requestedTag}`
+    ); // Optional logging
+
+    // Optional: Could throw 404 if no posts found, but showing an empty list might be better UX.
+    // if (filteredPosts.length === 0) {
+    //     throw error(404, `No posts found for tag: ${requestedTag}`);
+    // }
+
+    return {
+        tagName: requestedTag,
+        filteredPosts: filteredPosts
+    };
+}
+
+// --- Prerendering Support ---
+export function entries() {
+    const posts = getAllPosts();
+    const allTags: string[] = [];
+    posts.forEach((post) => {
+        if (post.tags && Array.isArray(post.tags)) {
+            allTags.push(...post.tags);
+        }
+    });
+    const uniqueTags = [...new Set(allTags)];
+
+    // Return an array of objects mapping the unique tags to the `tag` parameter
+    return uniqueTags.map((tag) => ({ tag: encodeURIComponent(tag) }));
+    // Example output: [ { tag: 'blog' }, { tag: 'first' }, { tag: 'second' }, ... ]
+}
+
+export const prerender = true; // Enable prerendering for these tag pages
+</file>
+
+<file path="src/routes/tags/[tag]/+page.svelte">
+<!-- src/routes/tags/[tag]/+page.svelte -->
+<script lang="ts">
+	import Header from '$lib/frontpage/Header.svelte';
+	import Footer from '$lib/frontpage/Footer.svelte';
+	import { Badge } from '$lib/components/ui/badge'; // Re-import Badge if needed
+	import { formatDisplayDate } from '$lib/utils'; // Import date formatter
+	import type { PageData } from './+page.server.js';
+
+	let { data }: { data: PageData } = $props();
+	const { tagName, filteredPosts } = data;
+</script>
+
+<div class="flex min-h-screen flex-col bg-background text-foreground">
+	<Header />
+
+	<!-- Main Content Area -->
+	<main class="flex-grow">
+		<div class="container mx-auto p-8">
+			<h1 class="font-heading mb-6 border-b-2 border-border pb-4 text-4xl">
+				Posts tagged with: <span class="text-main">{tagName}</span>
+			</h1>
+
+			<!-- Check if there are posts for this tag -->
+			{#if filteredPosts && filteredPosts.length > 0}
+				<div class="space-y-8">
+					<!-- Iterate over the filtered posts -->
+					{#each filteredPosts as post (post.slug)}
+						<!-- Replicate the styling from /blog/+page.svelte -->
+						<article
+							class="shadow-shadow rounded-[var(--radius-base)] border-2 border-border p-6 transition-transform hover:-translate-y-1"
+						>
+							<h2 class="font-heading mb-2 text-2xl">{post.name}</h2>
+							<p class="mb-4 text-sm text-foreground/80">
+								Published on: {formatDisplayDate(post.date)}
+							</p>
+
+							<!-- Optionally display other tags for context -->
+							{#if post.tags && post.tags.length > 0}
+								<div class="mb-4 flex flex-wrap gap-2">
+									{#each post.tags as postTag}
+										<Badge variant={postTag === tagName ? 'default' : 'neutral'} class="text-xs">
+											{postTag}
+										</Badge>
+									{/each}
+								</div>
+							{/if}
+
+							{#if post.blurb}
+								<p class="font-base mb-4">{post.blurb}</p>
+							{/if}
+							<a href="/blog/{post.slug}" class="text-main inline-block font-bold hover:underline">
+								Read More &rarr;
+							</a>
+						</article>
+					{/each}
+				</div>
+			{:else}
+				<p class="font-base text-center italic">
+					No blog posts found with the tag "{tagName}".
+				</p>
+			{/if}
+		</div>
+	</main>
+
+	<Footer />
+</div>
+</file>
+
+<file path="src/routes/tags/+page.server.ts">
+// src/routes/tags/+page.server.ts
+import { getAllPosts } from '$lib/server/blogPosts';
+import type { BlogPost } from '$lib/server/blogPosts'; // Optional: if you need the type
+
+export interface PageData {
+    /** An alphabetically sorted array of unique tags from all blog posts. */
+    uniqueTags: string[];
+}
+
+export function load(): PageData {
+    const posts = getAllPosts();
+    const allTags: string[] = [];
+
+    // Collect all tags from all posts
+    posts.forEach((post) => {
+        if (post.tags && Array.isArray(post.tags)) {
+            allTags.push(...post.tags);
+        }
+    });
+
+    // Get unique tags using a Set and sort them alphabetically
+    const uniqueTags = [...new Set(allTags)].sort((a, b) =>
+        a.localeCompare(b)
+    );
+
+    console.log(`Found ${uniqueTags.length} unique tags.`); // Optional logging
+
+    return {
+        uniqueTags: uniqueTags
+    };
+}
+
+// Prerender this page as the tag list is determined at build time
+export const prerender = true;
+</file>
+
+<file path="src/routes/tags/+page.svelte">
+<!-- src/routes/tags/+page.svelte -->
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import Fuse from 'fuse.js'; // Import the fuzzy search library
+	import Header from '$lib/blog_stuff/Header.svelte';
+	import Footer from '$lib/blog_stuff/Footer.svelte';
+	import { Input } from '$lib/components/ui/input'; // Assuming you have an Input component
+	import { Badge } from '$lib/components/ui/badge';
+	import type { PageData } from './+page.server.js';
+
+	// --- Get Page Data ---
+	let { data }: { data: PageData } = $props();
+	const allUniqueTags = data.uniqueTags || []; // Ensure it's an array
+
+	// --- State for Search ---
+	let searchTerm = $state('');
+	let filteredTags = $state([...allUniqueTags]); // Start with all tags
+	let fuse: Fuse<string>; // Fuse instance, initialized in onMount
+
+	// --- Initialize Fuse.js on Mount ---
+	onMount(() => {
+		const options: Fuse.IFuseOptions<string> = {
+			threshold: 0.4, // Adjust for sensitivity
+			minMatchCharLength: 1
+		};
+		fuse = new Fuse(allUniqueTags, options);
+	});
+
+	// --- Reactive Effect for Filtering ---
+	$effect(() => {
+		if (!fuse) return; // Don't run if Fuse isn't initialized yet
+
+		const term = searchTerm.trim();
+		if (term === '') {
+			filteredTags = [...allUniqueTags];
+		} else {
+			const results = fuse.search(term);
+			filteredTags = results.map((result) => result.item);
+		}
+	});
+</script>
+
+<div class="flex min-h-screen flex-col bg-background text-foreground">
+	<Header />
+
+	<!-- Main Content Area -->
+	<main class="flex-grow">
+		<div class="container mx-auto p-8">
+			<h1 class="font-heading mb-6 border-b-2 border-border pb-4 text-4xl">Search Tags</h1>
+
+			<div class="mb-8">
+				<Input
+					type="search"
+					placeholder="Start typing to fuzzy search tags..."
+					bind:value={searchTerm}
+					class="w-full max-w-lg"
+					aria-label="Search blog tags"
+				/>
+			</div>
+
+			{#if filteredTags.length > 0}
+				<div class="flex flex-wrap gap-3">
+					{#each filteredTags as tag (tag)}
+						<!-- Make the tag a link -->
+						<a
+							href="/tags/{encodeURIComponent(tag)}"
+							class="no-underline transition-transform hover:-translate-y-0.5"
+							aria-label="View posts tagged with {tag}"
+						>
+							<Badge variant="neutral" class="cursor-pointer text-base">
+								{tag}
+							</Badge>
+						</a>
+					{/each}
+				</div>
+			{:else if searchTerm.trim() !== ''}
+				<p class="font-base text-center italic text-foreground/80">
+					No tags found matching "{searchTerm}".
+				</p>
+			{:else}
+				<p class="font-base text-center italic text-foreground/80">No tags available.</p>
+			{/if}
+		</div>
+	</main>
+
+	<Footer />
+</div>
 </file>
 
 <file path=".npmrc">
@@ -1398,100 +2050,6 @@ The 0 tone is always 100% black, the darkest tone in the range; the 100 tone is 
 	<!-- Lower Diagonal Arm -->
 	<path d="M 25 50 L 75 90" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
 </svg>
-</file>
-
-<file path="src/lib/components/ui/button/button.svelte">
-<script lang="ts" module>
-	import type { WithElementRef } from 'bits-ui';
-	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
-	import { type VariantProps, tv } from 'tailwind-variants';
-
-	// --- MODIFICATIONS START HERE ---
-	export const buttonVariants = tv({
-		// Updated base styles using CSS variables where appropriate
-		base: 'inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] text-sm font-[var(--font-weight-base)] ring-offset-white transition-all gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
-		variants: {
-			// Replaced variants with the new ones, using CSS variables
-			variant: {
-				default:
-					'text-[var(--border)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
-				noShadow: 'text-[var(--main-foreground)] border-2 border-[var(--border)]',
-				neutral:
-					'text-[var(--foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
-				reverse:
-					'text-[var(--main-foreground)] border-2 border-[var(--border)] hover:translate-x-[var(--spacing-reverseBoxShadowX)] hover:translate-y-[var(--spacing-reverseBoxShadowY)] hover:shadow-[var(--shadow-shadow)]'
-				// Original variants removed, add back if needed
-			},
-			// Kept original sizes, updated icon size slightly
-			size: {
-				default: 'h-10 px-4 py-2',
-				sm: 'h-9 rounded-md px-3', // Kept original Svelte sm style
-				lg: 'h-11 rounded-md px-8',
-				icon: 'size-10' // Updated to use size-* utility
-			}
-		},
-		// Kept default variants
-		defaultVariants: {
-			variant: 'default',
-			size: 'default'
-		}
-	});
-	// --- MODIFICATIONS END HERE ---
-
-	// Types automatically adapt to the new variants
-	export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
-	export type ButtonSize = VariantProps<typeof buttonVariants>['size'];
-
-	// Props definition remains the same
-	export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
-		WithElementRef<HTMLAnchorAttributes> & {
-			variant?: ButtonVariant;
-			size?: ButtonSize;
-		};
-</script>
-
-<script lang="ts">
-	// No changes needed for cn import
-	import { cn } from '$lib/utils.js';
-
-	// ButtonProps type is directly available from the module script above
-	let {
-		class: className,
-		variant = 'default',
-		size = 'default',
-		ref = $bindable(null),
-		href = undefined,
-		type = 'button',
-		children,
-		...restProps
-	}: ButtonProps = $props();
-</script>
-
-<!-- No changes in the template -->
-{#if href}
-	<a bind:this={ref} class={cn(buttonVariants({ variant, size }), className)} {href} {...restProps}>
-		{@render children?.()}
-	</a>
-{:else}
-	<button
-		bind:this={ref}
-		class={cn(buttonVariants({ variant, size }), className)}
-		{type}
-		{...restProps}
-	>
-		{@render children?.()}
-	</button>
-{/if}
-
-<!--
-  Reminder: This component now heavily relies on CSS variables defined in your global CSS (src/app.css),
-  such as:
-  --radius-base, --font-weight-base, --main-foreground, --main, --border, --shadow-shadow,
-  --spacing-boxShadowX, --spacing-boxShadowY, --secondary-background, --foreground,
-  --spacing-reverseBoxShadowX, --spacing-reverseBoxShadowY
-
-  Ensure these are correctly defined for the styles to apply.
--->
 </file>
 
 <file path="src/lib/components/ui/separator/separator.svelte">
@@ -1751,6 +2309,49 @@ declare global {
 export {};
 </file>
 
+<file path="src/app.html">
+<!doctype html>
+<!-- Set lang based on your needs -->
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <link rel="icon" href="%sveltekit.assets%/favicon.png"/>
+        <meta
+        name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <!-- === START: Theme Initialization Script === -->
+        <script>
+            (function () {
+                try {
+                    const storedTheme = localStorage.getItem('theme');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    // Determine theme: stored preference > OS preference > default (light)
+                    const theme = storedTheme === 'dark' || (! storedTheme && prefersDark) ? 'dark' : 'light';
+
+                    if (theme === 'dark') {
+                        document.documentElement.classList.add('dark');
+                        // Optional: Set inline background color if needed for absolute earliest paint
+                        // document.documentElement.style.backgroundColor = '#241933'; // Your dark bg
+                    } else { // Ensure dark class is removed if light is preferred/stored
+                        document.documentElement.classList.remove('dark');
+                        // Optional: Set light background if needed
+                        // document.documentElement.style.backgroundColor = '#F0E5FF'; // Your light bg
+                    }
+                } catch (e) { // Ignore errors (e.g., localStorage access denied)
+                    console.error('Error applying initial theme:', e);
+                }
+            })();
+        </script>
+        <!-- === END: Theme Initialization Script === -->
+
+        %sveltekit.head%
+    </head>
+    <body data-sveltekit-preload-data="hover">
+        <div style="display: contents">%sveltekit.body%</div>
+    </body>
+</html>
+</file>
+
 <file path=".prettierrc">
 {
 	"useTabs": true,
@@ -1832,6 +2433,100 @@ You can preview the production build with `npm run preview`.
 }
 </file>
 
+<file path="src/lib/components/ui/button/button.svelte">
+<script lang="ts" module>
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
+	import { type VariantProps, tv } from 'tailwind-variants';
+
+	// --- MODIFICATIONS START HERE ---
+	export const buttonVariants = tv({
+		// Updated base styles using CSS variables where appropriate
+		base: 'inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] text-sm font-[var(--font-weight-base)] ring-offset-white transition-all gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+		variants: {
+			// Replaced variants with the new ones, using CSS variables
+			variant: {
+				default:
+					'text-[var(--border)] border-[3px] border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+				noShadow: 'text-[var(--main-foreground)] border-[3px] border-[var(--border)]',
+				neutral:
+					'text-[var(--foreground)] border-[3px] border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+				reverse:
+					'text-[var(--main-foreground)] border-[3px] border-[var(--border)] hover:translate-x-[var(--spacing-reverseBoxShadowX)] hover:translate-y-[var(--spacing-reverseBoxShadowY)] hover:shadow-[var(--shadow-shadow)]'
+				// Original variants removed, add back if needed
+			},
+			// Kept original sizes, updated icon size slightly
+			size: {
+				default: 'h-10 px-4 py-2',
+				sm: 'h-9 rounded-md px-3', // Kept original Svelte sm style
+				lg: 'h-11 rounded-md px-8',
+				icon: 'size-10' // Updated to use size-* utility
+			}
+		},
+		// Kept default variants
+		defaultVariants: {
+			variant: 'default',
+			size: 'default'
+		}
+	});
+	// --- MODIFICATIONS END HERE ---
+
+	// Types automatically adapt to the new variants
+	export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
+	export type ButtonSize = VariantProps<typeof buttonVariants>['size'];
+
+	// Props definition remains the same
+	export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
+		WithElementRef<HTMLAnchorAttributes> & {
+			variant?: ButtonVariant;
+			size?: ButtonSize;
+		};
+</script>
+
+<script lang="ts">
+	// No changes needed for cn import
+	import { cn } from '$lib/utils.js';
+
+	// ButtonProps type is directly available from the module script above
+	let {
+		class: className,
+		variant = 'default',
+		size = 'default',
+		ref = $bindable(null),
+		href = undefined,
+		type = 'button',
+		children,
+		...restProps
+	}: ButtonProps = $props();
+</script>
+
+<!-- No changes in the template -->
+{#if href}
+	<a bind:this={ref} class={cn(buttonVariants({ variant, size }), className)} {href} {...restProps}>
+		{@render children?.()}
+	</a>
+{:else}
+	<button
+		bind:this={ref}
+		class={cn(buttonVariants({ variant, size }), className)}
+		{type}
+		{...restProps}
+	>
+		{@render children?.()}
+	</button>
+{/if}
+
+<!--
+  Reminder: This component now heavily relies on CSS variables defined in your global CSS (src/app.css),
+  such as:
+  --radius-base, --font-weight-base, --main-foreground, --main, --border, --shadow-shadow,
+  --spacing-boxShadowX, --spacing-boxShadowY, --secondary-background, --foreground,
+  --spacing-reverseBoxShadowX, --spacing-reverseBoxShadowY
+
+  Ensure these are correctly defined for the styles to apply.
+-->
+</file>
+
 <file path=".prettierignore">
 # Package Managers
 package-lock.json
@@ -1857,325 +2552,146 @@ export default defineConfig({
 });
 </file>
 
-<file path="src/lib/frontpage/Footer.svelte">
-<script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import { Separator } from '$lib/components/ui/separator';
-	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
-	import GithubIcon from '$lib/components/icons/GithubIcon.svelte';
-	import LinkedinIcon from '$lib/components/icons/LinkedinIcon.svelte';
-	import { goto } from '$app/navigation';
+<file path="src/articles/first.toml">
+[[title]]
+name = "From 6 Days to 30 Minutes, How to Think about Programing"
+slug = "from-six-days-to-thirty-minutes-how-to-think-about-programing"
+blurb = "Optimizing large-scale data processing: A Python (6 days) to Rust (30 minutes) transition "
+tags = [
+    "Rust",
+    "Python",
+    "Performance",
+    "Optimization",
+    "Data Processing",
+    "Big Data",
+    "Zstd",
+    "FEC",
+]
+date = "2025-4-13"
+content = """
+# Who Am I
 
-	const currentYear = new Date().getFullYear();
-</script>
+For those who don't know, my name is karma jade rose. I am a python dev turned rust dev ,along the way I learned web dev, as well as low level avr stuff for robotics. In short, I'm in a lot of fields, and because of this, I may offer a unique point of view programming design. This documents my time as a programmer in a start up, working with technology that is pretty new to me. Working on performance related tasks when I could choose what language and what tools to do.
 
-<footer class="w-full bg-background">
-	<Separator />
-	<div class="mx-auto">
-		<div class="flex flex-col gap-8 md:flex md:flex-row md:items-stretch">
-			<div class="ml-8 mt-2 flex-1">
-				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
-					Quick Links
-				</h3>
-				<ul class="font-base space-y-3">
-					<li>
-						<a
-							href="/"
-							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
-							>Home</a
-						>
-					</li>
-					<li>
-						<a
-							href="/"
-							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
-							>Projects</a
-						>
-					</li>
-					<li>
-						<a
-							href="/blog/"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hover:bg-main hover:text-main-foreground inline-flex items-center border-4 border-transparent px-4 pb-4 text-foreground transition-all duration-200 hover:border-border"
-						>
-							Blogs
-							<ExternalLinkIcon />
-						</a>
-					</li>
-				</ul>
-			</div>
+In this post, I'll walk you through my journey of optimizing a  data processing task—from a naive Python implementation taking 6 days to a high-performance Rust solution running in 30 minutes—sharing lessons on profiling, memory management, and multithreading techniques you can apply to your own projects.
 
-			<Separator orientation="vertical" class="hidden md:block" />
+# Define the Problem, Sorta
 
-			<div class="mt-2 flex-1">
-				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
-					Get in Touch!
-				</h3>
-				<div class="mb-8 flex flex-col items-start">
-					<div class="mb-6 flex space-x-6">
-						<a
-							href="https://github.com/prudhviboggavarapu"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
-							aria-label="GitHub"
-						>
-							<GithubIcon />
-						</a>
-						<a
-							href="https://www.linkedin.com/in/prudhviboggavarapu/"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
-							aria-label="LinkedIn"
-						>
-							<LinkedinIcon />
-						</a>
-					</div>
-					<Button
-						variant="default"
-						class="bg-[var(--neobrutalism-yellow-50)] text-black dark:bg-[var(--neobrutalism-yellow-50)]"
-						onclick={() => goto('/linktree')}
-					>
-						Contact Me
-					</Button>
-				</div>
-			</div>
+Before you start programming, you should get in the habit of understanding what your problem is, and what's its scope. But that does not mean you should take a whiteboard and make everything on it. That just means you should mull over the product requirements. Just enough to sorta know what you're getting into.
 
-			<Separator orientation="vertical" class="hidden md:block" />
-			<div class="mt-2 flex-1">
-				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
-					Placeholder
-				</h3>
-				<p class="font-base text-foreground">Maybe some extra info here.</p>
-			</div>
-		</div>
-		<Separator />
+Our problem today is simple, I want to track where the donations are going from people, to corporations. Because of the Open Government Data Act, the FEC (Federal Election Committee) publishes a database (in pg_data) of all donations reported. Our startup needs to parse about 1E8 for every one year period. That's about 1E10 lines of dirty data in all. We want to sum every person's donation, to each organization every year.
 
-		<div
-			class="flex flex-col items-center justify-between gap-4 md:flex md:flex-row md:items-stretch"
-		>
-			<p class="ml-8 text-center font-bold text-foreground md:text-left">
-				© {currentYear} Karma | Built with love by
-				<a href="https://karmajaderose.com" class="text-main-foreground underline">Karma</a>
-			</p>
+# The Naive Implementation
 
-			<Separator class="w-1/2 md:hidden" />
+When you have a problem that can be broken up into chunks, you should break it into smaller chunks, and write a "naive" implementation. That means just open up a file in the language of your choosing and write it there. Don't worry about language choice, don't worry about best practices, just worry about getting a solution down. Only refactor when you feel like screaming.
 
-			<div
-				class="content-evenly bg-black px-2 font-mono text-sm text-white dark:bg-background dark:text-foreground"
-			>
-				&lt;/&gt; with <a href="https://svelte.dev/" class="text-main-foreground hover:underline"
-					>SvelteKit</a
-				>
-				+
-				<a href="https://www.shadcn-svelte.com/" class="text-main-foreground hover:underline"
-					>Shadcn UI Svelte</a
-				>
-			</div>
-		</div>
-	</div>
-</footer>
-</file>
+In this case, I took this first 100 lines of my CSV file, and wrote it in Pandas and Python, after manually validating that the output was correct. I tried it with 1E5 lines, then the whole dataset. Once it got to about 1E7, the program kept running out of memory. No good. So I switched to using Polars with the lazy dataframe approach, but because of the size of the output dataframe, it kept running out of memory. No good still, I just decided to stream the data from the compressed zstd archive, and line by line write to a CSV file for every line. It took 6 days, but at least it didn't crash.
 
-<file path="src/lib/frontpage/Header.svelte">
-<script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import { themeStore } from '$lib/stores/themeStore';
-	import {
-		Sheet,
-		SheetContent,
-		SheetHeader,
-		SheetTitle,
-		SheetTrigger,
-		SheetClose
-	} from '$lib/components/ui/sheet';
-	import { Separator } from '$lib/components/ui/separator';
-	import { goto } from '$app/navigation';
+# Problem Definition, Again But Better This Time
 
-	import LogoPlaceholder from '$lib/components/icons/LogoPlaceholder.svelte';
-	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
-	import SunIcon from '$lib/components/icons/SunIcon.svelte';
-	import MoonIcon from '$lib/components/icons/MoonIcon.svelte';
-	import Menu from '@lucide/svelte/icons/menu';
-</script>
+Now that you know what you're kind of doing. You can set your project guidelines better. Go back to that bulletpoint list that you have, and add the things that you learned from your toy implementation. Now and only now is the time to set performance target. Then, let the optimizing begin.
 
-<nav class="bg-main shadow-shadow w-full border-4 border-border">
-	<div class="mx-auto flex h-[64px] w-full items-center justify-between px-6">
-		<h1
-			class="text-main-foreground min-w-[50px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
-		>
-			<a href="/" class="text-main-foreground block">
-				<LogoPlaceholder />
-			</a>
-		</h1>
+I learned that memory management and compressed archive reading were far more demanding bottlenecks than expected. The computational operations consumed more resources than anticipated, resulting in performance that is not acceptable. In my case, I added that it has memory constraints and the output needs to be inspectable while the program is running. I set a target of 30 mins as `zstdcat file.csv.zst | wc -l` took about 20 minutes, so it shouldn't take much more than that realistically.
 
-		<div class="font-base hidden items-center space-x-6 text-base md:flex lg:text-lg">
-			<a
-				href="/"
-				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
-				>Home</a
-			>
+# Now the Fun Part: Speed Up Time
 
-			<a
-				href="/"
-				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
-				>Journey</a
-			>
-			<a
-				href="/"
-				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
-				>Projects</a
-			>
-			<a
-				href="/blog/"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
-			>
-				Blogs
-				<ExternalLinkIcon />
-			</a>
-			<div class="flex items-center gap-4">
-				<Button variant="default" onclick={() => goto('/linktree')}>Contact Me</Button>
-				<Button variant="neutral" size="icon" onclick={themeStore.toggle} aria-label="Toggle theme">
-					{#if $themeStore.mounted}
-						{#if $themeStore.isDark}
-							<SunIcon />
-						{:else}
-							<MoonIcon />
-						{/if}
-					{/if}
-					<span class="sr-only">Toggle theme</span>
-				</Button>
-			</div>
-		</div>
+Before you do any performance stuff, trash your first implementation. The point is you wrote it bad, and now it's time to write it again with the knowledge you now gained. After that, Profile Profile Profile. You think you know your code and what's slow and what's fast? You don't, and if you really do, this article is not meant for you. Take your time and use a profiler. I ended up using functiontrace for Python, and samply for Rust.
 
-		<div class="flex items-center gap-4 md:hidden">
-			<Button variant="neutral" size="icon" onclick={themeStore.toggle} aria-label="Toggle theme">
-				{#if $themeStore.mounted}
-					{#if $themeStore.isDark}
-						<SunIcon />
-					{:else}
-						<MoonIcon />
-					{/if}
-				{/if}
-				<span class="sr-only">Toggle theme</span>
-			</Button>
+I really recommend these tools as it gives you all of the performance data on profiler.firefox.com. That way you can both open and inspect the perf data in a generic way. My advice is to look at the flame graph and see what is taking all of your time. While I'm here giving some advice. I would commit all of your perf data to your Git when you change your implementation. So you can see how your stuff changed.
 
-			<Sheet>
-				<SheetTrigger
-					class="inline-flex h-10 w-10 items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] border-2 border-[var(--border)] text-sm font-[var(--font-weight-base)] shadow-[var(--shadow-shadow)] ring-offset-white transition-all hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
-					aria-label="Open menu"
-				>
-					<Menu class="size-5" />
-					<span class="sr-only">Open menu</span>
-				</SheetTrigger>
-				<SheetContent side="right" class="w-[280px] border-l-4 border-border bg-background p-6">
-					<SheetHeader class="mb-6 text-left">
-						<SheetTitle class="font-heading text-2xl">Menu</SheetTitle>
-					</SheetHeader>
-					<nav class="flex flex-col space-y-4">
-						<SheetClose>
-							<a href="/" class="hover:text-main block text-lg font-bold text-foreground">Home</a>
-						</SheetClose>
-						<SheetClose>
-							<a href="/" class="hover:text-main block text-lg font-bold text-foreground">Journey</a
-							>
-						</SheetClose>
-						<SheetClose>
-							<a href="/" class="hover:text-main block text-lg font-bold text-foreground"
-								>Projects</a
-							>
-						</SheetClose>
-						<SheetClose>
-							<a
-								href="/blog/"
-								target="_blank"
-								rel="noopener noreferrer"
-								class="hover:text-main inline-flex items-center gap-1 text-lg font-bold text-foreground"
-							>
-								Blogs
-								<ExternalLinkIcon />
-							</a>
-						</SheetClose>
+In my case (quite obviously), the opening of the CSV file, finding all of the rows to change then changing, then writing. It was taking 60% of the CPU time. At around the same point, I felt as if I was hacking Python to go EVEN FASTER. And I decided to change languages to Rust at this point. Normally, I tend to choose Rust when Python starts to become unbearably slow or terribly not readable anymore. This table shows what I was able to do 
 
-						<Separator class="my-4" />
+| Ideas                       | Runtime | Improvement Factor |
+| --------------------------- | ------- | ------------------ |
+| Naive Python                | 6 days  | Baseline           |
+| Rust Conversion             | 1 day   | 6x                 |
+| String Parsing Optimization | 6 hours | 4x                 |
+| Multi-threading             | 30 min  | 12x                |
+| Total                       | 30 min  | 288x               |
 
-						<SheetClose>
-							<Button
-								variant="default"
-								class="w-full"
-								onclick={() => {
-									goto('/linktree');
-								}}
-							>
-								Contact Me
-							</Button>
-						</SheetClose>
-					</nav>
-				</SheetContent>
-			</Sheet>
-		</div>
-	</div>
-</nav>
-</file>
+# Why Python is Slow, and Rust is Fast (at this)
 
-<file path="src/routes/blog/+page.svelte">
-<!-- src/routes/blog/+page.svelte -->
-<script lang="ts">
-	import Header from '$lib/frontpage/Header.svelte';
-	import Footer from '$lib/frontpage/Footer.svelte';
-	import type { PageData } from './+page.server.js'; // Import the type for loaded data
+The reason why Python can be pretty slow for this is because it just doesn't let you handle memory in an easy way. It will just decide for me how long variables live for, and when things get allocated and deallocated, that's not really a problem for a proof of concept or a first crack at an idea. But when you start doing performance stuff, it feels like the language starts to fight you on the readability front when you start making more performance choices. In short, it feels like Python is either readable, or fast. But rarely is it both. On the other hand, since Rust is a compiled language with a borrow checker, I can write kind of whatever I want, huck it into a function with defined errors and types and pretend that the impl is a black box unless I need to deal with it again. and it will deallocated and allocated thing very explicitly. This is extremely useful if you have a bunch of short-lived variables.
 
-	// Get the loaded posts from the page data provided by +page.server.ts
-	let { data }: { data: PageData } = $props();
-</script>
+(I might write a blog on why I choose what I choose).
 
-<div class="flex min-h-screen flex-col bg-background text-foreground">
-	<!-- Render Shared Header Component - No longer needs theme props -->
-	<Header />
+# From 6 Days to 1 Day: Changing Languages
 
-	<!-- Main Blog Content Area -->
-	<main class="flex-grow">
-		<div class="container mx-auto p-8">
-			<h1 class="font-heading mb-6 border-b-2 border-border pb-4 text-4xl">Blog Posts</h1>
+I don't think rust is always the right answer for the job, but in this case, I really like the way that rust tends to handle thing like memory management. I ended up writing basically the same implementation in Python, reducing the memory overhead to 1GB and sped things up to about 1 day. This was a 6x speedup, just by switching languages. Look at the profiling data, Python was spending a lot of time dropping variables and cleaning things up. It also took a lot of time getting the row of the file. When the compiler can know when and where to drop things, it speeds up.
 
-			<!-- Check if there are posts loaded -->
-			{#if data.posts && data.posts.length > 0}
-				<div class="space-y-8">
-					<!-- Iterate over the loaded posts -->
-					{#each data.posts as post}
-						<!-- Apply the exact same classes as the original placeholder article -->
-						<article class="shadow-shadow rounded-[var(--radius-base)] border-2 border-border p-6">
-							<!-- Post Title - styled like original h2 -->
-							<h2 class="font-heading mb-2 text-2xl">{post.name}</h2>
-							<!-- Publication Date - styled like original date p -->
-							<p class="mb-4 text-sm text-foreground/80">
-								Published on: {post.date.toLocaleDateString('en-US', {
-									year: 'numeric',
-									month: 'long',
-									day: 'numeric'
-								})}
-							</p>
-							<!-- Post Blurb/Excerpt - styled like original excerpt p -->
-							{#if post.blurb}
-								<p class="font-base mb-4">{post.blurb}</p>
-							{/if}
-							<!-- Read More Link - styled like original link -->
-							<a href="/blog/{post.slug}" class="text-main font-bold hover:underline">
-								Read More
-							</a>
-						</article>
-					{/each}
-				</div>
-			{:else}
-				<p class="font-base text-center italic">More posts coming soon!</p>
-			{/if}
-		</div>
-	</main>
-</div>
+# From 1 Day to 6 Hours: Optimizing String Parsing
+
+Looking again at the profiling data, I found that more than 80 percent of my time is spent parsing the string, with a bunch of memory allocations happening in the from_str. So let's look at the code
+
+
+```rust
+fn from_str(s: &str) -> Result<Self, Self::Err> {
+        // Split on the pipe delimiter.
+        let fields: Vec<&str> = s.split('|').collect();
+        if fields.len() != 81 {
+            return Err(ParseRecordError(format!(
+                "Expected 81 fields, got {}",
+                fields.len()
+            )));
+        }
+
+        Ok(Record {
+            committee_id: fields[0].trim().to_string(),
+            committee_name: fields[1].trim().to_string(),
+	         .....})
+```
+
+In this case, the from_str function takes a borrowed string slice (&str), temporarily allocates heap memory for a Vec containing slices pointing into the original string, and then performs numerous heap allocations to create owned String data for the fields of the Record struct it constructs and returns it. In short, I am creating a lot of intermediary data, that has to be allocated and deallocated taking a lot of CPU time. If I was just looking at the code, I would have thought that the database lookups were taking most of the time. After some amount of optimizing, I arrive on the following code block.
+
+```rust 
+pub fn from_bytes(bytes: &[u8]) -> Result<Self, ParseRecordError> {
+   // Split the byte slice on pipe character
+   let mut fields: Vec<&[u8]> = Vec::with_capacity(81);
+   let mut start = 0;
+
+   for i in 0..bytes.len() {
+	  if bytes[i] == b'|' {
+		 fields.push(&bytes[start..i]);
+		 start = i + 1;
+	  }
+   }
+   // Add the last field
+   fields.push(&bytes[start..]);
+
+   if fields.len() != 81 {
+	  return Err(ParseRecordError(format!(
+		 "Expected 81 fields, got {}",
+		 fields.len()
+	  )));
+   }
+
+   // Parse fields directly from bytes where possible
+   Ok(Record {
+	  committee_id: String::from_utf8_lossy(fields[0]).trim().to_string(),
+	  committee_name: String::from_utf8_lossy(fields[1]).trim().to_string(),
+	  contributor_id: String::from_utf8_lossy(fields[2]).trim().to_string(),
+	  ...}
+	  )
+}
+```
+
+In the optimized case, the from_bytes function takes a borrowed byte slice `&[u8]`, performs one initial heap allocation for a `Vec` to hold references to byte segments within the input, and then performs numerous subsequent heap allocations when converting these byte segments into owned String fields for the `Record` struct it constructs and returns. Instead of copying allocated and deallocated things, you just reserve the memory.
+
+This ends up giving a 4x speed up.
+
+# From 6 Hours To 30 Min: Multi-Threading
+
+Now that I've optimized the single-threaded performance, let's see how we can multi-thread it. Even though I am using Rust, a lot of these principles will transfer to your language of choice. Let's look at the single-thread performance. First, the workflow starts with reading the file (15%) and then structuring that data into an array of 5000 Record objects (40%). Next, it fetches current items from the database (15%) and performs the required calculations (10%). Finally, the processed results are inserted back into the database (20%). While the array is being generated, 45% of the code is just waiting, So what I ended up doing is spawning on another thread that does the file reading, and having it send to a single thread that did the database stuff. That took the code running in 3 hours. Looking at some benchmarking, the file reading part was just waiting on the database part, but because we broke things up, I just spawned more databases, and routed which thread based on some metadata. I ended up spawning 8 threads, and 1 thread for file reading.
+
+# What is Left on the Table
+
+String parsing could be faster, because of how the compressed archive reader works, it's fastest when it's reading in chunks of 2E16 bytes. It's probably faster to take a multirow chunk, create an array of objects, then send it on the pipe, then reading it row by row. You could also probably read a bunch of rows into memory, then do it the parsing, then optimize the chunk size for the faster read and write. You could probably open a file reader, and jump 100000 lines and merge the output stream. You could parse what you needed and not everything. That could speed things up immensely. 
+
+# Footnote
+
+I have tried rewriting the rust implementation into Nom, and it went faster in the 1E7 case, but when it went to the full file, it did not change the speed by more than 3%, so I decided to scrap the implementation. Once I wrote this blog I looked more into Apache arrow, but could not find a way to export things to that format without my machine running out of memory.
+
+In other news, this is the first time I am writing a blog. Let me know how it reads."""
 </file>
 
 <file path=".gitignore">
@@ -2245,6 +2761,351 @@ export default ts.config(
 );
 </file>
 
+<file path="src/lib/frontpage/Footer.svelte">
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { Separator } from '$lib/components/ui/separator';
+	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
+	import GithubIcon from '$lib/components/icons/GithubIcon.svelte';
+	import LinkedinIcon from '$lib/components/icons/LinkedinIcon.svelte';
+	import { goto } from '$app/navigation';
+
+	const currentYear = new Date().getFullYear();
+</script>
+
+<footer class="w-full bg-background">
+	<Separator />
+	<div class="mx-auto">
+		<div class="flex flex-col gap-8 md:flex md:flex-row md:items-stretch">
+			<Separator orientation="vertical" class="w-1" />
+
+			<div class="ml-8 mt-2 flex-1">
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Quick Links
+				</h3>
+				<ul class="font-base space-y-3">
+					<li>
+						<a
+							href="/"
+							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							>Home</a
+						>
+					</li>
+					<li>
+						<a
+							href="/"
+							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							>Projects</a
+						>
+					</li>
+					<li>
+						<a
+							href="/blog/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:bg-main hover:text-main-foreground inline-flex items-center border-4 border-transparent px-4 pb-4 text-foreground transition-all duration-200 hover:border-border"
+						>
+							Blogs
+							<ExternalLinkIcon />
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<Separator orientation="vertical" class="w-1" />
+
+			<div class="mt-2 flex-1">
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Get in Touch!
+				</h3>
+				<div class="mb-8 flex flex-col items-start">
+					<div class="mb-6 flex space-x-6">
+						<a
+							href="https://github.com/prudhviboggavarapu"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
+							aria-label="GitHub"
+						>
+							<GithubIcon />
+						</a>
+						<a
+							href="https://www.linkedin.com/in/prudhviboggavarapu/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:text-main text-4xl text-foreground transition-colors duration-300"
+							aria-label="LinkedIn"
+						>
+							<LinkedinIcon />
+						</a>
+					</div>
+					<Button
+						variant="default"
+						class="bg-[var(--neobrutalism-yellow-50)] text-black dark:bg-[var(--neobrutalism-yellow-50)]"
+						onclick={() => goto('/linktree')}
+					>
+						Contact Me
+					</Button>
+				</div>
+			</div>
+
+			<Separator orientation="vertical" class="hidden md:block" />
+			<div class="mt-2 flex-1">
+				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
+					Placeholder
+				</h3>
+				<p class="font-base text-foreground">Maybe some extra info here.</p>
+			</div>
+			<Separator orientation="vertical" class="w-1" />
+		</div>
+
+		<Separator />
+
+		<div
+			class="flex flex-col items-center justify-between gap-4 md:flex md:flex-row md:items-stretch"
+		>
+			<p class="ml-8 text-center font-bold text-foreground md:text-left">
+				© {currentYear} Karma | Built with love by
+				<a href="https://karmajaderose.com" class="text-main-foreground underline">Karma</a>
+			</p>
+
+			<Separator class="w-1/2 md:hidden" />
+
+			<div
+				class="content-evenly bg-black px-2 font-mono text-sm text-white dark:bg-background dark:text-foreground"
+			>
+				&lt;/&gt; with <a href="https://svelte.dev/" class="text-main-foreground hover:underline"
+					>SvelteKit</a
+				>
+				+
+				<a href="https://www.shadcn-svelte.com/" class="text-main-foreground hover:underline"
+					>Shadcn UI Svelte</a
+				>
+			</div>
+		</div>
+		
+	</div>
+</footer>
+</file>
+
+<file path="src/lib/frontpage/Header.svelte">
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { themeStore } from '$lib/stores/themeStore';
+	import {
+		Sheet,
+		SheetContent,
+		SheetHeader,
+		SheetTitle,
+		SheetTrigger,
+		SheetClose
+	} from '$lib/components/ui/sheet';
+	import { Separator } from '$lib/components/ui/separator'; // Import Separator
+	import { goto } from '$app/navigation';
+
+	import LogoPlaceholder from '$lib/components/icons/LogoPlaceholder.svelte';
+	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
+	import SunIcon from '$lib/components/icons/SunIcon.svelte';
+	import MoonIcon from '$lib/components/icons/MoonIcon.svelte';
+	import Menu from '@lucide/svelte/icons/menu';
+</script>
+
+<nav class="bg-main shadow-shadow w-full border-4 border-border">
+	<!-- Ensure the main container has a defined height -->
+	<div class="mx-auto flex h-[64px] w-full items-stretch justify-between px-6">
+		<!-- Logo section - align self center if needed -->
+		<h1
+			class="text-main-foreground min-w-[50px] transform self-center text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
+		>
+			<a href="/" class="text-main-foreground block">
+				<LogoPlaceholder />
+			</a>
+		</h1>
+
+		<!-- Desktop Navigation -->
+		<!-- Use items-stretch to make children fill height -->
+		<div class="font-base hidden items-stretch gap-4 text-base md:flex lg:text-lg">
+			<Separator orientation="vertical" class="w-[3px]" />
+			<a
+				href="/"
+				class="text-main-foreground transform self-center px-2 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+				>Home</a
+			>
+
+			<!-- Separator will now stretch - remove h-6 -->
+			<Separator orientation="vertical" class="w-[3px]" />
+
+			<a
+				href="/"
+				class="text-main-foreground transform self-center px-2 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+				>Projects</a
+			>
+
+			<Separator orientation="vertical" class="w-[3px]" />
+
+			<a
+				href="/blog/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="text-main-foreground transform self-center px-2 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+			>
+				Blogs
+				<ExternalLinkIcon />
+			</a>
+
+			<Separator orientation="vertical" class="w-[3px]" />
+
+			<a
+				href="/linktree"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="text-main-foreground transform self-center px-2 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
+			>
+				Contact Me
+			</a>
+			<Separator orientation="vertical" class="w-[3px]" />
+
+			<!-- Group Contact and Theme buttons - align items center within this group -->
+			<div class="flex items-center gap-4 self-center">
+				<Button variant="neutral" size="icon" onclick={themeStore.toggle} aria-label="Toggle theme">
+					{#if $themeStore.mounted}
+						{#if $themeStore.isDark}
+							<SunIcon />
+						{:else}
+							<MoonIcon />
+						{/if}
+					{/if}
+					<span class="sr-only">Toggle theme</span>
+				</Button>
+			</div>
+		</div>
+
+		<!-- Mobile Navigation - align self center -->
+		<div class="flex items-center gap-4 self-center md:hidden">
+			<Button variant="neutral" size="icon" onclick={themeStore.toggle} aria-label="Toggle theme">
+				{#if $themeStore.mounted}
+					{#if $themeStore.isDark}
+						<SunIcon />
+					{:else}
+						<MoonIcon />
+					{/if}
+				{/if}
+				<span class="sr-only">Toggle theme</span>
+			</Button>
+
+			<Sheet>
+				<SheetTrigger
+					class="inline-flex h-10 w-10 items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] border-2 border-[var(--border)] text-sm font-[var(--font-weight-base)] shadow-[var(--shadow-shadow)] ring-offset-white transition-all hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+					aria-label="Open menu"
+				>
+					<Menu class="size-5" />
+					<span class="sr-only">Open menu</span>
+				</SheetTrigger>
+				<SheetContent side="right" class="w-[280px] border-l-4 border-border bg-background p-6">
+					<SheetHeader class="mb-6 text-left">
+						<SheetTitle class="font-heading text-2xl">Menu</SheetTitle>
+					</SheetHeader>
+					<nav class="flex flex-col">
+						<SheetClose>
+							<a href="/" class="hover:text-main block py-2 text-lg font-bold text-foreground"
+								>Home</a
+							>
+						</SheetClose>
+
+						<Separator class="my-1" />
+
+						<SheetClose>
+							<a href="/" class="hover:text-main block py-2 text-lg font-bold text-foreground"
+								>Journey</a
+							>
+						</SheetClose>
+
+						<Separator class="my-1" />
+
+						<SheetClose>
+							<a href="/" class="hover:text-main block py-2 text-lg font-bold text-foreground"
+								>Projects</a
+							>
+						</SheetClose>
+
+						<Separator class="my-1" />
+
+						<SheetClose>
+							<a
+								href="/blog/"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="hover:text-main inline-flex items-center gap-1 py-2 text-lg font-bold text-foreground"
+							>
+								Blogs
+								<ExternalLinkIcon />
+							</a>
+						</SheetClose>
+
+						<Separator class="my-4" />
+
+						<SheetClose>
+							<Button
+								variant="default"
+								class="w-full"
+								onclick={() => {
+									goto('/linktree');
+								}}
+							>
+								Contact Me
+							</Button>
+						</SheetClose>
+					</nav>
+				</SheetContent>
+			</Sheet>
+		</div>
+	</div>
+</nav>
+</file>
+
+<file path="src/routes/blog/+page.svelte">
+<!-- src/routes/blog/+page.svelte -->
+<script lang="ts">
+	import Header from '$lib/blog_stuff/Header.svelte';
+	import type { PageData } from './+page.server.js'; // Import the type for loaded data
+	let { data }: { data: PageData } = $props();
+</script>
+
+<div class="flex min-h-screen flex-col bg-background text-foreground">
+	<Header />
+	<main class="flex-grow">
+		<div class="container mx-auto p-8">
+			<h1 class="font-heading mb-6 border-b-2 border-border pb-4 text-4xl">Blog Posts</h1>
+
+			{#if data.posts && data.posts.length > 0}
+				<div class="space-y-8">
+					{#each data.posts as post}
+						<article class="shadow-shadow rounded-[var(--radius-base)] border-2 border-border p-6">
+							<h2 class="font-heading mb-2 text-2xl">{post.name}</h2>
+							<p class="mb-4 text-sm text-foreground/80">
+								Published on: {post.date.toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'long',
+									day: 'numeric'
+								})}
+							</p>
+							{#if post.blurb}
+								<p class="font-base mb-4">{post.blurb}</p>
+							{/if}
+							<a href="/blog/{post.slug}" class="text-main font-bold hover:underline">
+								Read More
+							</a>
+						</article>
+					{/each}
+				</div>
+			{:else}
+				<p class="font-base text-center italic">More posts coming soon!</p>
+			{/if}
+		</div>
+	</main>
+</div>
+</file>
+
 <file path="src/routes/+layout.svelte">
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
@@ -2298,6 +3159,176 @@ export default ts.config(
 	<!-- Render Footer Component -->
 	<Footer />
 </div>
+</file>
+
+<file path="svelte.config.js">
+import adapter from '@sveltejs/adapter-cloudflare';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+	// Consult https://svelte.dev/docs/kit/integrations
+	// for more information about preprocessors
+	preprocess: vitePreprocess(),
+
+	kit: {
+		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
+		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
+		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
+		adapter: adapter(),
+		prerender: {
+			entries: ['*'] // Explicitly tell SvelteKit to try and prerender all pages it finds
+		}
+	}
+};
+
+export default config;
+</file>
+
+<file path="tailwind.config.ts">
+import containerQueries from '@tailwindcss/container-queries';
+import typography from '@tailwindcss/typography';
+import { fontFamily } from 'tailwindcss/defaultTheme';
+import type { Config } from 'tailwindcss';
+import tailwindcssAnimate from 'tailwindcss-animate';
+
+const config: Config = {
+	darkMode: ['class'],
+	content: ['./src/**/*.{html,js,svelte,ts}'],
+	safelist: ['dark'],
+	theme: {
+		container: {
+			center: true,
+			padding: '2rem',
+			screens: {
+				'2xl': '1400px'
+			}
+		},
+		extend: {
+			colors: {
+				// --- Existing Shadcn/Theme Colors ---
+				border: 'hsl(var(--border) / <alpha-value>)',
+				input: 'hsl(var(--input) / <alpha-value>)', // Assuming you might define --input later
+				ring: 'hsl(var(--ring) / <alpha-value>)',
+				background: 'hsl(var(--background) / <alpha-value>)',
+				foreground: 'hsl(var(--foreground) / <alpha-value>)',
+				primary: {
+					// Assuming you might define --primary later, or map it to --main
+					DEFAULT: 'hsl(var(--main) / <alpha-value>)', // Map primary to --main
+					foreground: 'hsl(var(--main-foreground) / <alpha-value>)' // Map primary-foreground to --main-foreground
+				},
+				secondary: {
+					// Map secondary to --secondary-background
+					DEFAULT: 'hsl(var(--secondary-background) / <alpha-value>)',
+					// Assuming secondary-foreground is same as main text on secondary bg
+					foreground: 'hsl(var(--foreground) / <alpha-value>)'
+				},
+				destructive: {
+					// Map destructive to danger-50
+					DEFAULT: 'hsl(var(--neobrutalism-danger-50) / <alpha-value>)',
+					// Assuming white/black text on danger
+					foreground: 'hsl(var(--main-foreground) / <alpha-value>)' // Or adjust as needed
+				},
+				muted: {
+					// You might map muted to a lighter decorative color or define --muted
+					DEFAULT: 'hsl(var(--neobrutalism-purple-90) / <alpha-value>)', // Example: Map to purple-90
+					foreground: 'hsl(var(--foreground) / 0.6 / <alpha-value>)' // Example: Dimmed foreground
+				},
+				accent: {
+					// Map accent to --main or another decorative color
+					DEFAULT: 'hsl(var(--main) / <alpha-value>)',
+					foreground: 'hsl(var(--main-foreground) / <alpha-value>)'
+				},
+				popover: {
+					// Map popover background/foreground, often similar to card
+					DEFAULT: 'hsl(var(--background) / <alpha-value>)',
+					foreground: 'hsl(var(--foreground) / <alpha-value>)'
+				},
+				card: {
+					// Map card background/foreground
+					DEFAULT: 'hsl(var(--background) / <alpha-value>)',
+					foreground: 'hsl(var(--foreground) / <alpha-value>)'
+				},
+				// Keep sidebar if you use it, otherwise remove
+				sidebar: {
+					DEFAULT: 'hsl(var(--sidebar-background))', // Define --sidebar-* vars if needed
+					foreground: 'hsl(var(--sidebar-foreground))',
+					primary: 'hsl(var(--sidebar-primary))',
+					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+					accent: 'hsl(var(--sidebar-accent))',
+					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+					border: 'hsl(var(--sidebar-border))',
+					ring: 'hsl(var(--sidebar-ring))'
+				},
+
+				// --- Neobrutalism Decorative Colors ---
+				'neobrutalism-pink-70': 'hsl(var(--neobrutalism-pink-70) / <alpha-value>)',
+				'neobrutalism-pink-90': 'hsl(var(--neobrutalism-pink-90) / <alpha-value>)',
+
+				'neobrutalism-purple-50': 'hsl(var(--neobrutalism-purple-50) / <alpha-value>)',
+				'neobrutalism-purple-70': 'hsl(var(--neobrutalism-purple-70) / <alpha-value>)',
+				'neobrutalism-purple-90': 'hsl(var(--neobrutalism-purple-90) / <alpha-value>)',
+
+				'neobrutalism-blue-50': 'hsl(var(--neobrutalism-blue-50) / <alpha-value>)',
+				'neobrutalism-blue-70': 'hsl(var(--neobrutalism-blue-70) / <alpha-value>)',
+				'neobrutalism-blue-90': 'hsl(var(--neobrutalism-blue-90) / <alpha-value>)',
+
+				'neobrutalism-yellow-50': 'hsl(var(--neobrutalism-yellow-50) / <alpha-value>)',
+				'neobrutalism-yellow-70': 'hsl(var(--neobrutalism-yellow-70) / <alpha-value>)',
+				'neobrutalism-yellow-90': 'hsl(var(--neobrutalism-yellow-90) / <alpha-value>)',
+
+				'neobrutalism-green-50': 'hsl(var(--neobrutalism-green-50) / <alpha-value>)',
+				'neobrutalism-green-70': 'hsl(var(--neobrutalism-green-70) / <alpha-value>)',
+				'neobrutalism-green-90': 'hsl(var(--neobrutalism-green-90) / <alpha-value>)',
+
+				// --- Feedback Colors ---
+				'neobrutalism-danger-50': 'hsl(var(--neobrutalism-danger-50) / <alpha-value>)',
+				'neobrutalism-danger-90': 'hsl(var(--neobrutalism-danger-90) / <alpha-value>)',
+				'neobrutalism-warning-50': 'hsl(var(--neobrutalism-warning-50) / <alpha-value>)',
+				'neobrutalism-warning-90': 'hsl(var(--neobrutalism-warning-90) / <alpha-value>)',
+				'neobrutalism-success-50': 'hsl(var(--neobrutalism-success-50) / <alpha-value>)',
+
+				// --- Other Palette Colors ---
+				'neobrutalism-primary-50': 'hsl(var(--neobrutalism-primary-50) / <alpha-value>)',
+				'neobrutalism-secondary-0': 'hsl(var(--neobrutalism-secondary-0) / <alpha-value>)',
+				'neobrutalism-separator-90': 'hsl(var(--neobrutalism-separator-90) / <alpha-value>)',
+				'neobrutalism-body-90': 'hsl(var(--neobrutalism-body-90) / <alpha-value>)',
+				'neobrutalism-white-100': 'hsl(var(--neobrutalism-white-100) / <alpha-value>)'
+			},
+			borderRadius: {
+				xl: 'calc(var(--radius) + 4px)',
+				lg: 'var(--radius)',
+				md: 'calc(var(--radius) - 2px)',
+				sm: 'calc(var(--radius) - 4px)'
+			},
+			fontFamily: {
+				sans: [...fontFamily.sans]
+			},
+			keyframes: {
+				'accordion-down': {
+					from: { height: '0' },
+					to: { height: 'var(--bits-accordion-content-height)' }
+				},
+				'accordion-up': {
+					from: { height: 'var(--bits-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'caret-blink': {
+					'0%,70%,100%': { opacity: '1' },
+					'20%,50%': { opacity: '0' }
+				}
+			},
+			animation: {
+				'accordion-down': 'accordion-down 0.2s ease-out',
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'caret-blink': 'caret-blink 1.25s ease-out infinite'
+			}
+		}
+	},
+	plugins: [tailwindcssAnimate, typography, containerQueries]
+};
+
+export default config;
 </file>
 
 <file path="src/app.css">
@@ -2497,181 +3528,13 @@ export default ts.config(
 	},
 	"packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
 	"dependencies": {
+		"@iconify/svelte": "^4.2.0",
+		"fuse.js": "^7.1.0",
 		"marked": "^15.0.8",
 		"toml": "^3.0.0",
 		"tw-animate-css": "^1.2.5"
 	}
 }
-</file>
-
-<file path="svelte.config.js">
-import adapter from '@sveltejs/adapter-cloudflare';
-import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-
-/** @type {import('@sveltejs/kit').Config} */
-const config = {
-	// Consult https://svelte.dev/docs/kit/integrations
-	// for more information about preprocessors
-	preprocess: vitePreprocess(),
-
-	kit: {
-		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
-		adapter: adapter(),
-		prerender: {
-			entries: ['*'] // Explicitly tell SvelteKit to try and prerender all pages it finds
-		}
-	}
-};
-
-export default config;
-</file>
-
-<file path="tailwind.config.ts">
-import containerQueries from '@tailwindcss/container-queries';
-import typography from '@tailwindcss/typography';
-import { fontFamily } from 'tailwindcss/defaultTheme';
-import type { Config } from 'tailwindcss';
-import tailwindcssAnimate from 'tailwindcss-animate';
-
-const config: Config = {
-	darkMode: ['class'],
-	content: ['./src/**/*.{html,js,svelte,ts}'],
-	safelist: ['dark'],
-	theme: {
-		container: {
-			center: true,
-			padding: '2rem',
-			screens: {
-				'2xl': '1400px'
-			}
-		},
-		extend: {
-			colors: {
-				// --- Existing Shadcn/Theme Colors ---
-				border: 'hsl(var(--border) / <alpha-value>)',
-				input: 'hsl(var(--input) / <alpha-value>)', // Assuming you might define --input later
-				ring: 'hsl(var(--ring) / <alpha-value>)',
-				background: 'hsl(var(--background) / <alpha-value>)',
-				foreground: 'hsl(var(--foreground) / <alpha-value>)',
-				primary: {
-					// Assuming you might define --primary later, or map it to --main
-					DEFAULT: 'hsl(var(--main) / <alpha-value>)', // Map primary to --main
-					foreground: 'hsl(var(--main-foreground) / <alpha-value>)' // Map primary-foreground to --main-foreground
-				},
-				secondary: {
-					// Map secondary to --secondary-background
-					DEFAULT: 'hsl(var(--secondary-background) / <alpha-value>)',
-					// Assuming secondary-foreground is same as main text on secondary bg
-					foreground: 'hsl(var(--foreground) / <alpha-value>)'
-				},
-				destructive: {
-					// Map destructive to danger-50
-					DEFAULT: 'hsl(var(--neobrutalism-danger-50) / <alpha-value>)',
-					// Assuming white/black text on danger
-					foreground: 'hsl(var(--main-foreground) / <alpha-value>)' // Or adjust as needed
-				},
-				muted: {
-					// You might map muted to a lighter decorative color or define --muted
-					DEFAULT: 'hsl(var(--neobrutalism-purple-90) / <alpha-value>)', // Example: Map to purple-90
-					foreground: 'hsl(var(--foreground) / 0.6 / <alpha-value>)' // Example: Dimmed foreground
-				},
-				accent: {
-					// Map accent to --main or another decorative color
-					DEFAULT: 'hsl(var(--main) / <alpha-value>)',
-					foreground: 'hsl(var(--main-foreground) / <alpha-value>)'
-				},
-				popover: {
-					// Map popover background/foreground, often similar to card
-					DEFAULT: 'hsl(var(--background) / <alpha-value>)',
-					foreground: 'hsl(var(--foreground) / <alpha-value>)'
-				},
-				card: {
-					// Map card background/foreground
-					DEFAULT: 'hsl(var(--background) / <alpha-value>)',
-					foreground: 'hsl(var(--foreground) / <alpha-value>)'
-				},
-				// Keep sidebar if you use it, otherwise remove
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))', // Define --sidebar-* vars if needed
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				},
-
-				// --- Neobrutalism Decorative Colors ---
-				'neobrutalism-pink-70': 'hsl(var(--neobrutalism-pink-70) / <alpha-value>)',
-				'neobrutalism-pink-90': 'hsl(var(--neobrutalism-pink-90) / <alpha-value>)',
-
-				'neobrutalism-purple-50': 'hsl(var(--neobrutalism-purple-50) / <alpha-value>)',
-				'neobrutalism-purple-70': 'hsl(var(--neobrutalism-purple-70) / <alpha-value>)',
-				'neobrutalism-purple-90': 'hsl(var(--neobrutalism-purple-90) / <alpha-value>)',
-
-				'neobrutalism-blue-50': 'hsl(var(--neobrutalism-blue-50) / <alpha-value>)',
-				'neobrutalism-blue-70': 'hsl(var(--neobrutalism-blue-70) / <alpha-value>)',
-				'neobrutalism-blue-90': 'hsl(var(--neobrutalism-blue-90) / <alpha-value>)',
-
-				'neobrutalism-yellow-50': 'hsl(var(--neobrutalism-yellow-50) / <alpha-value>)',
-				'neobrutalism-yellow-70': 'hsl(var(--neobrutalism-yellow-70) / <alpha-value>)',
-				'neobrutalism-yellow-90': 'hsl(var(--neobrutalism-yellow-90) / <alpha-value>)',
-
-				'neobrutalism-green-50': 'hsl(var(--neobrutalism-green-50) / <alpha-value>)',
-				'neobrutalism-green-70': 'hsl(var(--neobrutalism-green-70) / <alpha-value>)',
-				'neobrutalism-green-90': 'hsl(var(--neobrutalism-green-90) / <alpha-value>)',
-
-				// --- Feedback Colors ---
-				'neobrutalism-danger-50': 'hsl(var(--neobrutalism-danger-50) / <alpha-value>)',
-				'neobrutalism-danger-90': 'hsl(var(--neobrutalism-danger-90) / <alpha-value>)',
-				'neobrutalism-warning-50': 'hsl(var(--neobrutalism-warning-50) / <alpha-value>)',
-				'neobrutalism-warning-90': 'hsl(var(--neobrutalism-warning-90) / <alpha-value>)',
-				'neobrutalism-success-50': 'hsl(var(--neobrutalism-success-50) / <alpha-value>)',
-
-				// --- Other Palette Colors ---
-				'neobrutalism-primary-50': 'hsl(var(--neobrutalism-primary-50) / <alpha-value>)',
-				'neobrutalism-secondary-0': 'hsl(var(--neobrutalism-secondary-0) / <alpha-value>)',
-				'neobrutalism-separator-90': 'hsl(var(--neobrutalism-separator-90) / <alpha-value>)',
-				'neobrutalism-body-90': 'hsl(var(--neobrutalism-body-90) / <alpha-value>)',
-				'neobrutalism-white-100': 'hsl(var(--neobrutalism-white-100) / <alpha-value>)'
-			},
-			borderRadius: {
-				xl: 'calc(var(--radius) + 4px)',
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
-			},
-			fontFamily: {
-				sans: [...fontFamily.sans]
-			},
-			keyframes: {
-				'accordion-down': {
-					from: { height: '0' },
-					to: { height: 'var(--bits-accordion-content-height)' }
-				},
-				'accordion-up': {
-					from: { height: 'var(--bits-accordion-content-height)' },
-					to: { height: '0' }
-				},
-				'caret-blink': {
-					'0%,70%,100%': { opacity: '1' },
-					'20%,50%': { opacity: '0' }
-				}
-			},
-			animation: {
-				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out',
-				'caret-blink': 'caret-blink 1.25s ease-out infinite'
-			}
-		}
-	},
-	plugins: [tailwindcssAnimate, typography, containerQueries]
-};
-
-export default config;
 </file>
 
 </files>
