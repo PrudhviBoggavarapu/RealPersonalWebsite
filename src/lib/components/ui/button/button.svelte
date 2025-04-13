@@ -11,7 +11,7 @@
 			// Replaced variants with the new ones, using CSS variables
 			variant: {
 				default:
-					'text-[var(--main-foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+					'text-[var(--border)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
 				noShadow: 'text-[var(--main-foreground)] border-2 border-[var(--border)]',
 				neutral:
 					'text-[var(--foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',

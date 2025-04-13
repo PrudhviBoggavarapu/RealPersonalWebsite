@@ -20,7 +20,7 @@
 </script>
 
 <nav class="bg-main shadow-shadow w-full border-4 border-border">
-	<div class="mx-auto flex h-[64px] w-full max-w-screen-xl items-center justify-between px-6">
+	<div class="mx-auto flex h-[64px] w-full items-center justify-between px-6">
 		<h1
 			class="text-main-foreground min-w-[50px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
 		>
@@ -35,7 +35,7 @@
 				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
 				>Home</a
 			>
-			<Separator orientation="vertical"></Separator>
+
 			<a
 				href="/"
 				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"

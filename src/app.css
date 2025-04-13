@@ -16,7 +16,7 @@
 	/* :root variables (Light Mode) */
 	:root {
 		/* Core Theme Variables */
-		--background: var(--neobrutalism-purple-70);
+		--background: var(--neobrutalism-purple-90);
 		/* Light Purple background */
 		--secondary-background: oklch(100% 0 0);
 		/* White secondary for contrast */

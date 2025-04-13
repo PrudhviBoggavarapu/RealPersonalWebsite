@@ -1,24 +1,19 @@
-<!-- src/lib/components/layout/Footer.svelte -->
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
-
-	// Import Icon Components
 	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
 	import GithubIcon from '$lib/components/icons/GithubIcon.svelte';
 	import LinkedinIcon from '$lib/components/icons/LinkedinIcon.svelte';
+	import { goto } from '$app/navigation';
 
 	const currentYear = new Date().getFullYear();
-
-	// Removed SVG string variables
 </script>
 
 <footer class="w-full bg-background">
-	<Separator class="mb-4" />
+	<Separator />
 	<div class="mx-auto">
-		<div class="mb- grid grid-cols-1 gap-8 px-8 md:grid-cols-3">
-			<!-- Quick Links -->
-			<div>
+		<div class="flex flex-col gap-8 md:flex md:flex-row md:items-stretch">
+			<div class="ml-8 mt-2 flex-1">
 				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
 					Quick Links
 				</h3>
@@ -34,13 +29,6 @@
 						<a
 							href="/"
 							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
-							>Journey</a
-						>
-					</li>
-					<li>
-						<a
-							href="/"
-							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
 							>Projects</a
 						>
 					</li>
@@ -49,7 +37,7 @@
 							href="/blog/"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="hover:bg-main hover:text-main-foreground inline-flex items-center border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							class="hover:bg-main hover:text-main-foreground inline-flex items-center border-4 border-transparent px-4 pb-4 text-foreground transition-all duration-200 hover:border-border"
 						>
 							Blogs
 							<ExternalLinkIcon />
@@ -58,8 +46,9 @@
 				</ul>
 			</div>
 
-			<!-- Get in Touch -->
-			<div class="rotate-50 transform">
+			<Separator orientation="vertical" class="hidden md:block" />
+
+			<div class="mt-2 flex-1">
 				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
 					Get in Touch!
 				</h3>
@@ -84,37 +73,38 @@
 							<LinkedinIcon />
 						</a>
 					</div>
-					<!-- You could add a contact button/form here -->
 					<Button
 						variant="default"
-						class="bg-[var(--neobrutalism-yellow-70)]"
-						onclick={() => console.log('Footer Get in Touch clicked!')}
+						class="bg-[var(--neobrutalism-yellow-50)] text-black dark:bg-[var(--neobrutalism-yellow-50)]"
+						onclick={() => goto('/linktree')}
 					>
 						Contact Me
 					</Button>
 				</div>
 			</div>
 
-			<!-- Column 3 (Optional) -->
-			<div>
-				<!-- Placeholder for potential third column content -->
+			<Separator orientation="vertical" class="hidden md:block" />
+			<div class="mt-2 flex-1">
 				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
 					Placeholder
 				</h3>
 				<p class="font-base text-foreground">Maybe some extra info here.</p>
 			</div>
 		</div>
+		<Separator />
 
-		<!-- Footer Bottom -->
-		<Separator class="mb-4" />
-		<!-- Thinner separator -->
-		<div class="flex flex-col items-center justify-between gap-4 md:flex-row">
-			<p class="text-center font-bold text-foreground md:text-left">
+		<div
+			class="flex flex-col items-center justify-between gap-4 md:flex md:flex-row md:items-stretch"
+		>
+			<p class="ml-8 text-center font-bold text-foreground md:text-left">
 				© {currentYear} Karma | Built with love by
 				<a href="https://karmajaderose.com" class="text-main-foreground underline">Karma</a>
 			</p>
+
+			<Separator class="w-1/2 md:hidden" />
+
 			<div
-				class="bg-black px-4 py-2 font-mono text-sm text-white dark:bg-background dark:text-foreground"
+				class="content-evenly bg-black px-2 font-mono text-sm text-white dark:bg-background dark:text-foreground"
 			>
 				&lt;/&gt; with <a href="https://svelte.dev/" class="text-main-foreground hover:underline"
 					>SvelteKit</a

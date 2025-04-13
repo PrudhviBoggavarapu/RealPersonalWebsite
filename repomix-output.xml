@@ -131,182 +131,6 @@ vite.config.ts
 <files>
 This section contains the contents of the repository's files.
 
-<file path="style.md">
-# Colors
-
-## Fractal Design System by Snowball.xyz
-
-## Palette
-
-### Primary
-
-- `#FF8ACD` (Tone 50)
-
-**✅ Use for:**
-
-- Display covers & primary marketing contents backgrounds
-- Headers backgrounds
-- Primary elements backgrounds
-- Primary illustrations decoration
-- Primary Active elements with Secondary Color background
-
-**🚫 Don't:**
-
-- Use for text colors on light backgrounds
-- Use for icons colors on light backgrounds
-- Use for strokes nor separators
-
----
-
-### Secondary
-
-- `#000000` (Tone 0)
-
-**✅ Use for:**
-
-- Texts color on light & colored backgrounds
-- Footers & Left navigation backgrounds
-- Strokes & Brutal shadows styles
-- Secondary buttons backgrounds
-- Illustrations & default icons on light backgrounds
-
-**🚫 Don't:**
-
-- Body background color
-- Cards backgrounds
-
----
-
-### Decorative Pink
-
-| Hex Code  | Tone |
-| --------- | ---- |
-| `#FFC6E7` | 70   |
-| `#FFE2F3` | 90   |
-
----
-
-### Decorative Purple
-
-| Hex Code  | Tone |
-| --------- | ---- |
-| `#B37DFF` | 50   |
-| `#D9BEFF` | 70   |
-| `#F0E5FF` | 90   |
-
----
-
-### Decorative Blue
-
-| Hex Code  | Tone |
-| --------- | ---- |
-| `#8AF1FF` | 50   |
-| `#B3F6FF` | 70   |
-| `#D6FAFF` | 90   |
-
----
-
-### Decorative Yellow
-
-| Hex Code  | Tone |
-| --------- | ---- |
-| `#FFE959` | 50   |
-| `#FFF29B` | 70   |
-| `#FFF8C5` | 90   |
-
----
-
-### Decorative Green
-
-| Hex Code  | Tone |
-| --------- | ---- |
-| `#76F7AE` | 50   |
-| `#ADFACE` | 70   |
-| `#CFFCE3` | 90   |
-
-_(Usage rules below likely associated with Tones 70 & 90)_
-
-**✅ Use for:**
-
-- Illustrations decorations
-- Tertiary cards backgrounds
-- Lower page hierarchy backgrounds
-- Low interactions hierarchy backgrounds
-- Labels/cartouches backgrounds
-- Listed items:
-  - Drop downs Hovers
-  - Icons containers backgrounds
-  - Checkboxes checked status
-
-**🚫 Don't:**
-
-- Text colors
-- Stokes, borders nor separators
-- Icons
-- Buttons backgrounds
-
----
-
-### Feedback Danger
-
-| Hex Code  | Tone |
-| --------- | ---- |
-| `#FF5454` | 50   |
-| `#FFD6D6` | 90   |
-
----
-
-### Feedback Warning
-
-| Hex Code  | Tone |
-| --------- | ---- |
-| `#FF9F69` | 50   |
-| `#FFEAD1` | 90   |
-
----
-
-### Feedback Success
-
-| Hex Code  | Tone |
-| --------- | ---- |
-| `#3CD39D` | 50   |
-
-**✅ Use for: Feedback system only**
-
----
-
-### Separator
-
-- `#E2E2E2` (Tone 90)
-  **✅ Use for: separator strokes only**
-
----
-
-### Body
-
-- `#FFFBEE` (Tone 90)
-  **✅ Use for: body background only**
-
----
-
-### White
-
-- `#FFFFFF` (Tone 100)
-  **✅ Use for:**
-- Primary cards backgrounds
-- Text colors on dark & backgrounds
-- Icons colors on dark backgrounds
-- Strokes, borders & brutal shadows on dark backgrounds
-
----
-
-## Palette Tone
-
-(Visual representation: 0 [Black] <-----> 100 [White])
-
-The 0 tone is always 100% black, the darkest tone in the range; the 100 tone is always 100% white, the lightest tone in the range.
-</file>
-
 <file path="src/articles/first_blog.toml">
 [[title]]
 name = "First Blog Post"
@@ -415,18 +239,6 @@ Programming is more than just a technical skill; it's a powerful tool for creati
 		d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"
 	></path></svg
 >
-</file>
-
-<file path="src/lib/components/icons/LogoPlaceholder.svelte">
-<!-- src/lib/components/icons/LogoK.svelte -->
-<svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-	<!-- Vertical Stem -->
-	<path d="M 25 10 L 25 90" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
-	<!-- Upper Diagonal Arm -->
-	<path d="M 25 50 L 75 10" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
-	<!-- Lower Diagonal Arm -->
-	<path d="M 25 50 L 75 90" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
-</svg>
 </file>
 
 <file path="src/lib/components/icons/MoonIcon.svelte">
@@ -605,100 +417,6 @@ export {
 <file path="src/lib/components/ui/badge/index.ts">
 export { default as Badge } from "./badge.svelte";
 export { badgeVariants, type BadgeVariant } from "./badge.svelte";
-</file>
-
-<file path="src/lib/components/ui/button/button.svelte">
-<script lang="ts" module>
-	import type { WithElementRef } from 'bits-ui';
-	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
-	import { type VariantProps, tv } from 'tailwind-variants';
-
-	// --- MODIFICATIONS START HERE ---
-	export const buttonVariants = tv({
-		// Updated base styles using CSS variables where appropriate
-		base: 'inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] text-sm font-[var(--font-weight-base)] ring-offset-white transition-all gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
-		variants: {
-			// Replaced variants with the new ones, using CSS variables
-			variant: {
-				default:
-					'text-[var(--main-foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
-				noShadow: 'text-[var(--main-foreground)] border-2 border-[var(--border)]',
-				neutral:
-					'text-[var(--foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
-				reverse:
-					'text-[var(--main-foreground)] border-2 border-[var(--border)] hover:translate-x-[var(--spacing-reverseBoxShadowX)] hover:translate-y-[var(--spacing-reverseBoxShadowY)] hover:shadow-[var(--shadow-shadow)]'
-				// Original variants removed, add back if needed
-			},
-			// Kept original sizes, updated icon size slightly
-			size: {
-				default: 'h-10 px-4 py-2',
-				sm: 'h-9 rounded-md px-3', // Kept original Svelte sm style
-				lg: 'h-11 rounded-md px-8',
-				icon: 'size-10' // Updated to use size-* utility
-			}
-		},
-		// Kept default variants
-		defaultVariants: {
-			variant: 'default',
-			size: 'default'
-		}
-	});
-	// --- MODIFICATIONS END HERE ---
-
-	// Types automatically adapt to the new variants
-	export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
-	export type ButtonSize = VariantProps<typeof buttonVariants>['size'];
-
-	// Props definition remains the same
-	export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
-		WithElementRef<HTMLAnchorAttributes> & {
-			variant?: ButtonVariant;
-			size?: ButtonSize;
-		};
-</script>
-
-<script lang="ts">
-	// No changes needed for cn import
-	import { cn } from '$lib/utils.js';
-
-	// ButtonProps type is directly available from the module script above
-	let {
-		class: className,
-		variant = 'default',
-		size = 'default',
-		ref = $bindable(null),
-		href = undefined,
-		type = 'button',
-		children,
-		...restProps
-	}: ButtonProps = $props();
-</script>
-
-<!-- No changes in the template -->
-{#if href}
-	<a bind:this={ref} class={cn(buttonVariants({ variant, size }), className)} {href} {...restProps}>
-		{@render children?.()}
-	</a>
-{:else}
-	<button
-		bind:this={ref}
-		class={cn(buttonVariants({ variant, size }), className)}
-		{type}
-		{...restProps}
-	>
-		{@render children?.()}
-	</button>
-{/if}
-
-<!--
-  Reminder: This component now heavily relies on CSS variables defined in your global CSS (src/app.css),
-  such as:
-  --radius-base, --font-weight-base, --main-foreground, --main, --border, --shadow-shadow,
-  --spacing-boxShadowX, --spacing-boxShadowY, --secondary-background, --foreground,
-  --spacing-reverseBoxShadowX, --spacing-reverseBoxShadowY
-
-  Ensure these are correctly defined for the styles to apply.
--->
 </file>
 
 <file path="src/lib/components/ui/button/index.ts">
@@ -970,42 +688,6 @@ export {
 	//
 	Root as Separator,
 };
-</file>
-
-<file path="src/lib/components/ui/separator/separator.svelte">
-<script lang="ts">
-	import { Separator as SeparatorPrimitive } from 'bits-ui';
-	import { cn } from '$lib/utils.js';
-
-	let {
-		ref = $bindable(null),
-		class: className,
-		orientation = 'horizontal',
-		// Add a prop for thickness, defaulting to 8px (h-2 in Tailwind)
-		thickness = 'h-1', // Default thickness for horizontal
-		...restProps
-	}: SeparatorPrimitive.RootProps & { thickness?: string } = $props();
-
-	// Determine vertical thickness based on horizontal (e.g., w-2 if h-2)
-	// Or keep it fixed if preferred
-	const verticalThickness = thickness.replace('h-', 'w-'); // Simple replacement, adjust if needed
-</script>
-
-<SeparatorPrimitive.Root
-	bind:ref
-	class={cn(
-		// Change background to black
-		'shrink-0 ', // Use foreground color for the separator's background
-		// Use the thickness prop for height/width
-		orientation === 'horizontal'
-			? `${thickness} w-full` // e.g., h-2 w-full
-			: `min-h-full ${verticalThickness}`, // e.g., min-h-full w-2
-		className
-	)}
-	style="background-color: var(--foreground);"
-	{orientation}
-	{...restProps}
-/>
 </file>
 
 <file path="src/lib/components/ui/sheet/index.ts">
@@ -1530,6 +1212,324 @@ echo "Firefox closed. Temporary profile will be removed."
 exit 0
 </file>
 
+<file path="style.md">
+# Colors
+
+## Fractal Design System by Snowball.xyz
+
+## Palette
+
+### Primary
+
+- `#FF8ACD` (Tone 50)
+
+**✅ Use for:**
+
+- Display covers & primary marketing contents backgrounds
+- Headers backgrounds
+- Primary elements backgrounds
+- Primary illustrations decoration
+- Primary Active elements with Secondary Color background
+
+**🚫 Don't:**
+
+- Use for text colors on light backgrounds
+- Use for icons colors on light backgrounds
+- Use for strokes nor separators
+
+---
+
+### Secondary
+
+- `#000000` (Tone 0)
+
+**✅ Use for:**
+
+- Texts color on light & colored backgrounds
+- Footers & Left navigation backgrounds
+- Strokes & Brutal shadows styles
+- Secondary buttons backgrounds
+- Illustrations & default icons on light backgrounds
+
+**🚫 Don't:**
+
+- Body background color
+- Cards backgrounds
+
+---
+
+### Decorative Pink
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#FFC6E7` | 70   |
+| `#FFE2F3` | 90   |
+
+---
+
+### Decorative Purple
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#B37DFF` | 50   |
+| `#D9BEFF` | 70   |
+| `#F0E5FF` | 90   |
+
+---
+
+### Decorative Blue
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#8AF1FF` | 50   |
+| `#B3F6FF` | 70   |
+| `#D6FAFF` | 90   |
+
+---
+
+### Decorative Yellow
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#FFE959` | 50   |
+| `#FFF29B` | 70   |
+| `#FFF8C5` | 90   |
+
+---
+
+### Decorative Green
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#76F7AE` | 50   |
+| `#ADFACE` | 70   |
+| `#CFFCE3` | 90   |
+
+_(Usage rules below likely associated with Tones 70 & 90)_
+
+**✅ Use for:**
+
+- Illustrations decorations
+- Tertiary cards backgrounds
+- Lower page hierarchy backgrounds
+- Low interactions hierarchy backgrounds
+- Labels/cartouches backgrounds
+- Listed items:
+  - Drop downs Hovers
+  - Icons containers backgrounds
+  - Checkboxes checked status
+
+**🚫 Don't:**
+
+- Text colors
+- Stokes, borders nor separators
+- Icons
+- Buttons backgrounds
+
+---
+
+### Feedback Danger
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#FF5454` | 50   |
+| `#FFD6D6` | 90   |
+
+---
+
+### Feedback Warning
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#FF9F69` | 50   |
+| `#FFEAD1` | 90   |
+
+---
+
+### Feedback Success
+
+| Hex Code  | Tone |
+| --------- | ---- |
+| `#3CD39D` | 50   |
+
+**✅ Use for: Feedback system only**
+
+---
+
+### Separator
+
+- `#E2E2E2` (Tone 90)
+  **✅ Use for: separator strokes only**
+
+---
+
+### Body
+
+- `#FFFBEE` (Tone 90)
+  **✅ Use for: body background only**
+
+---
+
+### White
+
+- `#FFFFFF` (Tone 100)
+  **✅ Use for:**
+- Primary cards backgrounds
+- Text colors on dark & backgrounds
+- Icons colors on dark backgrounds
+- Strokes, borders & brutal shadows on dark backgrounds
+
+---
+
+## Palette Tone
+
+(Visual representation: 0 [Black] <-----> 100 [White])
+
+The 0 tone is always 100% black, the darkest tone in the range; the 100 tone is always 100% white, the lightest tone in the range.
+</file>
+
+<file path="src/lib/components/icons/LogoPlaceholder.svelte">
+<!-- src/lib/components/icons/LogoK.svelte -->
+<svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<!-- Vertical Stem -->
+	<path d="M 25 10 L 25 90" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+	<!-- Upper Diagonal Arm -->
+	<path d="M 25 50 L 75 10" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+	<!-- Lower Diagonal Arm -->
+	<path d="M 25 50 L 75 90" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+</svg>
+</file>
+
+<file path="src/lib/components/ui/button/button.svelte">
+<script lang="ts" module>
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
+	import { type VariantProps, tv } from 'tailwind-variants';
+
+	// --- MODIFICATIONS START HERE ---
+	export const buttonVariants = tv({
+		// Updated base styles using CSS variables where appropriate
+		base: 'inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] text-sm font-[var(--font-weight-base)] ring-offset-white transition-all gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+		variants: {
+			// Replaced variants with the new ones, using CSS variables
+			variant: {
+				default:
+					'text-[var(--border)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+				noShadow: 'text-[var(--main-foreground)] border-2 border-[var(--border)]',
+				neutral:
+					'text-[var(--foreground)] border-2 border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+				reverse:
+					'text-[var(--main-foreground)] border-2 border-[var(--border)] hover:translate-x-[var(--spacing-reverseBoxShadowX)] hover:translate-y-[var(--spacing-reverseBoxShadowY)] hover:shadow-[var(--shadow-shadow)]'
+				// Original variants removed, add back if needed
+			},
+			// Kept original sizes, updated icon size slightly
+			size: {
+				default: 'h-10 px-4 py-2',
+				sm: 'h-9 rounded-md px-3', // Kept original Svelte sm style
+				lg: 'h-11 rounded-md px-8',
+				icon: 'size-10' // Updated to use size-* utility
+			}
+		},
+		// Kept default variants
+		defaultVariants: {
+			variant: 'default',
+			size: 'default'
+		}
+	});
+	// --- MODIFICATIONS END HERE ---
+
+	// Types automatically adapt to the new variants
+	export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
+	export type ButtonSize = VariantProps<typeof buttonVariants>['size'];
+
+	// Props definition remains the same
+	export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
+		WithElementRef<HTMLAnchorAttributes> & {
+			variant?: ButtonVariant;
+			size?: ButtonSize;
+		};
+</script>
+
+<script lang="ts">
+	// No changes needed for cn import
+	import { cn } from '$lib/utils.js';
+
+	// ButtonProps type is directly available from the module script above
+	let {
+		class: className,
+		variant = 'default',
+		size = 'default',
+		ref = $bindable(null),
+		href = undefined,
+		type = 'button',
+		children,
+		...restProps
+	}: ButtonProps = $props();
+</script>
+
+<!-- No changes in the template -->
+{#if href}
+	<a bind:this={ref} class={cn(buttonVariants({ variant, size }), className)} {href} {...restProps}>
+		{@render children?.()}
+	</a>
+{:else}
+	<button
+		bind:this={ref}
+		class={cn(buttonVariants({ variant, size }), className)}
+		{type}
+		{...restProps}
+	>
+		{@render children?.()}
+	</button>
+{/if}
+
+<!--
+  Reminder: This component now heavily relies on CSS variables defined in your global CSS (src/app.css),
+  such as:
+  --radius-base, --font-weight-base, --main-foreground, --main, --border, --shadow-shadow,
+  --spacing-boxShadowX, --spacing-boxShadowY, --secondary-background, --foreground,
+  --spacing-reverseBoxShadowX, --spacing-reverseBoxShadowY
+
+  Ensure these are correctly defined for the styles to apply.
+-->
+</file>
+
+<file path="src/lib/components/ui/separator/separator.svelte">
+<script lang="ts">
+	import { Separator as SeparatorPrimitive } from 'bits-ui';
+	import { cn } from '$lib/utils.js';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		orientation = 'horizontal',
+		// Add a prop for thickness, defaulting to 8px (h-2 in Tailwind)
+		thickness = 'h-1', // Default thickness for horizontal
+		...restProps
+	}: SeparatorPrimitive.RootProps & { thickness?: string } = $props();
+
+	// Determine vertical thickness based on horizontal (e.g., w-2 if h-2)
+	// Or keep it fixed if preferred
+	const verticalThickness = thickness.replace('h-', 'w-'); // Simple replacement, adjust if needed
+</script>
+
+<SeparatorPrimitive.Root
+	bind:ref
+	class={cn(
+		// Change background to black
+		'shrink-0 ', // Use foreground color for the separator's background
+		// Use the thickness prop for height/width
+		orientation === 'horizontal'
+			? `${thickness} w-full` // e.g., h-2 w-full
+			: `min-h-full ${verticalThickness}`, // e.g., min-h-full w-2
+		className
+	)}
+	style="background-color: var(--foreground);"
+	{orientation}
+	{...restProps}
+/>
+</file>
+
 <file path="src/lib/server/blogPosts.ts">
 // src/lib/server/blogPosts.ts
 import toml from "toml";
@@ -1832,28 +1832,48 @@ You can preview the production build with `npm run preview`.
 }
 </file>
 
+<file path=".prettierignore">
+# Package Managers
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+</file>
+
+<file path="postcss.config.js">
+export default {
+	plugins: {
+		tailwindcss: {},
+		autoprefixer: {}
+	}
+};
+</file>
+
+<file path="vite.config.ts">
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit()]
+});
+</file>
+
 <file path="src/lib/frontpage/Footer.svelte">
-<!-- src/lib/components/layout/Footer.svelte -->
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
-
-	// Import Icon Components
 	import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
 	import GithubIcon from '$lib/components/icons/GithubIcon.svelte';
 	import LinkedinIcon from '$lib/components/icons/LinkedinIcon.svelte';
+	import { goto } from '$app/navigation';
 
 	const currentYear = new Date().getFullYear();
-
-	// Removed SVG string variables
 </script>
 
 <footer class="w-full bg-background">
-	<Separator class="mb-4" />
+	<Separator />
 	<div class="mx-auto">
-		<div class="mb- grid grid-cols-1 gap-8 px-8 md:grid-cols-3">
-			<!-- Quick Links -->
-			<div>
+		<div class="flex flex-col gap-8 md:flex md:flex-row md:items-stretch">
+			<div class="ml-8 mt-2 flex-1">
 				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
 					Quick Links
 				</h3>
@@ -1869,13 +1889,6 @@ You can preview the production build with `npm run preview`.
 						<a
 							href="/"
 							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
-							>Journey</a
-						>
-					</li>
-					<li>
-						<a
-							href="/"
-							class="hover:bg-main hover:text-main-foreground inline-block border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
 							>Projects</a
 						>
 					</li>
@@ -1884,7 +1897,7 @@ You can preview the production build with `npm run preview`.
 							href="/blog/"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="hover:bg-main hover:text-main-foreground inline-flex items-center border-4 border-transparent px-4 py-1 text-foreground transition-all duration-200 hover:border-border"
+							class="hover:bg-main hover:text-main-foreground inline-flex items-center border-4 border-transparent px-4 pb-4 text-foreground transition-all duration-200 hover:border-border"
 						>
 							Blogs
 							<ExternalLinkIcon />
@@ -1893,8 +1906,9 @@ You can preview the production build with `npm run preview`.
 				</ul>
 			</div>
 
-			<!-- Get in Touch -->
-			<div class="rotate-50 transform">
+			<Separator orientation="vertical" class="hidden md:block" />
+
+			<div class="mt-2 flex-1">
 				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
 					Get in Touch!
 				</h3>
@@ -1919,37 +1933,38 @@ You can preview the production build with `npm run preview`.
 							<LinkedinIcon />
 						</a>
 					</div>
-					<!-- You could add a contact button/form here -->
 					<Button
 						variant="default"
-						class="bg-[var(--neobrutalism-yellow-70)]"
-						onclick={() => console.log('Footer Get in Touch clicked!')}
+						class="bg-[var(--neobrutalism-yellow-50)] text-black dark:bg-[var(--neobrutalism-yellow-50)]"
+						onclick={() => goto('/linktree')}
 					>
 						Contact Me
 					</Button>
 				</div>
 			</div>
 
-			<!-- Column 3 (Optional) -->
-			<div>
-				<!-- Placeholder for potential third column content -->
+			<Separator orientation="vertical" class="hidden md:block" />
+			<div class="mt-2 flex-1">
 				<h3 class="mb-4 text-2xl font-black uppercase tracking-wider text-foreground">
 					Placeholder
 				</h3>
 				<p class="font-base text-foreground">Maybe some extra info here.</p>
 			</div>
 		</div>
+		<Separator />
 
-		<!-- Footer Bottom -->
-		<Separator class="mb-4" />
-		<!-- Thinner separator -->
-		<div class="flex flex-col items-center justify-between gap-4 md:flex-row">
-			<p class="text-center font-bold text-foreground md:text-left">
+		<div
+			class="flex flex-col items-center justify-between gap-4 md:flex md:flex-row md:items-stretch"
+		>
+			<p class="ml-8 text-center font-bold text-foreground md:text-left">
 				© {currentYear} Karma | Built with love by
 				<a href="https://karmajaderose.com" class="text-main-foreground underline">Karma</a>
 			</p>
+
+			<Separator class="w-1/2 md:hidden" />
+
 			<div
-				class="bg-black px-4 py-2 font-mono text-sm text-white dark:bg-background dark:text-foreground"
+				class="content-evenly bg-black px-2 font-mono text-sm text-white dark:bg-background dark:text-foreground"
 			>
 				&lt;/&gt; with <a href="https://svelte.dev/" class="text-main-foreground hover:underline"
 					>SvelteKit</a
@@ -1987,7 +2002,7 @@ You can preview the production build with `npm run preview`.
 </script>
 
 <nav class="bg-main shadow-shadow w-full border-4 border-border">
-	<div class="mx-auto flex h-[64px] w-full max-w-screen-xl items-center justify-between px-6">
+	<div class="mx-auto flex h-[64px] w-full items-center justify-between px-6">
 		<h1
 			class="text-main-foreground min-w-[50px] transform text-3xl font-black tracking-tight transition-transform duration-300 hover:rotate-0 lg:text-5xl"
 		>
@@ -2002,7 +2017,7 @@ You can preview the production build with `npm run preview`.
 				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
 				>Home</a
 			>
-			<Separator orientation="vertical"></Separator>
+
 			<a
 				href="/"
 				class="text-main-foreground transform px-3 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
@@ -2163,29 +2178,71 @@ You can preview the production build with `npm run preview`.
 </div>
 </file>
 
-<file path=".prettierignore">
-# Package Managers
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
+<file path=".gitignore">
+node_modules
+
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Repomix
+**/repomix-output.xml
+repomix-output.xml
 </file>
 
-<file path="postcss.config.js">
-export default {
-	plugins: {
-		tailwindcss: {},
-		autoprefixer: {}
+<file path="eslint.config.js">
+import prettier from 'eslint-config-prettier';
+import js from '@eslint/js';
+import { includeIgnoreFile } from '@eslint/compat';
+import svelte from 'eslint-plugin-svelte';
+import globals from 'globals';
+import { fileURLToPath } from 'node:url';
+import ts from 'typescript-eslint';
+const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
+
+export default ts.config(
+	includeIgnoreFile(gitignorePath),
+	js.configs.recommended,
+	...ts.configs.recommended,
+	...svelte.configs['flat/recommended'],
+	prettier,
+	...svelte.configs['flat/prettier'],
+	{
+		languageOptions: {
+			globals: {
+				...globals.browser,
+				...globals.node
+			}
+		}
+	},
+	{
+		files: ['**/*.svelte'],
+
+		languageOptions: {
+			parserOptions: {
+				parser: ts.parser
+			}
+		}
 	}
-};
-</file>
-
-<file path="vite.config.ts">
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-	plugins: [sveltekit()]
-});
+);
 </file>
 
 <file path="src/routes/+layout.svelte">
@@ -2262,7 +2319,7 @@ export default defineConfig({
 	/* :root variables (Light Mode) */
 	:root {
 		/* Core Theme Variables */
-		--background: var(--neobrutalism-purple-70);
+		--background: var(--neobrutalism-purple-90);
 		/* Light Purple background */
 		--secondary-background: oklch(100% 0 0);
 		/* White secondary for contrast */
@@ -2392,71 +2449,83 @@ export default defineConfig({
 }
 </file>
 
-<file path=".gitignore">
-node_modules
-
-# Output
-.output
-.vercel
-.netlify
-.wrangler
-/.svelte-kit
-/build
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Env
-.env
-.env.*
-!.env.example
-!.env.test
-
-# Vite
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-
-# Repomix
-**/repomix-output.xml
-repomix-output.xml
+<file path="package.json">
+{
+	"name": "realwebsitesvelte5",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"format": "prettier --write .",
+		"lint": "prettier --check . && eslint ."
+	},
+	"devDependencies": {
+		"@eslint/compat": "^1.2.5",
+		"@eslint/js": "^9.18.0",
+		"@lucide/svelte": "^0.487.0",
+		"@sveltejs/adapter-cloudflare": "^5.0.1",
+		"@sveltejs/kit": "^2.16.0",
+		"@sveltejs/vite-plugin-svelte": "^5.0.0",
+		"@tailwindcss/container-queries": "^0.1.1",
+		"@tailwindcss/forms": "^0.5.10",
+		"@tailwindcss/typography": "^0.5.16",
+		"autoprefixer": "^10.4.20",
+		"bits-ui": "^1.3.18",
+		"clsx": "^2.1.1",
+		"eslint": "^9.18.0",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-svelte": "^2.46.1",
+		"globals": "^15.14.0",
+		"prettier": "^3.4.2",
+		"prettier-plugin-svelte": "^3.3.3",
+		"prettier-plugin-tailwindcss": "^0.6.10",
+		"svelte": "^5.0.0",
+		"svelte-check": "^4.0.0",
+		"tailwind-merge": "^3.2.0",
+		"tailwind-variants": "^1.0.0",
+		"tailwindcss": "^3.4.17",
+		"tailwindcss-animate": "^1.0.7",
+		"typescript": "^5.0.0",
+		"typescript-eslint": "^8.20.0",
+		"vite": "^6.0.0"
+	},
+	"packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
+	"dependencies": {
+		"marked": "^15.0.8",
+		"toml": "^3.0.0",
+		"tw-animate-css": "^1.2.5"
+	}
+}
 </file>
 
-<file path="eslint.config.js">
-import prettier from 'eslint-config-prettier';
-import js from '@eslint/js';
-import { includeIgnoreFile } from '@eslint/compat';
-import svelte from 'eslint-plugin-svelte';
-import globals from 'globals';
-import { fileURLToPath } from 'node:url';
-import ts from 'typescript-eslint';
-const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
+<file path="svelte.config.js">
+import adapter from '@sveltejs/adapter-cloudflare';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
-export default ts.config(
-	includeIgnoreFile(gitignorePath),
-	js.configs.recommended,
-	...ts.configs.recommended,
-	...svelte.configs['flat/recommended'],
-	prettier,
-	...svelte.configs['flat/prettier'],
-	{
-		languageOptions: {
-			globals: {
-				...globals.browser,
-				...globals.node
-			}
-		}
-	},
-	{
-		files: ['**/*.svelte'],
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+	// Consult https://svelte.dev/docs/kit/integrations
+	// for more information about preprocessors
+	preprocess: vitePreprocess(),
 
-		languageOptions: {
-			parserOptions: {
-				parser: ts.parser
-			}
+	kit: {
+		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
+		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
+		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
+		adapter: adapter(),
+		prerender: {
+			entries: ['*'] // Explicitly tell SvelteKit to try and prerender all pages it finds
 		}
 	}
-);
+};
+
+export default config;
 </file>
 
 <file path="tailwind.config.ts">
@@ -2600,85 +2669,6 @@ const config: Config = {
 		}
 	},
 	plugins: [tailwindcssAnimate, typography, containerQueries]
-};
-
-export default config;
-</file>
-
-<file path="package.json">
-{
-	"name": "realwebsitesvelte5",
-	"private": true,
-	"version": "0.0.1",
-	"type": "module",
-	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
-		"prepare": "svelte-kit sync || echo ''",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
-	},
-	"devDependencies": {
-		"@eslint/compat": "^1.2.5",
-		"@eslint/js": "^9.18.0",
-		"@lucide/svelte": "^0.487.0",
-		"@sveltejs/adapter-cloudflare": "^5.0.1",
-		"@sveltejs/kit": "^2.16.0",
-		"@sveltejs/vite-plugin-svelte": "^5.0.0",
-		"@tailwindcss/container-queries": "^0.1.1",
-		"@tailwindcss/forms": "^0.5.10",
-		"@tailwindcss/typography": "^0.5.16",
-		"autoprefixer": "^10.4.20",
-		"bits-ui": "^1.3.18",
-		"clsx": "^2.1.1",
-		"eslint": "^9.18.0",
-		"eslint-config-prettier": "^10.0.1",
-		"eslint-plugin-svelte": "^2.46.1",
-		"globals": "^15.14.0",
-		"prettier": "^3.4.2",
-		"prettier-plugin-svelte": "^3.3.3",
-		"prettier-plugin-tailwindcss": "^0.6.10",
-		"svelte": "^5.0.0",
-		"svelte-check": "^4.0.0",
-		"tailwind-merge": "^3.2.0",
-		"tailwind-variants": "^1.0.0",
-		"tailwindcss": "^3.4.17",
-		"tailwindcss-animate": "^1.0.7",
-		"typescript": "^5.0.0",
-		"typescript-eslint": "^8.20.0",
-		"vite": "^6.0.0"
-	},
-	"packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
-	"dependencies": {
-		"marked": "^15.0.8",
-		"toml": "^3.0.0",
-		"tw-animate-css": "^1.2.5"
-	}
-}
-</file>
-
-<file path="svelte.config.js">
-import adapter from '@sveltejs/adapter-cloudflare';
-import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-
-/** @type {import('@sveltejs/kit').Config} */
-const config = {
-	// Consult https://svelte.dev/docs/kit/integrations
-	// for more information about preprocessors
-	preprocess: vitePreprocess(),
-
-	kit: {
-		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
-		adapter: adapter(),
-		prerender: {
-			entries: ['*'] // Explicitly tell SvelteKit to try and prerender all pages it finds
-		}
-	}
 };
 
 export default config;

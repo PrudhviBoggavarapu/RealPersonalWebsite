@@ -1,0 +1,138 @@
+[[title]]
+name = "From 6 Days to 30 Minutes, How to Think about Programing"
+slug = "from-six-days-to-thirty-minutes-how-to-think-about-programing"
+blurb = "Optimizing large-scale data processing: A Python (6 days) to Rust (30 minutes) transition "
+tags = [
+    "Rust",
+    "Python",
+    "Performance",
+    "Optimization",
+    "Data Processing",
+    "Big Data",
+    "Language Choice",
+    "zstd",
+    "FEC",
+]
+date = "2020-10-05"
+content = """
+
+For those who don't know, my name is karma jade rose. I am a python dev turned rust dev ,along the way I learned web dev, as well as low level avr stuff for robotics. In short, I'm in a lot of fields, and because of this, I may offer a unique point of view programming design. This documents my time as a programmer in a start up, working with technology that is pretty new to me. Working on performance related tasks when I could choose what language and what tools to do.
+
+In this post, I'll walk you through my journey of optimizing a  data processing task—from a naive Python implementation taking 6 days to a high-performance Rust solution running in 30 minutes—sharing lessons on profiling, memory management, and multithreading techniques you can apply to your own projects.
+
+# Define the Problem, Sorta
+
+Before you start programming, you should get in the habit of understanding what your problem is, and what's its scope. But that does not mean you should take a whiteboard and make everything on it. That just means you should mull over the product requirements. Just enough to sorta know what you're getting into.
+
+Our problem today is simple, I want to track where the donations are going from people, to corporations. Because of the Open Government Data Act, the FEC (Federal Election Committee) publishes a database (in pg_data) of all donations reported. Our startup needs to parse about 1E8 for every one year period. That's about 1E10 lines of dirty data in all. We want to sum every person's donation, to each organization every year.
+
+# The Naive Implementation
+
+When you have a problem that can be broken up into chunks, you should break it into smaller chunks, and write a "naive" implementation. That means just open up a file in the language of your choosing and write it there. Don't worry about language choice, don't worry about best practices, just worry about getting a solution down. Only refactor when you feel like screaming.
+
+In this case, I took this first 100 lines of my CSV file, and wrote it in Pandas and Python, after manually validating that the output was correct. I tried it with 1E5 lines, then the whole dataset. Once it got to about 1E7, the program kept running out of memory. No good. So I switched to using Polars with the lazy dataframe approach, but because of the size of the output dataframe, it kept running out of memory. No good still, I just decided to stream the data from the compressed zstd archive, and line by line write to a CSV file for every line. It took 6 days, but at least it didn't crash.
+
+# Problem Definition, Again But Better This Time
+
+Now that you know what you're kind of doing. You can set your project guidelines better. Go back to that bulletpoint list that you have, and add the things that you learned from your toy implementation. Now and only now is the time to set performance target. Then, let the optimizing begin.
+
+I learned that memory management and compressed archive reading were far more demanding bottlenecks than expected. The computational operations consumed more resources than anticipated, resulting in performance that is not acceptable. In my case, I added that it has memory constraints and the output needs to be inspectable while the program is running. I set a target of 30 mins as `zstdcat file.csv.zst | wc -l` took about 20 minutes, so it shouldn't take much more than that realistically.
+
+# Now the Fun Part: Speed Up Time
+
+Before you do any performance stuff, trash your first implementation. The point is you wrote it bad, and now it's time to write it again with the knowledge you now gained. After that, Profile Profile Profile. You think you know your code and what's slow and what's fast? You don't, and if you really do, this article is not meant for you. Take your time and use a profiler. I ended up using functiontrace for Python, and samply for Rust.
+
+I really recommend these tools as it gives you all of the performance data on profiler.firefox.com. That way you can both open and inspect the perf data in a generic way. My advice is to look at the flame graph and see what is taking all of your time. While I'm here giving some advice. I would commit all of your perf data to your Git when you change your implementation. So you can see how your stuff changed.
+
+In my case (quite obviously), the opening of the CSV file, finding all of the rows to change then changing, then writing. It was taking 60% of the CPU time. At around the same point, I felt as if I was hacking Python to go EVEN FASTER. And I decided to change languages to Rust at this point. Normally, I tend to choose Rust when Python starts to become unbearably slow or terribly not readable anymore. This table shows what I was able to do 
+
+| Ideas                       | Runtime | Improvement Factor |
+| --------------------------- | ------- | ------------------ |
+| Naive Python                | 6 days  | Baseline           |
+| Rust Conversion             | 1 day   | 6x                 |
+| String Parsing Optimization | 6 hours | 4x                 |
+| Multi-threading             | 30 min  | 12x                |
+| Total                       | 30 min  | 288x               |
+
+# Why Python is Slow, and Rust is Fast (at this)
+
+The reason why Python can be pretty slow for this is because it just doesn't let you handle memory in an easy way. It will just decide for me how long variables live for, and when things get allocated and deallocated, that's not really a problem for a proof of concept or a first crack at an idea. But when you start doing performance stuff, it feels like the language starts to fight you on the readability front when you start making more performance choices. In short, it feels like Python is either readable, or fast. But rarely is it both. On the other hand, since Rust is a compiled language with a borrow checker, I can write kind of whatever I want, huck it into a function with defined errors and types and pretend that the impl is a black box unless I need to deal with it again. and it will deallocated and allocated thing very explicitly. This is extremely useful if you have a bunch of short-lived variables.
+
+(I might write a blog on why I choose what I choose).
+
+# From 6 Days to 1 Day: Changing Languages
+
+I don't think rust is always the right answer for the job, but in this case, I really like the way that rust tends to handle thing like memory management. I ended up writing basically the same implementation in Python, reducing the memory overhead to 1GB and sped things up to about 1 day. This was a 6x speedup, just by switching languages. Look at the profiling data, Python was spending a lot of time dropping variables and cleaning things up. It also took a lot of time getting the row of the file. When the compiler can know when and where to drop things, it speeds up.
+
+## From 1 Day to 6 Hours: Optimizing String Parsing
+
+Looking again at the profiling data, I found that more than 80 percent of my time is spent parsing the string, with a bunch of memory allocations happening in the from_str. So let's look at the code
+
+{- When introducing code examples, add a sentence explaining what readers should focus on.}
+
+```rust
+fn from_str(s: &str) -> Result<Self, Self::Err> {
+        // Split on the pipe delimiter.
+        let fields: Vec<&str> = s.split('|').collect();
+        if fields.len() != 81 {
+            return Err(ParseRecordError(format!(
+                "Expected 81 fields, got {}",
+                fields.len()
+            )));
+        }
+
+        Ok(Record {
+            committee_id: fields[0].trim().to_string(),
+            committee_name: fields[1].trim().to_string(),
+	         .....})
+```
+
+```rust 
+pub fn from_bytes(bytes: &[u8]) -> Result<Self, ParseRecordError> {
+   // Split the byte slice on pipe character
+   let mut fields: Vec<&[u8]> = Vec::with_capacity(81);
+   let mut start = 0;
+
+   for i in 0..bytes.len() {
+	  if bytes[i] == b'|' {
+		 fields.push(&bytes[start..i]);
+		 start = i + 1;
+	  }
+   }
+   // Add the last field
+   fields.push(&bytes[start..]);
+
+   if fields.len() != 81 {
+	  return Err(ParseRecordError(format!(
+		 "Expected 81 fields, got {}",
+		 fields.len()
+	  )));
+   }
+
+   // Parse fields directly from bytes where possible
+   Ok(Record {
+	  committee_id: String::from_utf8_lossy(fields[0]).trim().to_string(),
+	  committee_name: String::from_utf8_lossy(fields[1]).trim().to_string(),
+	  contributor_id: String::from_utf8_lossy(fields[2]).trim().to_string(),
+	  ...}
+	  )
+}
+```
+
+In the optimized case, the from_bytes function takes a borrowed byte slice `&[u8]`, performs one initial heap allocation for a `Vec` to hold references to byte segments within the input, and then performs numerous subsequent heap allocations when converting these byte segments into owned String fields for the `Record` struct it constructs and returns. Instead of copying allocated and deallocated things, you just reserve the memory.
+
+This ends up giving a 4x speed up.
+
+# From 6 Hours To 30 Min: Multi-Threading
+
+Now that I've optimized the single-threaded performance, let's see how we can multi-thread it. Even though I am using Rust, a lot of these principles will transfer to your language of choice. Let's look at the single-thread performance. First, the workflow starts with reading the file (15%) and then structuring that data into an array of 5000 Record objects (40%). Next, it fetches current items from the database (15%) and performs the required calculations (10%). Finally, the processed results are inserted back into the database (20%). While the array is being generated, 45% of the code is just waiting, So what I ended up doing is spawning on another thread that does the file reading, and having it send to a single thread that did the database stuff. That took the code running in 3 hours. Looking at some benchmarking, the file reading part was just waiting on the database part, but because we broke things up, I just spawned more databases, and routed which thread based on some metadata. I ended up spawning 8 threads, and 1 thread for file reading.
+
+# What is Left on the Table
+
+String parsing could be faster, because of how the compressed archive reader works, it's fastest when it's reading in chunks of 2E16 bytes. It's probably faster to take a multirow chunk, create an array of objects, then send it on the pipe, then reading it row by row. You could also probably read a bunch of rows into memory, then do it the parsing, then optimize the chunk size for the faster read and write. You could probably open a file reader, and jump 100000 lines and merge the output stream. You could parse what you needed and not everything. That could speed things up immensely. 
+
+# Footnote
+
+I have tried rewriting the rust implementation into Nom, and it went faster in the 1E7 case, but when it went to the full file, it did not change the speed by more than 3%, so I decided to scrap the implementation. Once I wrote this blog I looked more into Apache arrow, but could not find a way to export things to that format without my machine running out of memory.
+
+In other news, this is the first time I am writing a blog. Tell me every change you would make to this blog post. Do not change anything other than punctuation and spelling of words."""
