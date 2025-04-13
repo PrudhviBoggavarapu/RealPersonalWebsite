@@ -68,7 +68,6 @@ I don't think rust is always the right answer for the job, but in this case, I r
 
 Looking again at the profiling data, I found that more than 80 percent of my time is spent parsing the string, with a bunch of memory allocations happening in the from_str. So let's look at the code
 
-{- When introducing code examples, add a sentence explaining what readers should focus on.}
 
 ```rust
 fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -86,6 +85,8 @@ fn from_str(s: &str) -> Result<Self, Self::Err> {
             committee_name: fields[1].trim().to_string(),
 	         .....})
 ```
+
+In this case, the from_str function takes a borrowed string slice (&str), temporarily allocates heap memory for a Vec containing slices pointing into the original string, and then performs numerous heap allocations to create owned String data for the fields of the Record struct it constructs and returns it. In short, I am creating a lot of intermediary data, that has to be allocated and deallocated taking a lot of CPU time. If I was just looking at the code, I would have thought that the database lookups were taking most of the time. After some amount of optimizing, I arrive on the following code block.
 
 ```rust 
 pub fn from_bytes(bytes: &[u8]) -> Result<Self, ParseRecordError> {
