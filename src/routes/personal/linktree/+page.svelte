@@ -18,18 +18,24 @@
 			icon: 'simple-icons:github',
 			variant: 'default' as const
 		},
-		{
-			href: 'https://www.youtube.com/@LetsLearnThingsLive', // Added YouTube link
-			label: 'YouTube',
-			icon: 'simple-icons:youtube', // Added YouTube icon
-			variant: 'default' as const
-		},
-		{
-			href: 'https://twitch.tv/letslearnthingslive',
-			label: 'Twitch',
-			icon: 'simple-icons:twitch',
-			variant: 'default' as const
-		},
+		// {
+		// 	href: 'https://www.linkedin.com/in/prudhviboggavarapu/',
+		// 	label: 'LinkedIn',
+		// 	icon: 'simple-icons:linkedin',
+		// 	variant: 'default' as const
+		// },
+        {
+            href: 'https://www.youtube.com/@LetsLearnThingsLive', // Added YouTube link
+            label: 'YouTube',
+            icon: 'simple-icons:youtube', // Added YouTube icon
+            variant: 'default' as const
+        },
+        {
+            href: 'https://twitch.tv/letslearnthingslive',
+            label: 'Twitch',
+            icon: 'simple-icons:twitch',
+            variant: 'default' as const
+        },
 		{
 			href: 'https://bsky.app/profile/thethornyrose.bsky.social',
 			label: 'Bluesky',
@@ -37,9 +43,28 @@
 			variant: 'default' as const
 		},
 		{
+			href: 'https://www.snapchat.com/add/soulcrusher6942?share_id=mO4CkjwaURo&locale=en-US',
+			label: 'Snapchat',
+			icon: 'simple-icons:snapchat',
+			variant: 'default' as const
+		},
+		{
+			href: 'https://wa.me/qr/LJWL6RUQD2TJE1',
+			label: 'WhatsApp',
+			icon: 'simple-icons:whatsapp',
+			variant: 'default' as const
+		},
+		{
 			href: 'mailto:codingpabs@gmail.com',
 			label: 'Email Me',
 			icon: 'mdi:email-outline',
+			variant: 'neutral' as const
+		},
+		{
+			// --- IMPORTANT: Replace with the ACTUAL URL to your vCard file ---
+			href: '/contact.vcf', // Placeholder URL - you need to host the .vcf file
+			label: 'Add to Contacts (vCard)',
+			icon: 'mdi:card-account-details-outline',
 			variant: 'neutral' as const
 		}
 	];

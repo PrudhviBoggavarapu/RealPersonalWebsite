@@ -1,7 +1,7 @@
 <!-- src/routes/blog/+page.svelte -->
 <script lang="ts">
 	import Header from '$lib/blog_stuff/Header.svelte';
-	import type { PageData } from './+page.server.js'; // Import the type for loaded data
+	import type { PageData } from './+page.server.js';
 	let { data }: { data: PageData } = $props();
 </script>
 
