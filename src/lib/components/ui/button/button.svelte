@@ -9,6 +9,8 @@
 			variant: {
 				default:
 					'text-[var(--border)] border-[3px] border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
+				noBorder:
+					'text-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',
 				noShadow: 'text-[var(--main-foreground)] border-[3px] border-[var(--border)]',
 				neutral:
 					'text-[var(--foreground)] border-[3px] border-[var(--border)] shadow-[var(--shadow-shadow)] hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none',

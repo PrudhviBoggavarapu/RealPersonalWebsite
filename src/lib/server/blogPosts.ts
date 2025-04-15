@@ -14,6 +14,7 @@ interface TomlArticleData {
 		date: string; // Keep as string initially for sorting
 		image?: string; // Optional image
 		content: string;
+		blog_url: string
 	}[]; // Array due to [[title]]
 }
 
@@ -25,6 +26,7 @@ export interface BlogPost {
 	date: Date; // Convert to Date object for easier use
 	image?: string;
 	content: string;
+	blogUrl: string;
 	// filePath is removed as it's no longer needed at runtime
 }
 
@@ -107,6 +109,7 @@ export function getAllPosts(): BlogPost[] {
 				date: new Date(postData.date), // Convert string to Date here
 				image: postData.image, // Will be undefined if missing
 				content: postData.content,
+				blogUrl: postData.blog_url
 				// filePath is removed
 			});
 		} catch (parseError: any) {

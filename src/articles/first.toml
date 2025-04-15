@@ -1,7 +1,8 @@
 [[title]]
 name = "From 6 Days to 30 Minutes, How to Think about Programing"
 slug = "from-six-days-to-thirty-minutes-how-to-think-about-programing"
-blurb = "Optimizing large-scale data processing: A Python (6 days) to Rust (30 minutes) transition "
+blurb = "Optimizing large-scale data processing: A Python (6 days) to Rust (30 minutes) transition"
+blog_url = "https://bsky.app/profile/thethornyrose.bsky.social/post/3lmt4spz4522x"
 tags = [
     "Rust",
     "Python",

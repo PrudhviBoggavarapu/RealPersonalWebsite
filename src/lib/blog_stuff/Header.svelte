@@ -76,13 +76,16 @@
 
 			<Sheet>
 				<SheetTrigger
-					class="inline-flex h-10 w-10 items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] border-2 border-[var(--border)] text-sm font-[var(--font-weight-base)] shadow-[var(--shadow-shadow)] ring-offset-white transition-all hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+					class="inline-flex h-10 w-10 items-center justify-center whitespace-nowrap rounded-[var(--radius-base)] border-2 border-[var(--border)] text-sm font-[var(--font-weight-base)] shadow-[var(--shadow-shadow)] ring-offset-white transition-all hover:translate-x-[var(--spacing-boxShadowX)] hover:translate-y-[var(--spacing-boxShadowY)] hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none  [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
 					aria-label="Open menu"
 				>
 					<Menu class="size-5" />
 					<span class="sr-only">Open menu</span>
 				</SheetTrigger>
-				<SheetContent side="right" class="w-[280px] border-l-4 border-border bg-background p-6">
+				<SheetContent
+					side="right"
+					class="w-[280px] border-l-4 border-border bg-[var(--background)] opacity-100"
+				>
 					<SheetHeader class="mb-6 text-left">
 						<SheetTitle class="font-heading text-2xl">Menu</SheetTitle>
 					</SheetHeader>
@@ -91,12 +94,8 @@
 							<a href="/" class="hover:text-main block text-lg font-bold text-foreground">Home</a>
 						</SheetClose>
 						<SheetClose>
-							<a href="/" class="hover:text-main block text-lg font-bold text-foreground">Journey</a
-							>
-						</SheetClose>
-						<SheetClose>
-							<a href="/" class="hover:text-main block text-lg font-bold text-foreground"
-								>Projects</a
+							<a href="/tags" class="hover:text-main block text-lg font-bold text-foreground"
+								>Tag Search</a
 							>
 						</SheetClose>
 						<SheetClose>
@@ -111,7 +110,7 @@
 							</a>
 						</SheetClose>
 
-						<Separator class="my-4" />
+						<Separator class="y-full" />
 
 						<SheetClose>
 							<Button

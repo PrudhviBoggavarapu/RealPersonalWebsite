@@ -45,14 +45,6 @@
 			<Separator orientation="vertical" class="w-[4px]" />
 
 			<a
-				href="/"
-				class="text-main-foreground transform self-center px-2 py-1 font-bold transition-all duration-200 hover:-translate-y-1 hover:rotate-2"
-				>Projects</a
-			>
-
-			<Separator orientation="vertical" class="w-[4px]" />
-
-			<a
 				href="/blog/"
 				target="_blank"
 				rel="noopener noreferrer"
@@ -110,7 +102,10 @@
 					<Menu class="size-5" />
 					<span class="sr-only">Open menu</span>
 				</SheetTrigger>
-				<SheetContent side="right" class="w-[280px] border-l-4 border-border bg-background p-6">
+				<SheetContent
+					side="right"
+					class="w-[280px] border-l-4 border-border bg-[var(--background)] p-6"
+				>
 					<SheetHeader class="mb-6 text-left">
 						<SheetTitle class="font-heading text-2xl">Menu</SheetTitle>
 					</SheetHeader>
@@ -120,24 +115,6 @@
 								>Home</a
 							>
 						</SheetClose>
-
-						<Separator class="my-1" />
-
-						<SheetClose>
-							<a href="/" class="hover:text-main block py-2 text-lg font-bold text-foreground"
-								>Journey</a
-							>
-						</SheetClose>
-
-						<Separator class="my-1" />
-
-						<SheetClose>
-							<a href="/" class="hover:text-main block py-2 text-lg font-bold text-foreground"
-								>Projects</a
-							>
-						</SheetClose>
-
-						<Separator class="my-1" />
 
 						<SheetClose>
 							<a
