@@ -1,4 +1,3 @@
-<!-- src/routes/blog/[slug]/+page.svelte -->
 <script lang="ts">
 	import Header from '$lib/frontpage/Header.svelte';
 	import Footer from '$lib/frontpage/Footer.svelte';
@@ -69,6 +68,26 @@
 		return neobrutalistBgColors[randomIndex];
 	}
 </script>
+
+<!-- src/routes/blog/[slug]/+page.svelte -->
+
+<svelte:head>
+	<title>{post.name} | Karma Jade Rose Blog</title>
+	<meta name="description" content={post.blurb} />
+	<meta property="og:title" content={post.name} />
+	<meta property="og:description" content={post.blurb} />
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content={'https://karmajaderose.com/' + post.slug} />
+	{#if post.image}
+		<meta property="og:image" content={post.image} />
+	{/if}
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={post.name} />
+	<meta name="twitter:description" content={post.blurb} />
+	{#if post.image}
+		<meta name="twitter:image" content={post.image} />
+	{/if}
+</svelte:head>
 
 <div class="flex min-h-screen flex-col bg-background text-foreground">
 	<Header />

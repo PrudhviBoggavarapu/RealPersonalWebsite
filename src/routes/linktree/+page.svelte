@@ -1,45 +1,52 @@
 <script lang="ts">
 	import Header from '$lib/frontpage/Header.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import Icon from '@iconify/svelte'; // Import Iconify component
 	import { Avatar, AvatarFallback, AvatarImage } from '$lib/components/ui/avatar';
 
-	// Define the links for the Linktree, using Iconify strings for icons
+	// Import icons as Svelte components
+	import MdiPostOutline from '~icons/mdi/post-outline';
+	import SimpleIconsGithub from '~icons/simple-icons/github';
+	import SimpleIconsYoutube from '~icons/simple-icons/youtube';
+	import SimpleIconsTwitch from '~icons/simple-icons/twitch';
+	import SimpleIconsBluesky from '~icons/simple-icons/bluesky';
+	import MdiEmailOutline from '~icons/mdi/email-outline';
+
+	// Define the links for the Linktree, using icon components
 	const links = [
 		{
-			href: '/blog', // Assuming this is an internal link
+			href: '/blog',
 			label: 'Blog',
-			icon: 'mdi:post-outline',
+			icon: MdiPostOutline,
 			variant: 'neutral' as const
 		},
 		{
 			href: 'https://github.com/prudhviboggavarapu',
 			label: 'GitHub',
-			icon: 'simple-icons:github',
+			icon: SimpleIconsGithub,
 			variant: 'default' as const
 		},
 		{
-			href: 'https://www.youtube.com/@LetsLearnThingsLive', // Added YouTube link
+			href: 'https://www.youtube.com/@LetsLearnThingsLive',
 			label: 'YouTube',
-			icon: 'simple-icons:youtube', // Added YouTube icon
+			icon: SimpleIconsYoutube,
 			variant: 'default' as const
 		},
 		{
 			href: 'https://twitch.tv/letslearnthingslive',
 			label: 'Twitch',
-			icon: 'simple-icons:twitch',
+			icon: SimpleIconsTwitch,
 			variant: 'default' as const
 		},
 		{
 			href: 'https://bsky.app/profile/thethornyrose.bsky.social',
 			label: 'Bluesky',
-			icon: 'simple-icons:bluesky',
+			icon: SimpleIconsBluesky,
 			variant: 'default' as const
 		},
 		{
 			href: 'mailto:codingpabs@gmail.com',
 			label: 'Email Me',
-			icon: 'mdi:email-outline',
+			icon: MdiEmailOutline,
 			variant: 'neutral' as const
 		}
 	];
@@ -48,13 +55,9 @@
 <div class="flex min-h-screen flex-col bg-background text-foreground">
 	<Header />
 
-	<!-- Main Content Area: Centered horizontally, starts near the top -->
 	<main class="flex flex-grow items-start justify-center pb-12 pt-12">
 		<div class="container mx-auto flex max-w-md flex-col items-center p-4">
-			<!-- Profile Avatar and Name -->
 			<Avatar class="shadow-shadow mb-4 size-24 border-4 border-border">
-				<!-- Replace with your actual image URL -->
-				<AvatarImage src="/placeholder-avatar.jpg" alt="Karma Jade Rose" />
 				<AvatarFallback class="text-4xl font-bold">KJ</AvatarFallback>
 			</Avatar>
 			<h1 class="font-heading mb-2 text-3xl">Karma Jade Rose</h1>
@@ -62,41 +65,16 @@
 				Rust & Python Developer | Web Dev Enthusiast | Robotics Tinkerer
 			</p>
 
-			<!-- Links Section -->
 			<div class="flex w-full flex-col space-y-4">
 				{#each links as link (link.href)}
-					{#if link.label === 'Add to Contacts (vCard)'}
-						<!-- Special handling for vCard download link -->
-						<a
-							href={link.href}
-							class="w-full no-underline"
-							download="KarmaJadeRose_Contact.vcf"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							<Button variant={link.variant} size="lg" class="w-full justify-center text-lg">
-								{#if link.icon}
-									<Icon icon={link.icon} class="mr-2 size-6" />
-								{/if}
-								{link.label}
-							</Button>
-						</a>
-					{:else}
-						<!-- Standard link handling -->
-						<a
-							href={link.href}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-full no-underline"
-						>
-							<Button variant={link.variant} size="lg" class="w-full justify-center text-lg">
-								{#if link.icon}
-									<Icon icon={link.icon} class="mr-2 size-6" />
-								{/if}
-								{link.label}
-							</Button>
-						</a>
-					{/if}
+					<a href={link.href} target="_blank" rel="noopener noreferrer" class="w-full no-underline">
+						<Button variant={link.variant} size="lg" class="w-full justify-center text-lg">
+							{#if link.icon}
+								<svelte:component this={link.icon} class="mr-2 size-6" />
+							{/if}
+							{link.label}
+						</Button>
+					</a>
 				{/each}
 			</div>
 		</div>

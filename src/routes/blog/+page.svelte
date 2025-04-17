@@ -1,9 +1,25 @@
 <!-- src/routes/blog/+page.svelte -->
+
 <script lang="ts">
 	import Header from '$lib/blog_stuff/Header.svelte';
 	import type { PageData } from './+page.server.js';
 	let { data }: { data: PageData } = $props();
 </script>
+
+<svelte:head>
+	<title>Blog | Karma Jade Rose</title>
+	<meta
+		name="description"
+		content="All blog posts by Karma Jade Rose. Rust, Python, Web, and more."
+	/>
+	<meta property="og:title" content="Blog | Karma Jade Rose" />
+	<meta
+		property="og:description"
+		content="All blog posts by Karma Jade Rose. Rust, Python, Web, and more."
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://karmajaderose.com/blog" />
+</svelte:head>
 
 <div class="flex min-h-screen flex-col bg-background text-foreground">
 	<Header />
