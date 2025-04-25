@@ -48,6 +48,7 @@
 	"dependencies": {
 		"@iconify/json": "^2.2.328",
 		"@iconify/svelte": "^4.2.0",
+		"@sveltejs/adapter-static": "^3.0.8",
 		"bsky-comments-svelte": "^0.0.2",
 		"fuse.js": "^7.1.0",
 		"marked": "^15.0.8",

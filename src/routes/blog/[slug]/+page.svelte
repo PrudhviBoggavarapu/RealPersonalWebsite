@@ -2,7 +2,6 @@
 	import Header from '$lib/frontpage/Header.svelte';
 	import Footer from '$lib/frontpage/Footer.svelte';
 	import { Badge } from '$lib/components/ui/badge';
-	import { onMount } from 'svelte';
 	import type { PageData } from './+page.server.js';
 
 	import { marked } from 'marked';
@@ -11,37 +10,6 @@
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import { Avatar, AvatarFallback, AvatarImage } from '$lib/components/ui/avatar';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { goto } from '$app/navigation';
-	let isDark = $state(false);
-	let mounted = $state(false);
-
-	onMount(() => {
-		mounted = true;
-		const storedTheme = localStorage.getItem('theme');
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		if (storedTheme) {
-			isDark = storedTheme === 'dark';
-		} else {
-			isDark = prefersDark;
-		}
-		applyTheme();
-	});
-
-	function toggleTheme() {
-		isDark = !isDark;
-		localStorage.setItem('theme', isDark ? 'dark' : 'light');
-		applyTheme();
-	}
-
-	function applyTheme() {
-		if (typeof document !== 'undefined') {
-			if (isDark) {
-				document.documentElement.classList.add('dark');
-			} else {
-				document.documentElement.classList.remove('dark');
-			}
-		}
-	}
 
 	let { data }: { data: PageData } = $props();
 	const post = data.post;

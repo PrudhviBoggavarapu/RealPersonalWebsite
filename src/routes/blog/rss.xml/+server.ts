@@ -1,5 +1,5 @@
 import { getAllPosts } from '$lib/server/blogPosts';
-
+export const prerender = true;
 export const GET = async () => {
 	const posts = getAllPosts();
 
