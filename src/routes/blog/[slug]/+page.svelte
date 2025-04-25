@@ -14,16 +14,7 @@
 	let { data }: { data: PageData } = $props();
 	const post = data.post;
 
-	let renderedHtml = $state('');
-
-	$effect(() => {
-		if (post?.content) {
-			renderedHtml = marked.parse(post.content) as string;
-		} else {
-			renderedHtml = '';
-		}
-	});
-
+	let renderedHtml = $state(marked.parse(post.content) as string);
 	const neobrutalistBgColors = [
 		'bg-neobrutalism-purple-50',
 		'bg-neobrutalism-yellow-50', // Needs text-black potentially
